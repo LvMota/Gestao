@@ -299,6 +299,8 @@ tbody tr:hover td{background:var(--sunk)}
 .goals-pick{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;padding:12px 14px;background:var(--sunk);border-radius:10px}
 .goals-pick label.f{width:200px}
 .goals-empty{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border:1px dashed var(--line);border-radius:10px}
+.mchip.on{background:var(--accent);color:var(--accent-fg)}
+.gstate{font-size:13px;font-weight:700;text-transform:none}
 .mchip{padding:3px 10px;border-radius:999px;font-size:13px;text-transform:capitalize;background:var(--accent-soft);color:var(--accent);border-color:transparent;margin:2px}
 .kpi-wrap{display:grid;grid-template-columns:minmax(250px,1.15fr) minmax(0,5fr);gap:18px;align-items:stretch}
 .kpi-iqs-box,.kpi-vy-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
@@ -509,17 +511,22 @@ tbody tr:hover td{background:var(--sunk)}
             <details class="goals-box" id="goalsBox">
               <summary><h2>Objetivos dos indicadores</h2><span class="sub" id="goalsSum"></span><span class="chev">&#x25be;</span></summary>
               <div class="goals-in">
-                <span class="sub">Cada indicador tem 5 graus: grau 1 (vermelho) &#xe9; o pior e grau 5 (verde) o melhor. Os <b>objetivos padr&#xe3;o</b> valem para todos os meses. Se num m&#xea;s os crit&#xe9;rios forem diferentes, escolhe o ano e o m&#xea;s e cria objetivos s&#xf3; para esse m&#xea;s.</span>
+                <span class="sub">Os objetivos s&#xe3;o definidos <b>m&#xea;s a m&#xea;s</b>. Escolhe o ano e o m&#xea;s. Para criar os de um m&#xea;s novo, copia os de outro m&#xea;s e depois altera o que mudou. Cada indicador tem 5 graus: grau 1 (vermelho) &#xe9; o pior e grau 5 (verde) o melhor.</span>
                 <div class="goals-pick">
-                  <label class="f" for="gScope">Editar<select id="gScope"><option value="def">Objetivos padr&#xe3;o</option><option value="month">Um m&#xea;s espec&#xed;fico</option></select></label>
-                  <label class="f" for="gYear" id="gYearL" hidden>Ano<select id="gYear"></select></label>
-                  <label class="f" for="gMonth" id="gMonthL" hidden>M&#xea;s<select id="gMonth"></select></label>
+                  <label class="f" for="gYear">Ano<select id="gYear"></select></label>
+                  <label class="f" for="gMonth">M&#xea;s<select id="gMonth"></select></label>
                   <span class="grow"></span>
-                  <span id="gState" class="sub"></span>
+                  <span id="gState" class="gstate"></span>
                 </div>
-                <div id="gEmpty" class="goals-empty" hidden><span>Este m&#xea;s usa os objetivos padr&#xe3;o.</span><button class="primary" id="gCreate">Criar objetivos para este m&#xea;s</button></div>
+                <div id="gEmpty" class="goals-empty" hidden>
+                  <span id="gEmptyMsg"></span>
+                  <div class="row"><label class="f" for="gFrom" style="width:220px">Copiar objetivos de<select id="gFrom"></select></label><button class="primary" id="gCreate" style="align-self:flex-end">Criar objetivos deste m&#xea;s</button></div>
+                </div>
                 <div class="tbl-wrap" id="gTable"><table class="goals"><thead><tr><th>Indicador</th><th>Grau 1</th><th>Grau 2</th><th>Grau 3</th><th>Grau 4</th><th>Grau 5</th></tr></thead><tbody id="goalRows"></tbody></table></div>
-                <div class="row" id="gMonthActs" hidden><button class="ghost" id="gRemove">Remover objetivos deste m&#xea;s (voltar ao padr&#xe3;o)</button></div>
+                <div class="row" id="gMonthActs" hidden style="flex-wrap:wrap">
+                  <label class="f" for="gFrom2" style="width:220px">Substituir pelos de<select id="gFrom2"></select></label><button id="gCopy" style="align-self:flex-end">Copiar</button>
+                  <span class="grow"></span><button class="ghost" id="gRemove" style="align-self:flex-end">Apagar objetivos deste m&#xea;s</button>
+                </div>
                 <div class="months-custom" id="gList"></div>
               </div>
             </details>
@@ -569,13 +576,26 @@ function lastSaturday(d=new Date()){const x=new Date(d);x.setDate(x.getDate()-((
 function weekdaysIn(ym){const [y,m]=ym.split('-').map(Number);let n=0;for(let d=new Date(y,m-1,1);d.getMonth()===m-1;d.setDate(d.getDate()+1)){const w=d.getDay();if(w&&w<6)n++}return n}
 
 const emptyMonth=ym=>({diasTrab:weekdaysIn(ym),diasFeitos:0,nps:{h:{p:0,n:0,d:0},o:{p:0,n:0,d:0}},iqs:{h:{f:0,q:0},o:{f:0,q:0}},man:{re:'',nps:'',iqs:'',fh:'',ivr:'',vy:''},mgr:{re:'',nps:'',iqs:'',fh:'',ivr:'',vy:''},horas:0,trat:0,ivr:Array(11).fill(0),vy:{r:'',n:'',i:'',p:'',eq:'',at:''}});
-const GOALS0={re:{n:'Reincid\u00eancia',u:'%',dir:-1,t:[20,15,10,5]},nps:{n:'NPS',u:'%',t:[65,72.5,80,87.5]},iqs:{n:'IQS',u:'%',t:[40,42.5,45,47.5]},fh:{n:'Produtividade hora',u:'',t:[1.6,2,2.6,4]},ivr:{n:'IVR',u:'',t:[9,9.15,9.45,9.6]},vy:{n:'Valyou',u:'',t:[2.5,3,3.5,4]}};
+const GOALS0={re:{n:'Reincid\u00eancia',u:'%',dir:-1,t:[28.5,25,21,18]},nps:{n:'NPS',u:'%',t:[65,72.5,80,87.5]},iqs:{n:'IQS',u:'%',t:[40,42.5,45,47.5]},fh:{n:'Produtividade hora',u:'',t:[1.6,2,2.6,4]},ivr:{n:'IVR',u:'',t:[9,9.15,9.45,9.6]},vy:{n:'Valyou',u:'',t:[2.5,3,3.5,4]}};
 const seed=()=>({goalsV:3,goals:JSON.parse(JSON.stringify(GOALS0)),tasks:[],org:{name:'',groups:[]},avarias:[],months:{},meterEnd:null,meterTotal:0});
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!S||!S.org)S=seed();
 if(!S.goals)S.goals=JSON.parse(JSON.stringify(GOALS0));
 if((S.goalsV||1)<3){S.goals=JSON.parse(JSON.stringify(GOALS0));S.goalsV=3;}
+/* Objetivos oficiais de 2026 (maio a dezembro) */
+const PRESET={
+ '2026-05':{re:[28,24.75,22,18],nps:[60,72.5,80,87.5],ivr:[9.10,9.30,9.45,9.60],fh:[1.80,2.10,2.80,4]},
+ '2026-06':{re:[29.5,25.5,22,18],nps:[65,72.5,80,87.5],ivr:[9.10,9.30,9.45,9.60],fh:[1.80,2.10,2.80,4]},
+ '2026-07':{re:[28.5,25.5,22,18],nps:[65,72.5,80,87.5],ivr:[9.10,9.30,9.45,9.60],fh:[1.80,2.15,2.80,4]},
+ '2026-08':{re:[28.5,26.5,22,18],nps:[65,72.5,80,87.5],ivr:[9.10,9.30,9.45,9.60],fh:[1.80,2.15,2.80,4]},
+ '2026-09':{re:[28.5,26.5,21,18],nps:[65,72.5,80,87.5],ivr:[9,9.15,9.45,9.60],fh:[1.80,2.20,2.80,4]},
+ '2026-10':{re:[28.5,25,21,18],nps:[65,72.5,80,87.5],ivr:[9,9.15,9.45,9.60],fh:[1.60,2,2.60,4]}};
+PRESET['2026-11']=PRESET['2026-10'];PRESET['2026-12']=PRESET['2026-10'];
+if((S.presetV||0)<1){S.goalsByMonth=S.goalsByMonth||{};
+  Object.entries(PRESET).forEach(([ym,p])=>{const g=JSON.parse(JSON.stringify(GOALS0));Object.entries(p).forEach(([k,t])=>g[k].t=t.slice());S.goalsByMonth[ym]=g});
+  S.goals.re=JSON.parse(JSON.stringify(GOALS0.re));S.presetV=1}
+S.goalsByMonth=S.goalsByMonth||{};if(!Object.keys(S.goalsByMonth).length)S.goalsByMonth[ymKey(new Date())]=JSON.parse(JSON.stringify(S.goals));
 if(!S.goals.re){S.goals={re:JSON.parse(JSON.stringify(GOALS0.re)),...S.goals}}
 Object.values(S.months||{}).forEach(m=>{m.man=m.man||{};m.mgr=m.mgr||{};if(m.vy&&m.vy.r!==''&&m.vy.r!=null&&(m.man.re===''||m.man.re==null)&&!m.mgr.re)m.mgr.re=String(m.vy.r)});
 S.avarias=(S.avarias||[]).filter(a=>'solic' in a||'ticket' in a);
@@ -706,7 +726,10 @@ $('groups').onsubmit=e=>{e.preventDefault();const f=e.target,g=S.org.groups.find
 const MESES=['janeiro','fevereiro','mar\u00e7o','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 let gYM=null;
 const pnum=v=>parseFloat(String(v).replace(',','.'));
-function gTarget(){return $('gScope').value==='def'?S.goals:(S.goalsByMonth||{})[gYM]||null}
+const ORDK=['re','nps','ivr','fh','vy','iqs'];
+function gTarget(){return (S.goalsByMonth||{})[gYM]||null}
+function monthOpts(excl){const ks=Object.keys(S.goalsByMonth).filter(k=>k!==excl).sort().reverse();
+  return ks.map(k=>`<option value="${k}">${mLabel(k)}</option>`).join('')+'<option value="__base">Valores base</option>'}
 function renderGoals(){
   S.goalsByMonth=S.goalsByMonth||{};
   const now=new Date();if(!gYM)gYM=curYM;
@@ -714,31 +737,35 @@ function renderGoals(){
   const years=[];for(let y=now.getFullYear()+1;y>=now.getFullYear()-3;y--)years.push(y);
   $('gYear').innerHTML=years.map(y=>`<option ${y===gy?'selected':''}>${y}</option>`).join('');
   $('gMonth').innerHTML=MESES.map((n,i)=>`<option value="${i+1}" ${i+1===gm?'selected':''}>${n}</option>`).join('');
-  const isM=$('gScope').value==='month';
-  $('gYearL').hidden=$('gMonthL').hidden=!isM;
-  const tgt=gTarget();
-  $('gEmpty').hidden=!(isM&&!tgt);$('gTable').hidden=isM&&!tgt;$('gMonthActs').hidden=!(isM&&tgt);
-  $('gState').textContent=isM?(tgt?'Objetivos pr\u00f3prios de '+MESES[gm-1]+' '+gy:'Sem objetivos pr\u00f3prios'):'Valem para todos os meses sem objetivos pr\u00f3prios';
-  if(tgt){if(!tgt.re)tgt.re=JSON.parse(JSON.stringify(S.goals.re));const ord=['re','nps','ivr','fh','vy','iqs'];
-  $('goalRows').innerHTML=ord.filter(k=>tgt[k]).map(k=>{const g=tgt[k],lo=g.dir<0;return `<tr><td>${g.n}<select class="gdir" data-gk="${k}" data-gdir="1" aria-label="Sentido"><option value="1" ${lo?'':'selected'}>Maior \u00e9 melhor</option><option value="-1" ${lo?'selected':''}>Menor \u00e9 melhor</option></select></td><td class="sub">${lo?'acima de':'abaixo de'} ${fmtG(k,g.t[0])}</td>
-    ${g.t.map((v,i)=>`<td><span class="gpre">${lo?'\u2264':'\u2265'}</span><input type="text" inputmode="decimal" data-gk="${k}" data-gi="${i}" value="${String(v).replace('.',',')}" aria-label="${g.n} grau ${i+2}"></td>`).join('')}</tr>`}).join('')}
+  const tgt=gTarget(),src=goalsSrc(gYM);
+  $('gEmpty').hidden=!!tgt;$('gTable').hidden=!tgt;$('gMonthActs').hidden=!tgt;
+  $('gState').innerHTML=tgt?`<b class="up">\u25cf</b> ${MESES[gm-1]} ${gy} tem objetivos pr\u00f3prios`:`<b class="down">\u25cf</b> ${MESES[gm-1]} ${gy} sem objetivos`;
+  if(!tgt){$('gEmptyMsg').innerHTML=src?`Este m\u00eas ainda n\u00e3o tem objetivos. Por agora est\u00e1 a usar os de <b style="text-transform:capitalize">${mLabel(src)}</b>.`:'Este m\u00eas ainda n\u00e3o tem objetivos.';
+    $('gFrom').innerHTML=monthOpts(gYM);if(src)$('gFrom').value=src}
+  else{$('gFrom2').innerHTML=monthOpts(gYM);
+    ORDK.forEach(k=>{if(!tgt[k])tgt[k]=JSON.parse(JSON.stringify(S.goals[k]||GOALS0[k]))});
+    $('goalRows').innerHTML=ORDK.map(k=>{const g=tgt[k],lo=g.dir<0,f=v=>String(v).replace('.',',');
+      const inp=(i,pre)=>`<span class="gpre">${pre}</span><input type="text" inputmode="decimal" data-gk="${k}" data-gi="${i}" value="${f(g.t[i])}" aria-label="${g.n} limite ${i+1}">`;
+      return `<tr><td>${g.n}<select class="gdir" data-gk="${k}" data-gdir="1" aria-label="Sentido"><option value="1" ${lo?'':'selected'}>Maior \u00e9 melhor</option><option value="-1" ${lo?'selected':''}>Menor \u00e9 melhor</option></select></td>
+        <td>${inp(0,lo?'\u2265':'<')}</td>${g.t.map((v,i)=>`<td>${inp(i,lo?'<':'\u2265')}</td>`).join('')}</tr>`}).join('')}
   const keys=Object.keys(S.goalsByMonth).sort().reverse();
-  $('gList').innerHTML=keys.length?'<span class="sub">Meses com objetivos pr\u00f3prios:</span> '+keys.map(ym=>`<button class="mchip" data-gym="${ym}">${mLabel(ym)}</button>`).join(''):'';
-  const n=keys.length;$('goalsSum').textContent=n?`${n} m\u00eas${n>1?'es':''} com objetivos pr\u00f3prios`:'S\u00f3 objetivos padr\u00e3o';
+  $('gList').innerHTML=keys.length?'<span class="sub">Meses com objetivos:</span> '+keys.map(ym=>`<button class="mchip${ym===gYM?' on':''}" data-gym="${ym}">${mLabel(ym)}</button>`).join(''):'';
+  $('goalsSum').textContent=keys.length+(keys.length===1?' m\u00eas com objetivos':' meses com objetivos');
 }
-$('gScope').onchange=renderGoals;
+const copyGoals=from=>JSON.parse(JSON.stringify(from==='__base'?GOALS0:S.goalsByMonth[from]));
+const afterGoals=msg=>{save();renderGoals();renderCalcs();renderHist();toast(msg)};
 $('gYear').onchange=$('gMonth').onchange=()=>{gYM=$('gYear').value+'-'+String($('gMonth').value).padStart(2,'0');renderGoals()};
-$('gList').onclick=e=>{const ym=e.target.dataset.gym;if(!ym)return;gYM=ym;$('gScope').value='month';renderGoals()};
-$('gCreate').onclick=()=>{S.goalsByMonth[gYM]=JSON.parse(JSON.stringify(S.goals));save();renderGoals();renderCalcs();renderHist();toast('Objetivos criados para '+mLabel(gYM)+'. J\u00e1 os podes alterar.')};
+$('gList').onclick=e=>{const ym=e.target.dataset.gym;if(!ym)return;gYM=ym;renderGoals()};
+$('gCreate').onclick=()=>{const f=$('gFrom').value;S.goalsByMonth[gYM]=copyGoals(f);afterGoals('Objetivos de '+mLabel(gYM)+' criados'+(f==='__base'?'':' a partir de '+mLabel(f))+'. J\u00e1 os podes alterar.')};
+$('gCopy').onclick=()=>{const f=$('gFrom2').value;S.goalsByMonth[gYM]=copyGoals(f);afterGoals('Objetivos substitu\u00eddos pelos de '+(f==='__base'?'valores base':mLabel(f)))};
 let gRemArm=false;
-$('gRemove').onclick=e=>{if(!gRemArm){gRemArm=true;e.target.textContent='Clica de novo para remover';setTimeout(()=>{gRemArm=false;e.target.textContent='Remover objetivos deste m\u00eas (voltar ao padr\u00e3o)'},3000);return}
-  gRemArm=false;delete S.goalsByMonth[gYM];save();renderGoals();renderCalcs();renderHist();toast('Este m\u00eas volta a usar os objetivos padr\u00e3o')};
+$('gRemove').onclick=e=>{if(!gRemArm){gRemArm=true;e.target.textContent='Clica de novo para apagar';setTimeout(()=>{gRemArm=false;e.target.textContent='Apagar objetivos deste m\u00eas'},3000);return}
+  gRemArm=false;delete S.goalsByMonth[gYM];afterGoals('Objetivos de '+mLabel(gYM)+' apagados')};
 $('goalRows').onchange=e=>{const t=e.target,tgt=gTarget();if(!tgt||!t.dataset.gk)return;const g=tgt[t.dataset.gk];
-  if(t.dataset.gdir){g.dir=+t.value;save();renderGoals();renderCalcs();renderHist();toast('Sentido atualizado. Confirma os limites dos graus.');return}
-  const v=pnum(t.value);
-  if(!isFinite(v)){toast('Valor inv\u00e1lido');renderGoals();return}
+  if(t.dataset.gdir){g.dir=+t.value;afterGoals('Sentido atualizado. Confirma os limites dos graus.');return}
+  const v=pnum(t.value);if(!isFinite(v)){toast('Valor inv\u00e1lido');renderGoals();return}
   g.t[+t.dataset.gi]=v;const ok=g.t.every((x,i)=>i===0||(g.dir<0?x<=g.t[i-1]:x>=g.t[i-1]));
-  save();renderGoals();renderCalcs();renderHist();toast(ok?'Objetivo guardado':'Guardado, mas aten\u00e7\u00e3o: os valores dos graus devem ir '+(g.dir<0?'diminuindo':'aumentando'))};
+  afterGoals(ok?'Objetivo guardado':'Guardado, mas aten\u00e7\u00e3o: os valores dos graus devem ir '+(g.dir<0?'diminuindo':'aumentando'))};
 function renderCfg(){
   renderGoals();renderNotifStatus();
   $('cfgOrg').value=S.org.name;
@@ -802,9 +829,10 @@ function calcFor(m){
 }
 /* Estados e carinhas */
 let GO=null,GM=null;const GG=()=>GM||S.goals;
-const goalsFor=ym=>(S.goalsByMonth&&S.goalsByMonth[ym])||S.goals;
+function goalsFor(ym){const gb=S.goalsByMonth||{};if(gb[ym])return gb[ym];const ks=Object.keys(gb).sort();if(!ks.length)return S.goals;const prev=ks.filter(k=>k<ym).pop();return gb[prev||ks[0]]}
+const goalsSrc=ym=>{const gb=S.goalsByMonth||{};if(gb[ym])return ym;const ks=Object.keys(gb).sort();if(!ks.length)return null;return ks.filter(k=>k<ym).pop()||ks[0]};
 const mgrOf=(k,o=GO)=>{const x=o&&o[k];return x!==''&&x!=null&&isFinite(x)?Math.min(5,Math.max(1,Math.round(+x))):0};
-function gradeOf(k,v){const fx=mgrOf(k);if(fx)return fx;const g=GG()[k]||S.goals[k];if(!g||!isFinite(v))return 0;return 1+(g.dir<0?g.t.filter(x=>v<=x).length:g.t.filter(x=>v>=x).length)}
+function gradeOf(k,v){const fx=mgrOf(k);if(fx)return fx;const g=GG()[k]||S.goals[k];if(!g||!isFinite(v))return 0;return 1+(g.dir<0?g.t.filter(x=>v<x).length:g.t.filter(x=>v>=x).length)}
 function stateOf(k,v){const n=gradeOf(k,v);return n?'g'+n:'none'}
 const WORD=['Sem dados','Muito mau','Mau','Razo\u00e1vel','Bom','Excelente'];
 const LBL={none:'Sem dados',g1:'Grau 1 \u00b7 Muito mau',g2:'Grau 2 \u00b7 Mau',g3:'Grau 3 \u00b7 Razo\u00e1vel',g4:'Grau 4 \u00b7 Bom',g5:'Grau 5 \u00b7 Excelente'};
@@ -823,8 +851,8 @@ function needFor(k){const c=calcAll(),m=c.m,g=GG()[k];if(c.isMan[k]||mgrOf(k))re
     if(n>1){const L=g.t[n-2];o.down=Math.max(0,Math.floor(Sm/L-N+1e-9));o.downTxt=o.down?`Aguentas ${o.down} nota${o.down>1?'s':''} 0 sem descer de grau`:'Uma nota 0 agora e desces de grau'}
     return o}
   return null}
-function goalTxt(k,v){if(mgrOf(k))return'Grau definido \u00e0 m\u00e3o';const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=GG()[k]||S.goals[k],n=gradeOf(k,v),lo=g.dir<0;if(!n)return'Grau 5 '+(lo?'at\u00e9 ':'a partir de ')+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
-  const next=g.t[n-1],d=Math.abs(next-v);return `Grau ${n+1} ${lo?'at\u00e9':'a partir de'} ${fmtG(k,next)} (${lo?'desce':'faltam'} ${String(+d.toFixed(2)).replace('.',',')}${g.u?' '+g.u:''})`}
+function goalTxt(k,v){if(mgrOf(k))return'Grau definido \u00e0 m\u00e3o';const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=GG()[k]||S.goals[k],n=gradeOf(k,v),lo=g.dir<0;if(!n)return'Grau 5 '+(lo?'abaixo de ':'a partir de ')+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
+  const next=g.t[n-1],d=Math.abs(next-v);return `Grau ${n+1} ${lo?'abaixo de':'a partir de'} ${fmtG(k,next)} (${lo?'desce':'faltam'} ${String(+d.toFixed(2)).replace('.',',')}${g.u?' '+g.u:''})`}
 /* Janela das calculadoras */
 const CNAME={re:'Reincid\u00eancia',nps:'NPS',iqs:'IQS',fh:'Produtividade hora',ivr:'IVR',vy:'Valyou'};
 let openKey=null;
@@ -1012,7 +1040,7 @@ function renderHist(){
   const pts=rows.map(r=>({ym:r.ym,v:r.v[histKey],g:r.v.g[histKey]})).filter(p=>isFinite(p.v));
   const el=$('histChart');
   if(!pts.length){el.innerHTML='<div class="empty" style="padding:60px 0;text-align:center">Sem dados de '+HK.find(x=>x[0]===histKey)[1]+' em nenhum m\u00eas.</div>';return}
-  const G0=S.goals[histKey],g=G0.dir<0?G0.t.slice().reverse():G0.t,W=1000,H=340,L=64,R=24,T=20,B=40;
+  const G0=goalsFor(curYM)[histKey]||S.goals[histKey],g=G0.dir<0?G0.t.slice().reverse():G0.t,W=1000,H=340,L=64,R=24,T=20,B=40;
   let lo=Math.min(...pts.map(p=>p.v),g[0]),hi=Math.max(...pts.map(p=>p.v),g[3]);const pad=(hi-lo)*0.15||1;lo-=pad;hi+=pad;
   if(histKey==='re')lo=Math.max(lo,0);
   if(histKey==='nps'||histKey==='iqs'){lo=Math.max(lo,histKey==='nps'?-100:0);hi=Math.min(hi,100)}
