@@ -4,46 +4,42 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Gest&#xe3;o de Campo</title>
+<title>Gest&#xe3;o</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
-/* Layout: cabe\00e7 alho em duas faixas (marca + separadores; m\00ea s + parqu\00ed metro), conte\00fa do a toda a largura; pain\00e9 is com faixa de t\00ed tulo azul como as tabelas do Excel */
+/* Layout: cabe\e7 alho em duas faixas (marca + separadores; m\ea s + parqu\ed metro), conte\fa do a toda a largura; pain\e9 is com faixa de t\ed tulo azul como as tabelas do Excel */
 :root{
-  --bg:#F2F5FA; --surface:#FFFFFF; --sunk:#E9EEF6; --fg:#0F1B2D; --muted:#5A6B82; --line:#D6DEEA;
+  --bg:#FFFFFF; --surface:#FFFFFF; --sunk:#F1F5FB; --fg:#0F1B2D; --muted:#5A6B82; --line:#DCE3EE;
   --band:#0B5CAD; --band-fg:#FFFFFF; --band-sub:#BFD6F2;
   --accent:#0B6BD3; --accent-fg:#FFFFFF; --accent-soft:#DCEAFB;
-  --head:#0A2547; --head-fg:#E8F1FC; --head-muted:#8FB0D6; --head-sunk:#123563;
+  --head:#FFFFFF; --head-fg:#0F1B2D; --head-muted:#5A6B82; --head-sunk:#EEF3F9;
   --ok:#17834F; --ok-soft:#DDF2E6; --g2:#D9620F; --g2-soft:#FCE6D6; --g4:#5E9E1E; --g4-soft:#E6F3D6; --warn:#B26B00; --warn-soft:#FCEFD9; --bad:#C62F2F; --bad-soft:#FBE1E1;
+  --shadow:0 1px 2px rgba(15,27,45,.05),0 6px 18px rgba(15,27,45,.06); --scrim:rgba(15,27,45,.45);
   --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
   --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0B1220; --surface:#121C2E; --sunk:#1A2740; --fg:#E4ECF7; --muted:#8EA0BA; --line:#24344F;
-  --band:#16407A; --band-fg:#EAF2FF; --band-sub:#9FBDE4;
-  --accent:#4DA3FF; --accent-fg:#06121F; --accent-soft:#15315A;
-  --head:#070D18; --head-fg:#E4ECF7; --head-muted:#7F95B4; --head-sunk:#152238;
-  --ok:#45C486; --ok-soft:#123224; --g2:#FF8A3D; --g2-soft:#3D2212; --g4:#A6D45A; --g4-soft:#26331A; --warn:#F0B44C; --warn-soft:#3A2B10; --bad:#FF7272; --bad-soft:#3E1A1F; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0B1220; --surface:#121C2E; --sunk:#1A2740; --fg:#E4ECF7; --muted:#8EA0BA; --line:#24344F;
-  --band:#16407A; --band-fg:#EAF2FF; --band-sub:#9FBDE4;
-  --accent:#4DA3FF; --accent-fg:#06121F; --accent-soft:#15315A;
-  --head:#070D18; --head-fg:#E4ECF7; --head-muted:#7F95B4; --head-sunk:#152238;
-  --ok:#45C486; --ok-soft:#123224; --g2:#FF8A3D; --g2-soft:#3D2212; --g4:#A6D45A; --g4-soft:#26331A; --warn:#F0B44C; --warn-soft:#3A2B10; --bad:#FF7272; --bad-soft:#3E1A1F; color-scheme:dark}
+  --bg:#0A1730; --surface:#10213F; --sunk:#172C52; --fg:#E6EEF9; --muted:#93A7C6; --line:#22406B;
+  --band:#1B4F94; --band-fg:#EEF5FF; --band-sub:#A9C6EC;
+  --accent:#5AAEFF; --accent-fg:#06121F; --accent-soft:#173A68;
+  --head:#081329; --head-fg:#E6EEF9; --head-muted:#8AA2C4; --head-sunk:#13284B;
+  --ok:#45C486; --ok-soft:#123A2C; --g2:#FF8A3D; --g2-soft:#40261A; --g4:#A6D45A; --g4-soft:#283A22; --warn:#F0B44C; --warn-soft:#3D3018; --bad:#FF7272; --bad-soft:#431E2A;
+  --shadow:0 1px 2px rgba(0,0,0,.25),0 8px 22px rgba(0,0,0,.25); --scrim:rgba(2,8,20,.65); color-scheme:dark}
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.45}
 [hidden]{display:none!important}
 
-/* Cabe\00e7 alho */
-header.top{position:sticky;top:0;z-index:5;background:var(--head);color:var(--head-fg)}
-.top-1{display:flex;align-items:stretch;gap:32px;padding:0 32px;height:58px;border-bottom:1px solid var(--head-sunk)}
+/* Cabe\e7 alho */
+header.top{position:sticky;top:0;z-index:5;background:var(--head);color:var(--head-fg);border-bottom:1px solid var(--line)}
+.top-1{display:flex;align-items:stretch;gap:18px;padding:0 24px;height:58px;border-bottom:1px solid var(--head-sunk)}
 .brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.01em;font-stretch:90%}
 .brand i{width:10px;height:26px;background:var(--accent);border-radius:2px;box-shadow:14px 0 0 -2px var(--band-sub)}
 .brand i{margin-right:14px}
 .tabs{display:flex;align-items:stretch;gap:4px}
-.nav{background:none;border:none;border-radius:0;color:var(--head-muted);font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase;padding:0 16px;border-bottom:3px solid transparent;display:flex;align-items:center;gap:8px}
+.nav{background:none;border:none;border-radius:0;color:var(--head-muted);font-family:var(--f-display);font-weight:600;font-size:15px;letter-spacing:.04em;text-transform:uppercase;padding:0 12px;border-bottom:3px solid transparent;display:flex;align-items:center;gap:8px}
 .nav svg{width:17px;height:17px}
 .nav:hover{color:var(--head-fg);border-color:transparent}
 .nav[aria-current="true"]{color:var(--head-fg);border-bottom-color:var(--accent)}
@@ -55,15 +51,17 @@ header.top{position:sticky;top:0;z-index:5;background:var(--head);color:var(--he
 .mes button{color:var(--head-muted);font-size:20px}
 .mes button:hover{color:var(--head-fg)}
 
-/* Parqu\00ed metro */
-.meter{display:flex;align-items:center;gap:6px;background:var(--head-sunk);border-radius:999px;padding:5px 6px 5px 16px}
+/* Parqu\ed metro */
+.meter{align-self:center;display:flex;align-items:center;gap:6px;background:var(--head-sunk);border-radius:999px;padding:5px 6px 5px 16px}
+.meter .pk{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:5px;background:var(--accent);color:var(--accent-fg)!important;font-family:var(--f-display);font-size:14px!important;letter-spacing:0!important;margin-right:2px!important}
 .meter .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--head-muted);margin-right:4px}
 .meter .time{font-family:var(--f-mono);font-weight:600;font-size:17px;font-variant-numeric:tabular-nums;min-width:62px;color:var(--head-fg)}
-.meter .end{font-size:12px;color:var(--head-muted);font-family:var(--f-mono);min-width:64px}
-.meter button{padding:4px 10px;font-size:13px;font-family:var(--f-mono);font-weight:500;background:transparent;border:1px solid var(--head-muted);color:var(--head-fg);border-radius:999px}
+.meter .end{font-size:12px;color:var(--head-muted);font-family:var(--f-mono)}
+.meter .end:empty{display:none}
+.meter button{padding:4px 8px;font-size:13px;font-family:var(--f-mono);font-weight:500;background:transparent;border:1px solid var(--head-muted);color:var(--head-fg);border-radius:999px}
 .meter button:hover{border-color:var(--head-fg)}
 .meter input{width:60px;padding:4px 8px;font-size:13px;font-family:var(--f-mono);background:transparent;border:1px solid var(--head-muted);color:var(--head-fg);border-radius:999px}
-.meter .bar{width:70px;height:4px;border-radius:2px;background:var(--head);overflow:hidden}
+.meter .bar{width:48px;height:4px;border-radius:2px;background:var(--head);overflow:hidden}
 .meter .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .9s linear}
 .meter.low .time{color:var(--warn)} .meter.low .bar i{background:var(--warn)}
 .meter.done{background:var(--bad);animation:pulse 1s ease-in-out infinite alternate} .meter.done .time,.meter.done .lbl,.meter.done .end{color:var(--band-fg)}
@@ -77,7 +75,7 @@ header.top{position:sticky;top:0;z-index:5;background:var(--head);color:var(--he
 h2{font-family:var(--f-display);font-size:17px;font-weight:700;margin:0;letter-spacing:.04em;text-transform:uppercase;font-stretch:95%}
 .sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .sub{color:var(--muted);font-size:13px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow)}
 input,select,textarea,button{font:inherit;color:inherit}
 input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
 input:disabled{color:var(--muted)}
@@ -103,11 +101,11 @@ td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
 tbody tr:hover td{background:var(--sunk)}
 .tbl-wrap{overflow-x:auto}
 
-/* Pain\00e9 is com faixa de t\00ed tulo */
+/* Pain\e9 is com faixa de t\ed tulo */
 .calc,.group,.tasks-card{padding:0;overflow:hidden;display:flex;flex-direction:column;gap:16px}
 .calc>.ch,.group>.gh,.tasks-card>.sec-head{background:var(--band);color:var(--band-fg);padding:11px 20px;margin:0;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .calc>.ch .sub,.group>.gh .sub,.tasks-card>.sec-head .sub,.calc>.ch .ivr-legend{color:var(--band-sub)}
-.tasks-card>.sec-head .ghost{color:var(--band-sub)} .tasks-card>.sec-head .ghost:hover{color:var(--band-fg)}
+.tasks-card>.sec-head .ghost{color:var(--band-sub);padding:0} .tasks-card>.sec-head .ghost:hover{color:var(--band-fg)}
 .calc>:not(.ch),.group>:not(.gh),.tasks-card>:not(.sec-head){margin-inline:20px}
 .calc>:last-child,.group>:last-child,.tasks-card>:last-child{margin-bottom:18px}
 
@@ -186,7 +184,7 @@ tbody tr:hover td{background:var(--sunk)}
 .chk{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--muted);cursor:pointer;padding-bottom:8px}
 .chk input{width:16px;height:16px;accent-color:var(--accent)}
 
-/* Configura\00e7 \00f5 es */
+/* Configura\e7 \f5 es */
 .cfg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
 .cfg-group{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;padding-top:12px;border-top:1px solid var(--line)}
 .btn-file input{display:none}
@@ -229,26 +227,45 @@ tbody tr:hover td{background:var(--sunk)}
 .goals td{padding:6px 6px}
 .goals input,.goals select{padding:6px 8px;font-family:var(--f-mono);font-size:14px}
 .goals td:first-child{font-weight:700;white-space:nowrap}
+/* Janela das calculadoras */
+.modal{position:fixed;inset:0;z-index:50;background:var(--scrim);display:flex;align-items:flex-start;justify-content:center;padding:7vh 24px 24px;overflow:auto}
+.modal-box{width:min(980px,100%);animation:pop .18s ease-out}
+.modal .calcs{display:block}
+.modal .calc{box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.modal .calc.s-g1,.modal .calc.s-g2,.modal .calc.s-g3,.modal .calc.s-g4,.modal .calc.s-g5{box-shadow:inset 0 -5px 0 var(--st),0 24px 60px rgba(0,0,0,.3)}
+.x-close{background:transparent!important;border:none!important;color:var(--band-fg)!important;font-size:26px;line-height:1;padding:0 2px!important;margin-left:6px}
+.x-close:hover{opacity:.75}
+.calc .ch{gap:12px}.calc .ch .sub{margin-left:auto}
+@keyframes pop{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.modal-box{animation:none}}
+.kpi{cursor:pointer}
+.kpi .tap{font-size:12px;font-weight:700;color:var(--accent);margin-top:2px}
+.kpi.flash{animation:flash 1s ease-out}
+@keyframes flash{0%{box-shadow:inset 0 0 0 3px var(--accent)}100%{box-shadow:inset 0 0 0 3px transparent}}
+.theme{font-family:var(--f-body)!important;text-transform:none!important;letter-spacing:0!important;font-weight:700!important;gap:6px!important}
+.bk-step{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
+.bk-step>b{font-size:14px}
+.primary-file{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.primary-file:hover{color:var(--accent-fg);filter:brightness(1.08)}
+.btn-danger{background:transparent;border-color:var(--bad);color:var(--bad)}
+.btn-danger:hover{background:var(--bad);color:var(--surface);border-color:var(--bad)}
+.btn-danger.armed{background:var(--bad);color:var(--surface)}
+.bk-step.danger>b{color:var(--bad)}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
+<script>try{if(localStorage.getItem("gestao-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
 </head>
 <body>
 <header class="top">
   <div class="top-1">
-    <div class="brand"><i></i>Gest&#xe3;o de Campo</div>
+    <div class="brand"><i></i>Gest&#xe3;o</div>
     <nav class="tabs">
       <button class="nav" data-tab="dash" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Dashboard</button>
-      <button class="nav" data-tab="calc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h8"/></svg>Calculadoras</button>
       <button class="nav" data-tab="av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>Avarias</button>
     </nav>
     <div class="grow"></div>
-    <button class="nav gear" data-tab="cfg" aria-label="Configura&#xe7;&#xf5;es" title="Configura&#xe7;&#xf5;es"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
-  </div>
-  <div class="top-2">
-    <div class="mes"><button class="ghost" id="mPrev" aria-label="M&#xea;s anterior">&#x2039;</button><b id="mesLabel"></b><button class="ghost" id="mNext" aria-label="M&#xea;s seguinte">&#x203a;</button></div>
-    <div class="grow"></div>
-    <div class="meter" id="meter" title="Parqu&#xed;metro">
-        <span class="lbl">Parqu&#xed;metro</span>
+<div class="meter" id="meter" title="Parqu&#xed;metro">
+        <span class="lbl pk" aria-hidden="true">P</span>
         <span class="time" id="meterTime">--:--</span>
         <span class="bar"><i id="meterBar"></i></span>
         <span class="end" id="meterEnd"></span>
@@ -259,13 +276,20 @@ tbody tr:hover td{background:var(--sunk)}
         <button id="stopMeter" aria-label="Parar">&#x25a0;</button>
         <button id="stopAlarm" class="stopA" hidden>Parar alarme</button>
       </div>
+    <button class="nav theme" id="themeBtn" title="Mudar entre dia e noite"></button>
+    <button class="nav gear" data-tab="cfg" aria-label="Configura&#xe7;&#xf5;es" title="Configura&#xe7;&#xf5;es"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+  </div>
+  <div class="top-2">
+    <div class="mes"><button class="ghost" id="mPrev" aria-label="M&#xea;s anterior">&#x2039;</button><b id="mesLabel"></b><button class="ghost" id="mNext" aria-label="M&#xea;s seguinte">&#x203a;</button></div>
+    <div class="grow"></div>
+
   </div>
 </header>
 <div class="content">
       <!-- DASHBOARD -->
       <section id="tab-dash" class="tabpane" style="display:flex;flex-direction:column;gap:24px">
         <div>
-          <div class="sec-head"><h2>Indicadores do m&#xea;s</h2><button class="ghost" data-goto="calc">Abrir calculadoras &#x203a;</button></div>
+          <div class="sec-head"><h2>Indicadores do m&#xea;s</h2><span class="sub">Clica num indicador para o atualizar</span></div>
           <div class="kpis" id="kpis"></div>
         </div>
         <div class="dash-grid">
@@ -273,21 +297,24 @@ tbody tr:hover td{background:var(--sunk)}
             <div class="sec-head"><h2 id="orgTitle"></h2><span class="sub" id="orgCount"></span></div>
             <div class="groups" id="groups"></div>
           </div>
+          <div>
+          <div class="sec-head"><h2>Tarefas</h2><span class="sub" id="taskCount"></span></div>
           <div class="card tasks-card">
-            <div class="sec-head"><h2>Tarefas</h2><button class="ghost" id="clearDone">Limpar feitas</button></div>
+            <div class="sec-head"><b style="font-family:var(--f-display);font-size:18px;font-weight:700">Para fazer</b><button class="ghost" id="clearDone">Limpar feitas</button></div>
             <form class="row" id="taskForm" style="margin-bottom:6px">
               <input id="taskInput" placeholder="Nova tarefa&#x2026;" autocomplete="off">
               <button class="primary" type="submit">Adicionar</button>
             </form>
             <ul class="tasks" id="taskList"></ul>
           </div>
+          </div>
         </div>
       </section>
 
-      <!-- CALCULADORAS -->
-      <section id="tab-calc" class="tabpane" hidden>
+      <!-- CALCULADORAS (janela) -->
+      <div id="tab-calc" class="modal" hidden role="dialog" aria-modal="true"><div class="modal-box">
         <div class="calcs">
-          <div class="card calc c-nps">
+          <div class="card calc c-nps" data-calc="nps">
             <div class="ch"><h2>NPS</h2><span class="sub">(Promotores &#x2212; Detratores) &#xf7; Total</span></div>
             <table>
               <thead><tr><th></th><th>Promotor</th><th>Neutro</th><th>Detrator</th><th>Total</th><th>NPS</th></tr></thead>
@@ -302,7 +329,7 @@ tbody tr:hover td{background:var(--sunk)}
             <div class="calc-acts"><span class="sub" style="margin-right:auto;align-self:center">Fechar dia soma o Hoje ao At&#xe9; ontem e limpa o Hoje.</span><button data-close="nps">Fechar dia</button></div>
           </div>
 
-          <div class="card calc c-iqs">
+          <div class="card calc c-iqs" data-calc="iqs">
             <div class="ch"><h2>IQS</h2><span class="sub">Qtd. IQS &#xf7; Fechadas</span></div>
             <table>
               <thead><tr><th></th><th>At&#xe9; ontem</th><th>Hoje</th><th>Total</th></tr></thead>
@@ -316,7 +343,7 @@ tbody tr:hover td{background:var(--sunk)}
             <div class="calc-acts"><button data-close="iqs">Fechar dia</button></div>
           </div>
 
-          <div class="card calc c-fh">
+          <div class="card calc c-fh" data-calc="fh">
             <div class="ch"><h2>Produtividade hora</h2><span class="sub">Tratadas &#xf7; Horas</span></div>
             <div class="fh-grid">
               <label class="f" for="horas">Horas trabalhadas<input id="horas" data-k="horas" type="number" min="0" step="0.5"></label>
@@ -325,30 +352,29 @@ tbody tr:hover td{background:var(--sunk)}
             <div class="big" id="fh-bigrow"><span>Produtividade</span><span class="verdict" id="fh-v"></span><b id="fh-r"></b></div>
           </div>
 
-          <div class="card calc c-ivr">
+          <div class="card calc c-ivr" data-calc="ivr">
             <div class="ch"><h2>IVR</h2><span class="ivr-legend"><span>Quantidade de respostas por nota</span><span class="down">0&#x2013;6</span><span class="up">9&#x2013;10</span></span></div>
             <div class="ivr" id="ivrGrid"></div>
             <div class="dist"><div class="db" id="ivr-bar"></div><div class="dl" id="ivr-leg"></div></div>
             <div class="big" id="ivr-bigrow"><span>Nota &#xb7; <span id="ivr-n" style="text-transform:none"></span></span><span class="verdict" id="ivr-v"></span><b id="ivr-r"></b></div>
           </div>
 
-          <div class="card calc c-vy">
-            <div class="ch"><h2>Valyou</h2><span class="sub">O Valyou atual &#xe9; introduzido &#xe0; m&#xe3;o at&#xe9; definirmos a f&#xf3;rmula.</span></div>
+          <div class="card calc c-vy" data-calc="vy">
+            <div class="ch"><h2>Valyou</h2><span class="sub">(Reinc. &#xd7; 0,2 + NPS &#xd7; 0,3 + IVR &#xd7; 0,2 + Prod. &#xd7; 0,3) &#xd7; 0,85 + Valyou equipa &#xd7; 0,15</span></div>
             <div class="vy-grid">
-              <label class="f" for="vy-r">N&#xed;vel reincid&#xea;ncia<input id="vy-r" data-k="vy.r" type="number" min="0" step="0.5"></label>
+              <label class="f" for="vy-r">N&#xed;vel reincid&#xea;ncia<input id="vy-r" data-k="vy.r" type="number" min="1" max="5" step="1"></label>
               <label class="f" for="vy-n">N&#xed;vel NPS (auto)<input id="vy-n" type="number" disabled title="Grau do NPS do m&#xea;s"></label>
               <label class="f" for="vy-i">N&#xed;vel IVR (auto)<input id="vy-i" type="number" disabled title="Grau do IVR do m&#xea;s"></label>
-              <label class="f" for="vy-p">N&#xed;vel produtividade (auto)<input id="vy-p" type="number" disabled title="Grau da produtividade hora do m&#xea;s"></label>
+              <label class="f" for="vy-p">N&#xed;vel produtividade<input id="vy-p" data-k="vy.p" type="number" min="1" max="5" step="1"></label>
               <span class="sep"></span>
               <label class="f" for="vy-eq">Valyou equipa<input id="vy-eq" data-k="vy.eq" type="number" step="0.01"></label>
-              <label class="f" for="vy-at">Valyou atual<input id="vy-at" data-k="vy.at" type="number" step="0.01"></label>
+              <label class="f" for="vy-at">Valyou atual (auto)<input id="vy-at" type="number" disabled></label>
             </div>
             <div class="big" id="vy-bigrow"><span>Valyou atual</span><span class="verdict" id="vy-v"></span><b id="vy-big"></b></div>
             <div class="sub" style="text-align:right">Diferen&#xe7;a para a equipa: <b id="vy-cmp" class="mono"></b></div>
           </div>
         </div>
-        <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="ghost" id="resetMonth">Limpar valores deste m&#xea;s</button></div>
-      </section>
+      </div></div>
 
       <!-- AVARIAS -->
       <section id="tab-av" class="tabpane" hidden style="flex-direction:column;gap:20px">
@@ -400,17 +426,30 @@ tbody tr:hover td{background:var(--sunk)}
             <h2>Objetivos dos indicadores</h2>
             <span class="sub">Cada indicador tem 5 graus: grau 1 (vermelho) &#xe9; o pior e grau 5 (verde) o melhor. Indica o valor a partir do qual come&#xe7;a cada grau.</span>
             <div class="tbl-wrap"><table class="goals"><thead><tr><th>Indicador</th><th>Grau 1</th><th>Grau 2 a partir de</th><th>Grau 3 a partir de</th><th>Grau 4 a partir de</th><th>Grau 5 a partir de</th></tr></thead><tbody id="goalRows"></tbody></table></div>
+            <div class="row" style="justify-content:flex-end"><button class="ghost" id="resetMonth">Limpar os valores dos indicadores deste m&#xea;s</button></div>
+          </div>
+          <div class="card" style="display:flex;flex-direction:column;gap:10px">
+            <h2>Alertas do parqu&#xed;metro</h2>
+            <span class="sub" id="notifStatus"></span>
+            <div class="row"><button class="primary" id="notifOn">Ativar alertas</button><button id="notifTest">Testar alerta</button></div>
+            <span class="sub">Os alertas aparecem mesmo com o Chrome minimizado ou noutro separador, desde que esta p&#xe1;gina esteja aberta. Se n&#xe3;o aparecerem, confirma que o modo "N&#xe3;o incomodar" do Windows est&#xe1; desligado.</span>
           </div>
           <div class="card" style="display:flex;flex-direction:column;gap:10px">
             <h2>C&#xf3;pia de seguran&#xe7;a</h2>
-            <span class="sub">Os dados ficam guardados s&#xf3; neste navegador, nunca no GitHub. Guarda um ficheiro de c&#xf3;pia no PC de vez em quando, e usa-o para restaurar ou passar os dados para outro computador.</span>
-            <div class="row" style="flex-wrap:wrap"><button class="primary" id="saveFile">Guardar ficheiro no PC</button><label class="btn-file" for="openFile">Restaurar de ficheiro<input type="file" id="openFile" accept=".json,application/json"></label></div>
-            <details><summary class="sub" style="cursor:pointer">C&#xf3;pia em texto</summary>
-              <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-                <textarea id="backupText" rows="4" placeholder="Cola aqui uma c&#xf3;pia para restaurar"></textarea>
-                <div class="row"><button id="exportBtn">Copiar como texto</button><button id="importBtn">Restaurar do texto</button></div>
-              </div>
-            </details>
+            <span class="sub">Os dados ficam guardados s&#xf3; neste navegador, nunca no GitHub. Faz uma c&#xf3;pia de vez em quando e guarda-a num ficheiro .txt no PC.</span>
+            <div class="bk-step"><b>1. Fazer c&#xf3;pia</b>
+              <div class="row" style="flex-wrap:wrap"><button class="primary" id="exportBtn">Copiar texto da c&#xf3;pia</button><button id="saveFile">Descarregar como .txt</button></div>
+              <span class="sub">"Copiar texto" p&#xf5;e a c&#xf3;pia na &#xe1;rea de transfer&#xea;ncia: cola-a no Bloco de Notas e guarda o .txt.</span>
+            </div>
+            <div class="bk-step"><b>2. Restaurar c&#xf3;pia</b>
+              <div class="row" style="flex-wrap:wrap"><label class="btn-file primary-file" for="openFile">Inserir ficheiro .txt<input type="file" id="openFile" accept=".txt,.json,text/plain,application/json"></label><span class="sub">ou cola o texto aqui em baixo</span></div>
+              <textarea id="backupText" rows="4" placeholder="Cola aqui o texto da c&#xf3;pia"></textarea>
+              <div class="row"><button id="importBtn">Restaurar do texto colado</button></div>
+            </div>
+            <div class="bk-step danger"><b>Apagar tudo</b>
+              <span class="sub">Apaga equipa, tarefas, indicadores, objetivos e avarias deste navegador. Faz uma c&#xf3;pia antes.</span>
+              <div class="row"><button class="btn-danger" id="wipeAll">Apagar tudo</button><button class="ghost" id="wipeCancel" hidden>Cancelar</button></div>
+            </div>
             <span id="importMsg" class="sub"></span>
           </div>
         </div>
@@ -444,7 +483,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2000)}
 
 /* Separadores */
-const TITLES={dash:'Dashboard',calc:'Calculadoras',av:'Avarias',cfg:'Configura\u00e7\u00f5es'};
+const TITLES={dash:'Dashboard',av:'Avarias',cfg:'Configura\u00e7\u00f5es'};
 document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>showTab(b.dataset.goto));
 function showTab(t){
@@ -473,31 +512,45 @@ function beep(f=880,ms=220){if(!actx)return;try{const o=actx.createOscillator(),
 [[15,'15'],[30,'30'],[60,'1h'],[90,'1h30'],[120,'2h']].forEach(([m,l])=>{const b=document.createElement('button');b.textContent=l;b.title=m+' minutos';b.onclick=()=>startMeter(m);$('presets').appendChild(b)});
 $('startCustom').onclick=()=>{const m=parseInt($('customMin').value);if(m>0){startMeter(m);$('customMin').value=''}else toast('Indica os minutos')};
 $('customMin').onkeydown=e=>{if(e.key==='Enter')$('startCustom').click()};
-$('add15').onclick=()=>{audio();if(S.meterEnd&&S.meterEnd>Date.now()){S.meterEnd+=15*60000;S.meterTotal+=15*60000;warned=false;save();tick()}else startMeter(15)};
-$('stopMeter').onclick=$('stopAlarm').onclick=()=>{S.meterEnd=null;save();stopAlarm();tick()};
-function startMeter(m){audio();stopAlarm();S.meterEnd=Date.now()+m*60000;S.meterTotal=m*60000;warned=false;save();tick();toast('Parqu\u00edmetro: '+m+' min')}
+$('add15').onclick=()=>{audio();if(S.meterEnd&&S.meterEnd>Date.now()){S.meterEnd+=15*60000;S.meterTotal+=15*60000;warned=false;S.meterWarned=null;save();schedule();tick()}else startMeter(15)};
+$('stopMeter').onclick=$('stopAlarm').onclick=()=>{S.meterEnd=null;save();stopAlarm();schedule();closeNotif();tick()};
+function startMeter(m){audio();askNotif();stopAlarm();closeNotif();S.meterEnd=Date.now()+m*60000;S.meterTotal=m*60000;warned=false;S.meterWarned=null;S.meterNotified=null;save();schedule();tick();toast('Parqu\u00edmetro: '+m+' min')}
+/* Alertas do Windows (notifica\u00e7\u00f5es do Chrome) */
+let lastNotif=null,tWarn=null,tEnd=null;
+const notifOK=()=>'Notification' in window&&Notification.permission==='granted';
+function askNotif(){try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission().then(renderNotifStatus)}catch(e){}}
+function notify(title,body,sticky){if(!notifOK())return;try{closeNotif();const n=new Notification(title,{body,tag:'parquimetro',renotify:true,requireInteraction:!!sticky});n.onclick=()=>{window.focus();n.close()};lastNotif=n}catch(e){}}
+function closeNotif(){try{lastNotif&&lastNotif.close()}catch(e){}lastNotif=null}
+function schedule(){clearTimeout(tWarn);clearTimeout(tEnd);if(!S.meterEnd)return;const left=S.meterEnd-Date.now();
+  if(left-5*60000>0)tWarn=setTimeout(tick,left-5*60000+50);if(left>0)tEnd=setTimeout(tick,left+50)}
+function renderNotifStatus(){const el=$('notifStatus');if(!el)return;
+  if(!('Notification' in window)){el.textContent='Este navegador n\u00e3o suporta alertas.';return}
+  const p=Notification.permission;
+  el.innerHTML=p==='granted'?'<span class="up">Ativos.</span> O Windows mostra um alerta aos 5 minutos e quando o tempo acaba.':p==='denied'?'<span class="down">Bloqueados.</span> Clica no cadeado ao lado do endere\u00e7o, em Notifica\u00e7\u00f5es escolhe Permitir e recarrega a p\u00e1gina.':'Ainda n\u00e3o ativados. Clica em Ativar alertas.'}
 function stopAlarm(){clearInterval(beepTimer);beepTimer=null;$('stopAlarm').hidden=true}
 function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':'+String(m).padStart(2,'0'):String(m).padStart(2,'0'))+':'+String(x).padStart(2,'0')}
 function tick(){
   const mt=$('meter');mt.classList.remove('low','done');
-  if(!S.meterEnd){$('meterTime').textContent='--:--';$('meterEnd').textContent='';$('meterBar').style.width='0';document.title='Gest\u00e3o de Campo';return}
+  if(!S.meterEnd){$('meterTime').textContent='--:--';$('meterEnd').textContent='';$('meterBar').style.width='0';document.title='Gest\u00e3o';return}
   const left=S.meterEnd-Date.now();
   $('meterEnd').textContent='at\u00e9 '+new Date(S.meterEnd).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
   if(left<=0){
     mt.classList.add('done');$('meterTime').textContent='00:00';$('meterBar').style.width='100%';document.title='\u23f0 Parqu\u00edmetro!';
+    if(S.meterNotified!==S.meterEnd){S.meterNotified=S.meterEnd;save();notify('\u23f0 Parqu\u00edmetro: o tempo acabou','Acabou \u00e0s '+new Date(S.meterEnd).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'})+'. Clica para abrir a Gest\u00e3o.',true)}
     if(!beepTimer){$('stopAlarm').hidden=false;beepTimer=setInterval(()=>{beep(988);setTimeout(()=>beep(740),260)},1200)}
     return;
   }
-  if(left<=5*60000){mt.classList.add('low');if(!warned){warned=true;beep(660,300);toast('Parqu\u00edmetro: faltam 5 minutos')}}
+  if(left<=5*60000){mt.classList.add('low');if(!warned){warned=true;beep(660,300);toast('Parqu\u00edmetro: faltam 5 minutos')}if(S.meterWarned!==S.meterEnd){S.meterWarned=S.meterEnd;save();notify('Parqu\u00edmetro: faltam 5 minutos','Acaba \u00e0s '+new Date(S.meterEnd).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'})+'.',false)}}
   $('meterTime').textContent=fmt(left);
   $('meterBar').style.width=(100*(1-left/(S.meterTotal||left)))+'%';
-  document.title=fmt(left)+' \u00b7 Gest\u00e3o de Campo';
+  document.title=fmt(left)+' \u00b7 Gest\u00e3o';
 }
 setInterval(tick,1000);
+schedule();
 
 /* Tarefas */
 function renderTasks(){
-  const l=$('taskList');
+  const l=$('taskList');const open=S.tasks.filter(t=>!t.done).length;$('taskCount').textContent=S.tasks.length?open+' por fazer \u00b7 '+(S.tasks.length-open)+' feitas':'';
   if(!S.tasks.length){l.innerHTML='<li class="empty">Sem tarefas.</li>';return}
   const sorted=[...S.tasks.filter(t=>!t.done),...S.tasks.filter(t=>t.done)];
   l.innerHTML=sorted.map(t=>`<li class="${t.done?'done':''}"><input type="checkbox" id="tk-${t.id}" data-id="${t.id}" ${t.done?'checked':''} aria-label="Feita"><label for="tk-${t.id}" class="txt">${esc(t.text)}</label><button class="icon" data-del="${t.id}" aria-label="Apagar">\u00d7</button></li>`).join('');
@@ -539,7 +592,7 @@ function renderGoals(){
 }
 $('goalRows').onchange=e=>{const t=e.target,g=S.goals[t.dataset.gk];if(!g)return;g.t[+t.dataset.gi]=parseFloat(t.value)||0;g.t.sort((a,b)=>a-b);save();renderGoals();renderCalcs()};
 function renderCfg(){
-  renderGoals();
+  renderGoals();renderNotifStatus();
   $('cfgOrg').value=S.org.name;
   $('cfgGroups').innerHTML=S.org.groups.map((g,i)=>`<div class="cfg-group">
     <label class="f" for="cfg-sup-${g.id}">Supervisor ${i+1}<input id="cfg-sup-${g.id}" data-g="${g.id}" data-f="sup" value="${esc(g.sup)}" autocomplete="off"></label>
@@ -551,6 +604,8 @@ let pendingDel=null;
 $('cfgGroups').onclick=e=>{const id=e.target.dataset.delg;if(!id)return;
   if(pendingDel!==id){pendingDel=id;e.target.textContent='Confirmar (apaga os utilizadores)';return}
   S.org.groups=S.org.groups.filter(g=>g.id!==id);pendingDel=null;save();renderCfg();renderOrg();toast('Supervisor removido')};
+$('notifOn').onclick=()=>{if(!('Notification' in window))return;Notification.requestPermission().then(()=>{renderNotifStatus();if(notifOK())toast('Alertas ativados')})};
+$('notifTest').onclick=()=>{if(!notifOK()){toast('Ativa primeiro os alertas');return}notify('Parqu\u00edmetro: teste','Assim aparece o alerta quando o tempo acabar.',false)};
 $('addGroup').onclick=()=>{const g={id:uid(),sup:'',name:'',rows:[]};S.org.groups.push(g);save();renderCfg();renderOrg();$('cfg-sup-'+g.id).focus()};
 $('cfgOrg').oninput=e=>{S.org.name=e.target.value;save();renderOrg()};
 $('cfgGroups').oninput=e=>{const g=S.org.groups.find(x=>x.id===e.target.dataset.g);if(!g)return;g[e.target.dataset.f]=e.target.value;save();renderOrg()};
@@ -573,8 +628,8 @@ $('tab-calc').addEventListener('input',e=>{
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{
   const m=M()[b.dataset.close];Object.keys(m.h).forEach(f=>{m.o[f]+=m.h[f];m.h[f]=0});save();fillCalcInputs();renderCalcs();toast('Dia fechado')});
 let resetArmed=false;
-$('resetMonth').onclick=e=>{if(!resetArmed){resetArmed=true;e.target.textContent='Clica de novo para limpar';setTimeout(()=>{resetArmed=false;e.target.textContent='Limpar valores deste m\u00eas'},3000);return}
-  S.months[curYM]=emptyMonth(curYM);resetArmed=false;e.target.textContent='Limpar valores deste m\u00eas';save();renderMonth();toast('M\u00eas limpo')};
+$('resetMonth').onclick=e=>{if(!resetArmed){resetArmed=true;e.target.textContent='Clica de novo para limpar';setTimeout(()=>{resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas'},3000);return}
+  S.months[curYM]=emptyMonth(curYM);resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas';save();renderMonth();toast('M\u00eas limpo')};
 const npsOf=x=>{const t=x.p+x.n+x.d;return{t,r:t?(x.p-x.d)/t:NaN}};
 function calcAll(){
   const m=M();
@@ -597,6 +652,29 @@ function face(st){
 const fmtG=(k,x)=>{const g=S.goals[k];return String(x).replace('.',',')+(g.u?' '+g.u:'')};
 function goalTxt(k,v){const g=S.goals[k],n=gradeOf(k,v);if(!n)return'Grau 5 a partir de '+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
   const next=g.t[n-1],d=next-v;return `Grau ${n+1} a partir de ${fmtG(k,next)} (faltam ${String(+d.toFixed(2)).replace('.',',')}${g.u?' '+g.u:''})`}
+/* Janela das calculadoras */
+const CNAME={nps:'NPS',iqs:'IQS',fh:'Produtividade hora',ivr:'IVR',vy:'Valyou'};
+let openKey=null;
+function openCalc(k){openKey=k;document.querySelectorAll('#tab-calc .calc').forEach(c=>c.hidden=c.dataset.calc!==k);$('tab-calc').hidden=false;
+  const f=document.querySelector(`#tab-calc .calc[data-calc="${k}"] input:not([disabled])`);f&&setTimeout(()=>f.focus(),30)}
+function closeCalc(){if($('tab-calc').hidden)return;$('tab-calc').hidden=true;const k=openKey;openKey=null;return k}
+document.querySelectorAll('#tab-calc .calc').forEach(c=>{
+  c.querySelector('.ch').insertAdjacentHTML('beforeend','<button class="x-close" data-xclose aria-label="Fechar">\u00d7</button>');
+  let a=c.querySelector('.calc-acts');if(!a){a=document.createElement('div');a.className='calc-acts';c.appendChild(a)}
+  a.insertAdjacentHTML('beforeend','<button class="primary" data-upd>Atualizar</button>');
+});
+$('tab-calc').addEventListener('click',e=>{
+  if(e.target===$('tab-calc')||e.target.closest('[data-xclose]')){closeCalc();return}
+  if(e.target.closest('[data-upd]')){save();renderCalcs();const k=closeCalc();toast(CNAME[k]+' atualizado');
+    const i=['nps','iqs','fh','ivr','vy'].indexOf(k),tile=$('kpis').children[i];if(tile){tile.classList.remove('flash');void tile.offsetWidth;tile.classList.add('flash')}}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCalc();if(e.key==='Enter'&&openKey&&e.target.matches('#tab-calc input'))document.querySelector(`#tab-calc .calc[data-calc="${openKey}"] [data-upd]`).click()});
+/* Dia / noite */
+function setTheme(dark){if(dark)document.documentElement.setAttribute('data-theme','dark');else document.documentElement.removeAttribute('data-theme');
+  try{localStorage.setItem('gestao-theme',dark?'dark':'light')}catch(e){}
+  $('themeBtn').textContent=dark?'\u2600\ufe0f Dia':'\u{1f311} Noite'}
+$('themeBtn').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')!=='dark');
+setTheme(document.documentElement.getAttribute('data-theme')==='dark');
 const steps=(st,n)=>`<span class="steps s-${st}">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span>`;
 function verdict(id,k,v){const st=stateOf(k,v);const el=$(id);el.className='verdict s-'+st;
   el.innerHTML=face(st)+`<span class="vt"><b>${LBL[st]}</b><small>${goalTxt(k,v)}</small></span>`;
@@ -615,7 +693,13 @@ function renderCalcs(){
   set('ivr-r',num(c.ivr,2));set('ivr-n',c.ivrN+' respostas');
   const eq=m.vy.eq,at=m.vy.at;
   if(eq!==''&&at!==''){const d=at-eq;$('vy-cmp').innerHTML=`<span class="${d>=0?'up':'down'}">${d>=0?'+':''}${num(d,2)}</span>`}else set('vy-cmp','\u2014');
-  const npsV=c.nt.r*100,iqsV=c.iqs.t*100,vyV=m.vy.at===''?NaN:+m.vy.at;
+  const npsV=c.nt.r*100,iqsV=c.iqs.t*100;
+  const gN=gradeOf('nps',npsV),gI=gradeOf('ivr',c.ivr);m.vy.n=gN||'';m.vy.i=gI||'';$('vy-n').value=gN||'';$('vy-i').value=gI||'';
+  const gP=gradeOf('fh',c.fh);$('vy-p').placeholder=gP?'Sugest\u00e3o: '+gP:'';
+  const nums=[m.vy.r,m.vy.n,m.vy.i,m.vy.p,m.vy.eq];
+  let vyV=nums.every(x=>x!==''&&x!=null&&isFinite(x))?((+m.vy.r)*0.2+(+m.vy.n)*0.3+(+m.vy.i)*0.2+(+m.vy.p)*0.3)*0.85+(+m.vy.eq)*0.15:NaN;
+  if(isFinite(vyV))vyV=Math.round(vyV*100+1e-6)/100;
+  m.vy.at=isFinite(vyV)?vyV:'';$('vy-at').value=isFinite(vyV)?vyV.toFixed(2):'';
   verdict('nps-v','nps',npsV);set('nps-big',pct(c.nt.r));
   verdict('iqs-v','iqs',iqsV);$('iqs-big').innerHTML=$('iqs-t-r').innerHTML;
   verdict('fh-v','fh',c.fh);verdict('ivr-v','ivr',c.ivr);verdict('vy-v','vy',vyV);set('vy-big',num(vyV,2));
@@ -625,13 +709,12 @@ function renderCalcs(){
   const iv=m.ivr,sum=(a,b)=>iv.slice(a,b+1).reduce((x,y)=>x+y,0);
   distBar('ivr-bar','ivr-leg',[{l:'9\u201310',v:sum(9,10),c:'p',col:'--ok'},{l:'7\u20138',v:sum(7,8),c:'n',col:'--warn'},{l:'0\u20136',v:sum(0,6),c:'d',col:'--bad'}]);
   document.querySelectorAll('[data-ivr]').forEach(i=>i.classList.toggle('has',+i.value>0));
-  const gN=gradeOf('nps',npsV),gI=gradeOf('ivr',c.ivr);m.vy.n=gN||'';m.vy.i=gI||'';$('vy-n').value=gN||'';$('vy-i').value=gI||'';const gP=gradeOf('fh',c.fh);m.vy.p=gP||'';$('vy-p').value=gP||'';
   const kv={nps:npsV,iqs:iqsV,fh:c.fh,ivr:c.ivr,vy:vyV};
   const k=[['NPS',pct(c.nt.r),c.nt.t+' respostas'],['IQS',pct(c.iqs.t),c.iqs.q+' IQS / '+c.iqs.f+' fechadas'],['Produtividade hora',num(c.fh,2),m.horas?(m.trat||0)+' tratadas \u00b7 '+m.horas+' h':'sem horas'],['IVR',num(c.ivr,2),c.ivrN+' respostas'],['Valyou',m.vy.at!==''?num(+m.vy.at,2):'\u2014',m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa']];
   const keys=['nps','iqs','fh','ivr','vy'];
   $('kpis').innerHTML=k.map(([l,v,sub],i)=>{const key=keys[i],val=kv[key],st=stateOf(key,val),n=gradeOf(key,val);
-    return `<button class="kpi s-${st}"><div class="kh"><span>${l}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small></button>`}).join('');
-  $('kpis').querySelectorAll('button').forEach(b=>b.onclick=()=>showTab('calc'));
+    return `<button class="kpi s-${st}"><div class="kh"><span>${l}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`}).join('');
+  $('kpis').querySelectorAll('button').forEach((b,i)=>b.onclick=()=>openCalc(keys[i]));
 }
 
 /* Avarias */
@@ -696,16 +779,23 @@ $('avCopySel').onclick=()=>copyRows(visibleAv().filter(a=>selected.has(a.id)));
 
 /* C\u00f3pia de seguran\u00e7a */
 function restore(d,src){if(!d||!d.org||!d.tasks)throw 0;S={...seed(),...d};S.avarias=(S.avarias||[]).filter(a=>'solic' in a||'ticket' in a);save();renderAll();renderCfg();$('importMsg').textContent='Dados restaurados'+(src?' de '+src:'')+'.'}
+const backupTxt=()=>JSON.stringify({app:'gestao',saved:new Date().toISOString(),...S,meterEnd:null});
 $('saveFile').onclick=()=>{
-  const txt=JSON.stringify({...S,meterEnd:null},null,1);
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'application/json'}));
-  a.download='gestao-campo-backup-'+iso(new Date())+'.json';document.body.appendChild(a);a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([backupTxt()],{type:'text/plain;charset=utf-8'}));
+  a.download='gestao-backup-'+iso(new Date())+'.txt';document.body.appendChild(a);a.click();
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast('C\u00f3pia guardada nas Transfer\u00eancias')};
 $('openFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();
-  rd.onload=()=>{try{restore(JSON.parse(rd.result),f.name)}catch(x){$('importMsg').textContent='Este ficheiro n\u00e3o \u00e9 uma c\u00f3pia desta p\u00e1gina.'}e.target.value=''};rd.readAsText(f)};
-$('exportBtn').onclick=()=>{const txt=JSON.stringify({...S,meterEnd:null});$('backupText').value=txt;
-  navigator.clipboard.writeText(txt).then(()=>toast('C\u00f3pia copiada'),()=>{$('backupText').select();toast('Seleciona e copia o texto')})};
-$('importBtn').onclick=()=>{try{restore(JSON.parse($('backupText').value))}catch(e){$('importMsg').textContent='O texto n\u00e3o \u00e9 uma c\u00f3pia v\u00e1lida desta p\u00e1gina.'}};
+  rd.onload=()=>{try{restore(JSON.parse(String(rd.result).trim()),f.name);toast('Dados restaurados')}catch(x){$('importMsg').textContent='Este ficheiro n\u00e3o tem uma c\u00f3pia v\u00e1lida desta p\u00e1gina.'}e.target.value=''};rd.readAsText(f)};
+$('exportBtn').onclick=()=>{const txt=backupTxt();$('backupText').value=txt;
+  navigator.clipboard.writeText(txt).then(()=>toast('C\u00f3pia copiada. Cola no Bloco de Notas e guarda como .txt'),()=>{$('backupText').select();toast('Seleciona o texto e copia com Ctrl+C')})};
+$('importBtn').onclick=()=>{try{restore(JSON.parse($('backupText').value.trim()));toast('Dados restaurados')}catch(e){$('importMsg').textContent='O texto n\u00e3o \u00e9 uma c\u00f3pia v\u00e1lida desta p\u00e1gina. Cola o texto completo.'}};
+let wipeArmed=false;
+$('wipeAll').onclick=()=>{
+  if(!wipeArmed){wipeArmed=true;$('wipeAll').textContent='Confirmar: apagar tudo';$('wipeAll').classList.add('armed');$('wipeCancel').hidden=false;return}
+  wipeArmed=false;S.meterEnd=null;stopAlarm();schedule();S=seed();save();$('backupText').value='';
+  $('wipeAll').textContent='Apagar tudo';$('wipeAll').classList.remove('armed');$('wipeCancel').hidden=true;
+  renderAll();renderCfg();$('importMsg').textContent='Todos os dados foram apagados.';toast('Tudo apagado')};
+$('wipeCancel').onclick=()=>{wipeArmed=false;$('wipeAll').textContent='Apagar tudo';$('wipeAll').classList.remove('armed');$('wipeCancel').hidden=true};
 
 function renderAll(){renderTasks();renderOrg();renderAv();renderMonth();tick()}
 renderAll();
