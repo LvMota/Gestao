@@ -117,7 +117,8 @@ tbody tr:hover td{background:var(--sunk)}
 .kpi:hover{color:inherit}.kpi:hover::before{transform:scaleX(1)}
 .kpi span{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .kpi b{font-family:var(--f-mono);font-size:34px;font-variant-numeric:tabular-nums;font-weight:600;line-height:1.15;color:var(--fg)}
-.kpi small{font-size:13px;color:var(--muted)}
+.kpi small{font-size:13px;color:var(--muted);overflow-wrap:anywhere;white-space:normal}
+.kpi{min-width:0}
 .dash-grid{display:grid;grid-template-columns:minmax(0,2.3fr) minmax(330px,1fr);gap:28px;align-items:start}
 .groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(440px,1fr));gap:18px}
 .group .gh b{font-family:var(--f-display);font-size:18px;font-weight:700}
@@ -269,6 +270,10 @@ tbody tr:hover td{background:var(--sunk)}
 .hist-tbl tbody tr{cursor:pointer}
 .gchip{display:inline-flex;align-items:baseline;gap:4px;font-family:var(--f-mono);font-weight:600;padding:3px 9px;border-radius:7px;background:var(--st-soft);color:var(--st)}
 .gchip small{font-family:var(--f-body);font-size:11px;font-weight:700;opacity:.8}
+.quip-head{display:inline-flex;align-items:center;gap:8px;background:var(--st-soft);color:var(--st);padding:4px 12px 4px 5px;border-radius:999px;font-weight:600;font-size:14px;min-width:0}
+.quip-head .face{width:26px;height:26px}
+.quip-head em{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quip-head small{font-family:var(--f-mono);font-weight:600;opacity:.75;white-space:nowrap}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
 <script>try{if(localStorage.getItem("gestao-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
@@ -309,7 +314,7 @@ tbody tr:hover td{background:var(--sunk)}
       <!-- DASHBOARD -->
       <section id="tab-dash" class="tabpane" style="display:flex;flex-direction:column;gap:24px">
         <div>
-          <div class="sec-head"><h2>Indicadores do m&#xea;s</h2><span class="sub">Clica num indicador para o atualizar</span></div>
+          <div class="sec-head"><div class="row" style="gap:14px;min-width:0"><h2>Indicadores do m&#xea;s</h2><span id="vyQuip" class="quip-head"></span></div><span class="sub">Clica num indicador para o atualizar</span></div>
           <div class="kpis" id="kpis"></div>
         </div>
         <div class="dash-grid">
@@ -732,7 +737,7 @@ function quip(k,n){if(!n)return'Sem n\u00fameros ainda. Mete l\u00e1 os valores,
   const L=QUIPS[n],seed=(new Date().toDateString()+k).split('').reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);return L[seed%L.length]}
 const steps=(st,n)=>`<span class="steps s-${st}">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span>`;
 function verdict(id,k,v){const st=stateOf(k,v);const el=$(id);el.className='verdict s-'+st;const nd=needFor(k);
-  el.innerHTML=face(st)+`<span class="vt"><b>${LBL[st]}</b><small>${goalTxt(k,v)}${nd&&nd.downTxt?' \u00b7 '+nd.downTxt:''}</small><em class="quip">\u201c${quip(k,gradeOf(k,v))}\u201d</em></span>`;
+  el.innerHTML=face(st)+`<span class="vt"><b>${LBL[st]}</b><small>${goalTxt(k,v)}${nd&&nd.downTxt?' \u00b7 '+nd.downTxt:''}</small></span>`;
   const row=el.closest('.big');row.className='big s-'+st;el.closest('.calc').className=el.closest('.calc').className.replace(/ s-\w+/g,'')+' s-'+st;return st}
 function distBar(bar,leg,parts){const tot=parts.reduce((a,p)=>a+p.v,0);
   $(bar).innerHTML=tot?parts.map(p=>`<i class="${p.c}" style="width:${p.v/tot*100}%" title="${p.l}: ${p.v}"></i>`).join(''):'';
@@ -757,7 +762,7 @@ function renderCalcs(){
   m.vy.at=isFinite(vyV)?vyV:'';$('vy-at').value=isFinite(vyV)?vyV.toFixed(2):'';
   verdict('nps-v','nps',npsV);set('nps-big',pct(c.nt.r));
   verdict('iqs-v','iqs',iqsV);$('iqs-big').innerHTML=$('iqs-t-r').innerHTML;
-  verdict('fh-v','fh',c.fh);verdict('ivr-v','ivr',c.ivr);verdict('vy-v','vy',vyV);set('vy-big',num(vyV,2));
+  verdict('fh-v','fh',c.fh);verdict('ivr-v','ivr',c.ivr);verdict('vy-v','vy',vyV);{const st=stateOf('vy',vyV);$('vyQuip').className='quip-head s-'+st;$('vyQuip').innerHTML=face(st)+`<em>\u201c${quip('vy',gradeOf('vy',vyV))}\u201d</em><small>Valyou ${isFinite(vyV)?num(vyV,2):'\u2014'}</small>`}set('vy-big',num(vyV,2));
   [['nps-h-r',c.nh.r*100,'nps'],['nps-o-r',c.no.r*100,'nps'],['nps-t-r',npsV,'nps'],['iqs-o-r',c.iqs.o*100,'iqs'],['iqs-h-r',c.iqs.h*100,'iqs'],['iqs-t-r',iqsV,'iqs']].forEach(([id,v,k])=>{const e=$(id);e.classList.remove('s-g1','s-g2','s-g3','s-g4','s-g5','s-none');e.classList.add('s-'+stateOf(k,v))});
   const P=m.nps.h.p+m.nps.o.p,N=m.nps.h.n+m.nps.o.n,D=m.nps.h.d+m.nps.o.d;
   distBar('nps-bar','nps-leg',[{l:'Promotores',v:P,c:'p',col:'--ok'},{l:'Neutros',v:N,c:'n',col:'--warn'},{l:'Detratores',v:D,c:'d',col:'--bad'}]);
@@ -768,7 +773,7 @@ function renderCalcs(){
   const k=[['NPS',pct(c.nt.r),c.nt.t+' respostas'],['IQS',pct(c.iqs.t),c.iqs.q+' IQS / '+c.iqs.f+' fechadas'],['Produtividade hora',num(c.fh,2),m.horas?(m.trat||0)+' tratadas \u00b7 '+m.horas+' h':'sem horas'],['IVR',num(c.ivr,2),c.ivrN+' respostas'],['Valyou',m.vy.at!==''?num(+m.vy.at,2):'\u2014',m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa']];
   const keys=['nps','iqs','fh','ivr','vy'];
   $('kpis').innerHTML=k.map(([l,v,sub],i)=>{const key=keys[i],val=kv[key],st=stateOf(key,val),n=gradeOf(key,val);
-    return `<button class="kpi s-${st}"><div class="kh"><span>${l}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><em class="quip">\u201c${quip(key,n)}\u201d</em><span class="tap">Atualizar \u203a</span></button>`}).join('');
+    return `<button class="kpi s-${st}"><div class="kh"><span>${l}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`}).join('');
   $('kpis').querySelectorAll('button').forEach((b,i)=>b.onclick=()=>openCalc(keys[i]));
 }
 
