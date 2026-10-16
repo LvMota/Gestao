@@ -56,7 +56,7 @@ header.top{position:sticky;top:0;z-index:5;background:var(--head);color:var(--he
 .mes .today-btn{margin-left:10px;padding:5px 12px;border-radius:999px;background:var(--accent-soft);border-color:transparent;color:var(--accent);font-size:13px}
 .mes .today-btn:hover{background:var(--accent);color:var(--accent-fg)}
 .meter .mt-lbl{font-size:12px;font-weight:700;color:var(--head-muted);margin-left:4px}
-.meter input[type=time]{width:128px;font-size:15px;padding:4px 10px}
+.meter #meterAt{width:76px;text-align:center;font-size:15px;padding:4px 10px}
 .meter .mt-go{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-family:var(--f-body);font-weight:700;padding:4px 14px}
 .meter .mt-go:hover{color:var(--accent-fg);filter:brightness(1.08)}
 .meter .pk{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:5px;background:var(--accent);color:var(--accent-fg)!important;font-family:var(--f-display);font-size:14px!important;letter-spacing:0!important;margin-right:2px!important}
@@ -280,6 +280,12 @@ tbody tr:hover td{background:var(--sunk)}
 .quip-head .face{width:26px;height:26px}
 .quip-head em{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .quip-head small{font-family:var(--f-mono);font-weight:600;opacity:.75;white-space:nowrap}
+.man-row{display:grid;grid-template-columns:200px 1fr auto 160px;gap:14px;align-items:end;padding:12px 14px;border-radius:10px;background:var(--sunk)}
+.man-row input{font-family:var(--f-mono);font-size:16px;background:var(--surface)}
+.man-badge{display:none;font-size:12px;font-weight:700;color:var(--accent-fg);background:var(--accent);padding:4px 10px;border-radius:999px;white-space:nowrap;align-self:center}
+.calc.is-man .man-badge{display:inline-block}
+.calc.is-man .man-row,.calc.is-fix .man-row{background:var(--accent-soft)}
+.calc.is-fix [data-mgr]{border-color:var(--accent);color:var(--accent);font-weight:700}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
 <script>try{if(localStorage.getItem("gestao-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
@@ -300,7 +306,7 @@ tbody tr:hover td{background:var(--sunk)}
         <span class="bar"><i id="meterBar"></i></span>
         <span class="end" id="meterEnd"></span>
         <label class="mt-lbl" for="meterAt">Acaba &#xe0;s</label>
-        <input id="meterAt" type="time" aria-label="Hora a que acaba o estacionamento">
+        <input id="meterAt" type="text" inputmode="numeric" maxlength="5" placeholder="16:00" autocomplete="off" aria-label="Hora a que acaba o estacionamento (24 horas)">
         <button id="meterSet" class="mt-go">Avisar</button>
         <button id="stopMeter" aria-label="Cancelar" title="Cancelar">&#x25a0;</button>
         <button id="stopAlarm" class="stopA" hidden>Parar alarme</button>
@@ -512,7 +518,7 @@ const ptDate=d=>d?d.split('-').reverse().join('/'):'';
 function lastSaturday(d=new Date()){const x=new Date(d);x.setDate(x.getDate()-((x.getDay()+1)%7));return iso(x)}
 function weekdaysIn(ym){const [y,m]=ym.split('-').map(Number);let n=0;for(let d=new Date(y,m-1,1);d.getMonth()===m-1;d.setDate(d.getDate()+1)){const w=d.getDay();if(w&&w<6)n++}return n}
 
-const emptyMonth=ym=>({diasTrab:weekdaysIn(ym),diasFeitos:0,nps:{h:{p:0,n:0,d:0},o:{p:0,n:0,d:0}},iqs:{h:{f:0,q:0},o:{f:0,q:0}},horas:0,trat:0,ivr:Array(11).fill(0),vy:{r:'',n:'',i:'',p:'',eq:'',at:''}});
+const emptyMonth=ym=>({diasTrab:weekdaysIn(ym),diasFeitos:0,nps:{h:{p:0,n:0,d:0},o:{p:0,n:0,d:0}},iqs:{h:{f:0,q:0},o:{f:0,q:0}},man:{nps:'',iqs:'',fh:'',ivr:'',vy:''},mgr:{nps:'',iqs:'',fh:'',ivr:'',vy:''},horas:0,trat:0,ivr:Array(11).fill(0),vy:{r:'',n:'',i:'',p:'',eq:'',at:''}});
 const GOALS0={nps:{n:'NPS',u:'%',t:[65,72.5,80,87.5]},iqs:{n:'IQS',u:'%',t:[40,42.5,45,47.5]},fh:{n:'Produtividade hora',u:'',t:[1.6,2,2.6,4]},ivr:{n:'IVR',u:'',t:[9,9.15,9.45,9.6]},vy:{n:'Valyou',u:'',t:[2.5,3,3.5,4]}};
 const seed=()=>({goalsV:3,goals:JSON.parse(JSON.stringify(GOALS0)),tasks:[],org:{name:'',groups:[]},avarias:[],months:{},meterEnd:null,meterTotal:0});
 let S;
@@ -555,8 +561,12 @@ function renderMonth(){
 let actx=null,beepTimer=null,warned=false;
 function audio(){try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume()}catch(e){}}
 function beep(){} /* sem som: alerta s\u00f3 visual e notifica\u00e7\u00e3o */
-function setMeterAt(){const v=$('meterAt').value;if(!v){toast('Escolhe a hora a que acaba o estacionamento');return}
-  const [h,mi]=v.split(':').map(Number),d=new Date();d.setHours(h,mi,0,0);
+const hhmm=d=>String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+$('meterAt').addEventListener('input',e=>{let d=e.target.value.replace(/\D/g,'').slice(0,4);e.target.value=d.length>2?d.slice(0,2)+':'+d.slice(2):d});
+function setMeterAt(){const raw=$('meterAt').value.replace(/\D/g,'');if(!raw){toast('Escreve a hora a que acaba o estacionamento, por exemplo 16:00');return}
+  const h=raw.length<=2?+raw:+raw.slice(0,raw.length-2),mi=raw.length<=2?0:+raw.slice(-2);
+  if(h>23||mi>59){toast('Hora inv\u00e1lida. Usa o formato 24 horas, por exemplo 16:00');return}
+  const v=String(h).padStart(2,'0')+':'+String(mi).padStart(2,'0');$('meterAt').value=v;const d=new Date();d.setHours(h,mi,0,0);
   if(d.getTime()<=Date.now()){toast('Essa hora j\u00e1 passou');return}
   askNotif();stopAlarm();closeNotif();S.meterEnd=d.getTime();S.meterTotal=S.meterEnd-Date.now();warned=false;S.meterWarned=null;S.meterNotified=null;save();schedule();tick();
   toast('Aviso marcado para as '+v)}
@@ -582,7 +592,7 @@ function tick(){
   const mt=$('meter');mt.classList.remove('low','done');
   if(!S.meterEnd){$('meterTime').textContent='--:--';$('meterEnd').textContent='';$('meterBar').style.width='0';document.title='Gest\u00e3o';return}
   const left=S.meterEnd-Date.now();
-  $('meterEnd').textContent='';const hhmm=new Date(S.meterEnd).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});if(document.activeElement!==$('meterAt')&&$('meterAt').value!==hhmm)$('meterAt').value=hhmm;
+  $('meterEnd').textContent='';const hm=hhmm(new Date(S.meterEnd));if(document.activeElement!==$('meterAt')&&$('meterAt').value!==hm)$('meterAt').value=hm;
   if(left<=0){
     mt.classList.add('done');$('meterTime').textContent='00:00';$('meterBar').style.width='100%';document.title='\u23f0 Parqu\u00edmetro!';
     if(S.meterNotified!==S.meterEnd){S.meterNotified=S.meterEnd;save();notify('\u23f0 Parqu\u00edmetro: o tempo acabou','Acabou \u00e0s '+new Date(S.meterEnd).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'})+'. Clica para abrir a Gest\u00e3o.',true)}
@@ -666,9 +676,15 @@ function setK(o,k,v){const ps=k.split('.');const last=ps.pop();ps.reduce((a,p)=>
 function fillCalcInputs(){
   document.querySelectorAll('#tab-calc [data-k]').forEach(i=>{const v=getK(M(),i.dataset.k);i.value=i.dataset.k.startsWith('vy')?v:(v||'')});
   document.querySelectorAll('[data-ivr]').forEach(i=>i.value=M().ivr[i.dataset.ivr]||'');
+  document.querySelectorAll('[data-mgr]').forEach(i=>{i.value=(M().mgr||{})[i.dataset.mgr]||''});
+  document.querySelectorAll('[data-man]').forEach(i=>{const v=(M().man||{})[i.dataset.man];i.value=v===''||v==null?'':v});
 }
+$('tab-calc').addEventListener('change',e=>{if(e.target.dataset.mgr){M().mgr=M().mgr||{};M().mgr[e.target.dataset.mgr]=e.target.value;save();renderCalcs()}});
 $('tab-calc').addEventListener('input',e=>{
   const t=e.target;
+  if(t.dataset.mgr){M().mgr=M().mgr||{};M().mgr[t.dataset.mgr]=t.value;save();renderCalcs();return}
+  if(t.dataset.man){const k=t.dataset.man;M().man=M().man||{};M().man[k]=t.value===''?'':parseFloat(t.value);save();renderCalcs();return}
+  {const card=t.closest('.calc');if(card&&(t.dataset.k||t.dataset.ivr)&&t.value!==''){const k=card.dataset.calc,mm=M();mm.man=mm.man||{};if(mm.man[k]!==''&&mm.man[k]!=null){mm.man[k]='';const mi=card.querySelector('[data-man]');if(mi)mi.value='';toast('Valor manual apagado: a usar o c\u00e1lculo autom\u00e1tico')}}}
   if(t.dataset.k){setK(M(),t.dataset.k,t.dataset.k.startsWith('vy')?(t.value===''?'':parseFloat(t.value)):(parseFloat(t.value)||0))}
   else if(t.dataset.ivr){M().ivr[+t.dataset.ivr]=parseInt(t.value)||0}
   else return;
@@ -679,7 +695,8 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{
 let resetArmed=false;
 $('resetMonth').onclick=e=>{if(!resetArmed){resetArmed=true;e.target.textContent='Clica de novo para limpar';setTimeout(()=>{resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas'},3000);return}
   S.months[curYM]=emptyMonth(curYM);resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas';save();renderMonth();toast('M\u00eas limpo')};
-function vyOf(m,c){const n=gradeOf('nps',c.nt.r*100),i=gradeOf('ivr',c.ivr);const xs=[m.vy.r,n||'',i||'',m.vy.p,m.vy.eq];
+const manV=(m,k)=>{const v=(m.man||{})[k];return v!==''&&v!=null&&isFinite(v)?+v:null};
+function vyOf(m,c){const mv=manV(m,'vy');if(mv!=null)return mv;const n=gradeOf('nps',c.eff.nps),i=gradeOf('ivr',c.eff.ivr);const xs=[m.vy.r,n||'',i||'',m.vy.p,m.vy.eq];
   if(!xs.every(x=>x!==''&&x!=null&&isFinite(x)))return NaN;const v=((+m.vy.r)*0.2+n*0.3+i*0.2+(+m.vy.p)*0.3)*0.85+(+m.vy.eq)*0.15;return Math.round(v*100+1e-6)/100}
 const npsOf=x=>{const t=x.p+x.n+x.d;return{t,r:t?(x.p-x.d)/t:NaN}};
 function calcAll(){return calcFor(M())}
@@ -689,10 +706,13 @@ function calcFor(m){
   const iqs={o:m.iqs.o.f?m.iqs.o.q/m.iqs.o.f:NaN,h:m.iqs.h.f?m.iqs.h.q/m.iqs.h.f:NaN,t:iF?iQ/iF:NaN,f:iF,q:iQ};
   const fh=m.horas?(m.trat||0)/m.horas:NaN;
   const ivrN=m.ivr.reduce((a,b)=>a+b,0),ivr=ivrN?m.ivr.reduce((a,c,i)=>a+c*i,0)/ivrN:NaN;
-  return{m,nh,no,nt,iqs,fh,ivr,ivrN};
+  const isMan={},eff={};[['nps',nt.r*100],['iqs',iqs.t*100],['fh',fh],['ivr',ivr]].forEach(([k,a])=>{const v=manV(m,k);isMan[k]=v!=null;eff[k]=v!=null?v:a});
+  isMan.vy=manV(m,'vy')!=null;
+  return{m,nh,no,nt,iqs,fh,ivr,ivrN,eff,isMan};
 }
 /* Estados e carinhas */
-function gradeOf(k,v){const g=S.goals[k];if(!g||!isFinite(v))return 0;return 1+g.t.filter(x=>v>=x).length}
+let GO=null;const mgrOf=(k,o=GO)=>{const x=o&&o[k];return x!==''&&x!=null&&isFinite(x)?Math.min(5,Math.max(1,Math.round(+x))):0};
+function gradeOf(k,v){const fx=mgrOf(k);if(fx)return fx;const g=S.goals[k];if(!g||!isFinite(v))return 0;return 1+g.t.filter(x=>v>=x).length}
 function stateOf(k,v){const n=gradeOf(k,v);return n?'g'+n:'none'}
 const WORD=['Sem dados','Muito mau','Mau','Razo\u00e1vel','Bom','Excelente'];
 const LBL={none:'Sem dados',g1:'Grau 1 \u00b7 Muito mau',g2:'Grau 2 \u00b7 Mau',g3:'Grau 3 \u00b7 Razo\u00e1vel',g4:'Grau 4 \u00b7 Bom',g5:'Grau 5 \u00b7 Excelente'};
@@ -701,7 +721,7 @@ function face(st){
   const m={g1:'<path class="m" d="M10.5 23.5 Q16 17 21.5 23.5"/><path class="m" d="M9 9.5 L13 11 M23 9.5 L19 11"/>',g2:'<path class="m" d="M11 22.5 Q16 19 21 22.5"/>',g3:'<path class="m" d="M11 21 H21"/>',g4:'<path class="m" d="M11 19.5 Q16 24 21 19.5"/>',g5:'<path class="mo" d="M9.5 18.5 Q16 28 22.5 18.5 Z"/>',none:'<path class="m" d="M12 21 H20"/>'}[st];
   return `<svg class="face s-${st}" viewBox="0 0 32 32" aria-hidden="true"><circle class="f" cx="16" cy="16" r="14"/>${eyes}${m}</svg>`}
 const fmtG=(k,x)=>{const g=S.goals[k];return String(x).replace('.',',')+(g.u?' '+g.u:'')};
-function needFor(k){const c=calcAll(),m=c.m,g=S.goals[k];
+function needFor(k){const c=calcAll(),m=c.m,g=S.goals[k];if(c.isMan[k]||mgrOf(k))return null;
   if(k==='nps'){const P=m.nps.h.p+m.nps.o.p,D=m.nps.h.d+m.nps.o.d,T=c.nt.t;if(!T)return null;const v=c.nt.r*100,n=gradeOf(k,v);const o={};
     if(n<5){const t=g.t[n-1]/100;o.up=t>=1?null:Math.max(1,Math.ceil((t*T-P+D)/(1-t)-1e-9));o.upTxt=o.up==null?'':`Faltam ${o.up} promotor${o.up>1?'es':''} seguido${o.up>1?'s':''} para o grau ${n+1}`}
     if(n>1){const L=g.t[n-2]/100;o.down=Math.max(0,Math.floor((P-D-L*T)/(1+L)+1e-9));o.downTxt=o.down?`Aguentas ${o.down} detrator${o.down>1?'es':''} sem descer de grau`:'Mais um detrator e desces de grau'}
@@ -711,7 +731,7 @@ function needFor(k){const c=calcAll(),m=c.m,g=S.goals[k];
     if(n>1){const L=g.t[n-2];o.down=Math.max(0,Math.floor(Sm/L-N+1e-9));o.downTxt=o.down?`Aguentas ${o.down} nota${o.down>1?'s':''} 0 sem descer de grau`:'Uma nota 0 agora e desces de grau'}
     return o}
   return null}
-function goalTxt(k,v){const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=S.goals[k],n=gradeOf(k,v);if(!n)return'Grau 5 a partir de '+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
+function goalTxt(k,v){if(mgrOf(k))return'Grau definido \u00e0 m\u00e3o';const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=S.goals[k],n=gradeOf(k,v);if(!n)return'Grau 5 a partir de '+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
   const next=g.t[n-1],d=next-v;return `Grau ${n+1} a partir de ${fmtG(k,next)} (faltam ${String(+d.toFixed(2)).replace('.',',')}${g.u?' '+g.u:''})`}
 /* Janela das calculadoras */
 const CNAME={nps:'NPS',iqs:'IQS',fh:'Produtividade hora',ivr:'IVR',vy:'Valyou'};
@@ -719,7 +739,9 @@ let openKey=null;
 function openCalc(k){openKey=k;document.querySelectorAll('#tab-calc .calc').forEach(c=>c.hidden=c.dataset.calc!==k);$('tab-calc').hidden=false;
   const f=document.querySelector(`#tab-calc .calc[data-calc="${k}"] input:not([disabled])`);f&&setTimeout(()=>f.focus(),30)}
 function closeCalc(){if($('tab-calc').hidden)return;$('tab-calc').hidden=true;const k=openKey;openKey=null;return k}
+const MANU={nps:['%','ex.: 72,5'],iqs:['%','ex.: 45,2'],fh:['','ex.: 2,3'],ivr:['','ex.: 9,3'],vy:['','ex.: 3,1']};
 document.querySelectorAll('#tab-calc .calc').forEach(c=>{
+  {const k=c.dataset.calc,[u,ph]=MANU[k];c.querySelector('.big').insertAdjacentHTML('beforebegin',`<div class="man-row"><label class="f" for="man-${k}">Resultado manual${u?' ('+u+')':''}<input id="man-${k}" data-man="${k}" type="number" step="0.01" placeholder="${ph}"></label><span class="sub">Escreve o resultado se n\u00e3o quiseres preencher os campos acima (preench\u00ea-los apaga o valor manual). O grau manual fica fixo mesmo que os crit\u00e9rios mudem.</span><span class="man-badge">\u270e A usar valor manual</span><label class="f" for="mgr-${k}">Grau manual<select id="mgr-${k}" data-mgr="${k}"><option value="">Autom\u00e1tico</option>${[1,2,3,4,5].map(n=>`<option value="${n}">Grau ${n}</option>`).join('')}</select></label></div>`)}
   c.querySelector('.ch').insertAdjacentHTML('beforeend','<button class="x-close" data-xclose aria-label="Fechar">\u00d7</button>');
   let a=c.querySelector('.calc-acts');if(!a){a=document.createElement('div');a.className='calc-acts';c.appendChild(a)}
   a.insertAdjacentHTML('beforeend','<button class="primary" data-upd>Atualizar</button>');
@@ -753,36 +775,41 @@ function distBar(bar,leg,parts){const tot=parts.reduce((a,p)=>a+p.v,0);
   $(bar).innerHTML=tot?parts.map(p=>`<i class="${p.c}" style="width:${p.v/tot*100}%" title="${p.l}: ${p.v}"></i>`).join(''):'';
   $(leg).innerHTML=parts.map(p=>`<span style="--c:var(${p.col})">${p.l} <b class="mono">${p.v}</b>${tot?` (${Math.round(p.v/tot*100)}%)`:''}</span>`).join('')}
 function renderCalcs(){
+  GO=M().mgr||{};
   const c=calcAll(),m=c.m,set=(id,v)=>$(id).textContent=v;
   set('nps-h-t',c.nh.t);set('nps-h-r',pct(c.nh.r));set('nps-o-t',c.no.t);set('nps-o-r',pct(c.no.r));
   set('nps-t-p',m.nps.h.p+m.nps.o.p);set('nps-t-n',m.nps.h.n+m.nps.o.n);set('nps-t-d',m.nps.h.d+m.nps.o.d);set('nps-t-t',c.nt.t);set('nps-t-r',pct(c.nt.r));
   set('iqs-t-f',c.iqs.f);set('iqs-t-q',c.iqs.q);set('iqs-o-r',pct(c.iqs.o));set('iqs-h-r',pct(c.iqs.h));
   const up=isFinite(c.iqs.t)&&isFinite(c.iqs.o)&&c.iqs.t!==c.iqs.o?(c.iqs.t>c.iqs.o):null;
   $('iqs-t-r').innerHTML=pct(c.iqs.t)+(up===null?'':` <span class="${up?'up':'down'}">${up?'\u25b2':'\u25bc'}</span>`);
-  set('fh-r',num(c.fh,2));
-  set('ivr-r',num(c.ivr,2));set('ivr-n',c.ivrN+' respostas');
+  set('fh-r',num(c.eff.fh,2));
+  set('ivr-r',num(c.eff.ivr,2));set('ivr-n',c.ivrN+' respostas');
   const eq=m.vy.eq,at=m.vy.at;
   if(eq!==''&&at!==''){const d=at-eq;$('vy-cmp').innerHTML=`<span class="${d>=0?'up':'down'}">${d>=0?'+':''}${num(d,2)}</span>`}else set('vy-cmp','\u2014');
-  const npsV=c.nt.r*100,iqsV=c.iqs.t*100;
-  const gN=gradeOf('nps',npsV),gI=gradeOf('ivr',c.ivr);m.vy.n=gN||'';m.vy.i=gI||'';$('vy-n').value=gN||'';$('vy-i').value=gI||'';
-  const gP=gradeOf('fh',c.fh);$('vy-p').placeholder=gP?'Sugest\u00e3o: '+gP:'';
+  const npsV=c.eff.nps,iqsV=c.eff.iqs,P2=v=>isFinite(v)?num(v,2)+' %':'\u2014';
+  const gN=gradeOf('nps',npsV),gI=gradeOf('ivr',c.eff.ivr);m.vy.n=gN||'';m.vy.i=gI||'';$('vy-n').value=gN||'';$('vy-i').value=gI||'';
+  const gP=gradeOf('fh',c.eff.fh);$('vy-p').placeholder=gP?'Sugest\u00e3o: '+gP:'';
   const nums=[m.vy.r,m.vy.n,m.vy.i,m.vy.p,m.vy.eq];
   let vyV=nums.every(x=>x!==''&&x!=null&&isFinite(x))?((+m.vy.r)*0.2+(+m.vy.n)*0.3+(+m.vy.i)*0.2+(+m.vy.p)*0.3)*0.85+(+m.vy.eq)*0.15:NaN;
   if(isFinite(vyV))vyV=Math.round(vyV*100+1e-6)/100;
+  if(c.isMan.vy)vyV=manV(m,'vy');
   m.vy.at=isFinite(vyV)?vyV:'';$('vy-at').value=isFinite(vyV)?vyV.toFixed(2):'';
-  verdict('nps-v','nps',npsV);set('nps-big',pct(c.nt.r));
-  verdict('iqs-v','iqs',iqsV);$('iqs-big').innerHTML=$('iqs-t-r').innerHTML;
-  verdict('fh-v','fh',c.fh);verdict('ivr-v','ivr',c.ivr);verdict('vy-v','vy',vyV);{const st=stateOf('vy',vyV);$('vyQuip').className='quip-head s-'+st;$('vyQuip').innerHTML=face(st)+`<em>\u201c${quip('vy',gradeOf('vy',vyV))}\u201d</em><small>Valyou ${isFinite(vyV)?num(vyV,2):'\u2014'}</small>`}set('vy-big',num(vyV,2));
+  verdict('nps-v','nps',npsV);set('nps-big',P2(npsV));
+  verdict('iqs-v','iqs',iqsV);if(c.isMan.iqs)set('iqs-big',P2(iqsV));else $('iqs-big').innerHTML=$('iqs-t-r').innerHTML;
+  verdict('fh-v','fh',c.eff.fh);verdict('ivr-v','ivr',c.eff.ivr);verdict('vy-v','vy',vyV);{const st=stateOf('vy',vyV);$('vyQuip').className='quip-head s-'+st;$('vyQuip').innerHTML=face(st)+`<em>\u201c${quip('vy',gradeOf('vy',vyV))}\u201d</em><small>Valyou ${isFinite(vyV)?num(vyV,2):'\u2014'}</small>`}set('vy-big',num(vyV,2));
   [['nps-h-r',c.nh.r*100,'nps'],['nps-o-r',c.no.r*100,'nps'],['nps-t-r',npsV,'nps'],['iqs-o-r',c.iqs.o*100,'iqs'],['iqs-h-r',c.iqs.h*100,'iqs'],['iqs-t-r',iqsV,'iqs']].forEach(([id,v,k])=>{const e=$(id);e.classList.remove('s-g1','s-g2','s-g3','s-g4','s-g5','s-none');e.classList.add('s-'+stateOf(k,v))});
   const P=m.nps.h.p+m.nps.o.p,N=m.nps.h.n+m.nps.o.n,D=m.nps.h.d+m.nps.o.d;
   distBar('nps-bar','nps-leg',[{l:'Promotores',v:P,c:'p',col:'--ok'},{l:'Neutros',v:N,c:'n',col:'--warn'},{l:'Detratores',v:D,c:'d',col:'--bad'}]);
   const iv=m.ivr,sum=(a,b)=>iv.slice(a,b+1).reduce((x,y)=>x+y,0);
   distBar('ivr-bar','ivr-leg',[{l:'9\u201310',v:sum(9,10),c:'p',col:'--ok'},{l:'7\u20138',v:sum(7,8),c:'n',col:'--warn'},{l:'0\u20136',v:sum(0,6),c:'d',col:'--bad'}]);
   document.querySelectorAll('[data-ivr]').forEach(i=>i.classList.toggle('has',+i.value>0));
-  const kv={nps:npsV,iqs:iqsV,fh:c.fh,ivr:c.ivr,vy:vyV};
-  const k=[['NPS',pct(c.nt.r),c.nt.t+' respostas'],['IQS',pct(c.iqs.t),c.iqs.q+' IQS / '+c.iqs.f+' fechadas'],['Produtividade hora',num(c.fh,2),m.horas?(m.trat||0)+' tratadas \u00b7 '+m.horas+' h':'sem horas'],['IVR',num(c.ivr,2),c.ivrN+' respostas'],['Valyou',m.vy.at!==''?num(+m.vy.at,2):'\u2014',m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa']];
+  const kv={nps:npsV,iqs:iqsV,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyV};
+  document.querySelectorAll('#tab-calc .calc').forEach(el=>{el.classList.toggle('is-man',!!c.isMan[el.dataset.calc]);el.classList.toggle('is-fix',!!mgrOf(el.dataset.calc))});
+  const MAN='\u270e valor manual';
+  const k=[['NPS',P2(npsV),c.isMan.nps?MAN:c.nt.t+' respostas'],['IQS',P2(iqsV),c.isMan.iqs?MAN:c.iqs.q+' IQS / '+c.iqs.f+' fechadas'],['Produtividade hora',num(c.eff.fh,2),c.isMan.fh?MAN:m.horas?(m.trat||0)+' tratadas \u00b7 '+m.horas+' h':'sem horas'],['IVR',num(c.eff.ivr,2),c.isMan.ivr?MAN:c.ivrN+' respostas'],['Valyou',num(vyV,2),c.isMan.vy?MAN:m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa']];
   const keys=['nps','iqs','fh','ivr','vy'];
   $('kpis').innerHTML=k.map(([l,v,sub],i)=>{const key=keys[i],val=kv[key],st=stateOf(key,val),n=gradeOf(key,val);
+    if(mgrOf(key))sub+=' \u00b7 \u270e grau fixo';
     return `<button class="kpi s-${st}"><div class="kh"><span>${l}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`}).join('');
   $('kpis').querySelectorAll('button').forEach((b,i)=>b.onclick=()=>openCalc(keys[i]));
 }
@@ -871,15 +898,15 @@ $('wipeCancel').onclick=()=>{wipeArmed=false;$('wipeAll').textContent='Apagar tu
 /* Hist\u00f3rico */
 const HK=[['nps','NPS'],['iqs','IQS'],['fh','Produtividade hora'],['ivr','IVR'],['vy','Valyou']];
 let histKey='nps';
-function monthVals(m){const c=calcFor(m);return{nps:c.nt.r*100,iqs:c.iqs.t*100,fh:c.fh,ivr:c.ivr,vy:vyOf(m,c)}}
+function monthVals(m){const prev=GO;GO=m.mgr||{};const c=calcFor(m),o={nps:c.eff.nps,iqs:c.eff.iqs,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyOf(m,c)};o.g={};o.fx={};HK.forEach(([k])=>{o.g[k]=gradeOf(k,o[k]);o.fx[k]=!!mgrOf(k)});GO=prev;return o}
 const fmtK=(k,v)=>!isFinite(v)?'\u2014':(k==='nps'||k==='iqs')?num(v,2)+' %':num(v,2);
 const mLabel=(ym,short)=>{const [y,mm]=ym.split('-').map(Number);return new Date(y,mm-1,1).toLocaleDateString('pt-PT',short?{month:'short',year:'2-digit'}:{month:'long',year:'numeric'})};
 function renderHist(){
   $('histSeg').innerHTML=HK.map(([k,l])=>`<button data-hk="${k}" class="${k===histKey?'on':''}">${l}</button>`).join('');
-  const rows=Object.keys(S.months).sort().map(ym=>({ym,v:monthVals(S.months[ym])})).filter(r=>HK.some(([k])=>isFinite(r.v[k])));
-  $('histBody').innerHTML=rows.length?rows.slice().reverse().map(r=>`<tr data-ym="${r.ym}"><td style="text-transform:capitalize;font-weight:700">${mLabel(r.ym)}</td>${HK.map(([k])=>{const st=stateOf(k,r.v[k]);return `<td><span class="gchip s-${st}">${fmtK(k,r.v[k])}${st!=='none'?` <small>G${st.slice(1)}</small>`:''}</span></td>`}).join('')}</tr>`).join('')
+  const rows=Object.keys(S.months).sort().map(ym=>({ym,v:monthVals(S.months[ym])})).filter(r=>HK.some(([k])=>isFinite(r.v[k])||r.v.g[k]));
+  $('histBody').innerHTML=rows.length?rows.slice().reverse().map(r=>`<tr data-ym="${r.ym}"><td style="text-transform:capitalize;font-weight:700">${mLabel(r.ym)}</td>${HK.map(([k])=>{const n=r.v.g[k],st=n?'g'+n:'none';return `<td><span class="gchip s-${st}">${fmtK(k,r.v[k])}${n?` <small>G${n}${r.v.fx[k]?' \u270e':''}</small>`:''}</span></td>`}).join('')}</tr>`).join('')
     :'<tr><td colspan="6" class="empty">Ainda n\u00e3o h\u00e1 meses com dados. Preenche os indicadores no dashboard.</td></tr>';
-  const pts=rows.map(r=>({ym:r.ym,v:r.v[histKey]})).filter(p=>isFinite(p.v));
+  const pts=rows.map(r=>({ym:r.ym,v:r.v[histKey],g:r.v.g[histKey]})).filter(p=>isFinite(p.v));
   const el=$('histChart');
   if(!pts.length){el.innerHTML='<div class="empty" style="padding:60px 0;text-align:center">Sem dados de '+HK.find(x=>x[0]===histKey)[1]+' em nenhum m\u00eas.</div>';return}
   const g=S.goals[histKey].t,W=1000,H=340,L=64,R=24,T=20,B=40;
@@ -890,7 +917,7 @@ function renderHist(){
     bands+=`<rect class="band s-g${i+1}" x="${L}" y="${y(b)}" width="${W-L-R}" height="${y(a)-y(b)}"/><text class="bl s-g${i+1}" x="${W-R-6}" y="${y(b)+14}" text-anchor="end">Grau ${i+1}</text>`}
   const ticks=g.map(t=>`<text class="ax" x="${L-8}" y="${y(t)+4}" text-anchor="end">${fmtK(histKey,t).replace(' %','%')}</text><line class="gl" x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}"/>`).join('');
   const line=pts.length>1?`<polyline class="ln" points="${pts.map((p,i)=>x(i)+','+y(p.v)).join(' ')}"/>`:'';
-  const dots=pts.map((p,i)=>{const st=stateOf(histKey,p.v);return `<circle class="dot s-${st}" cx="${x(i)}" cy="${y(p.v)}" r="7"/><text class="vl" x="${x(i)}" y="${y(p.v)-14}" text-anchor="middle">${fmtK(histKey,p.v)}</text><text class="ax" x="${x(i)}" y="${H-12}" text-anchor="middle">${mLabel(p.ym,true)}</text>`}).join('');
+  const dots=pts.map((p,i)=>{const st=p.g?'g'+p.g:'none';return `<circle class="dot s-${st}" cx="${x(i)}" cy="${y(p.v)}" r="7"/><text class="vl" x="${x(i)}" y="${y(p.v)-14}" text-anchor="middle">${fmtK(histKey,p.v)}</text><text class="ax" x="${x(i)}" y="${H-12}" text-anchor="middle">${mLabel(p.ym,true)}</text>`}).join('');
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolu\u00e7\u00e3o mensal">${bands}${ticks}${line}${dots}</svg>`;
 }
 $('histSeg').onclick=e=>{const k=e.target.dataset.hk;if(k){histKey=k;renderHist()}};
