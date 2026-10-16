@@ -610,6 +610,7 @@ document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>showTab(b.data
 function showTab(t){
   document.querySelectorAll('.nav').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===t));
   document.querySelectorAll('.tabpane').forEach(p=>{p.hidden=p.id!=='tab-'+t;if(!p.hidden&&p.id==='tab-av')p.style.display='flex'});
+  document.querySelector('.top-2').hidden=t!=='dash';
   if(t==='cfg')renderCfg();
   if(t==='hist')renderHist();
   try{localStorage.setItem(KEY+'-tab',t)}catch(e){}
@@ -866,8 +867,11 @@ document.querySelectorAll('#tab-calc .calc').forEach(c=>{
   let a=c.querySelector('.calc-acts');if(!a){a=document.createElement('div');a.className='calc-acts';c.appendChild(a)}
   a.insertAdjacentHTML('beforeend','<button class="primary" data-upd>Atualizar</button>');
 });
+let downOnBackdrop=false;
+$('tab-calc').addEventListener('mousedown',e=>{downOnBackdrop=e.target===$('tab-calc')});
 $('tab-calc').addEventListener('click',e=>{
-  if(e.target===$('tab-calc')||e.target.closest('[data-xclose]')){closeCalc();return}
+  if(e.target===$('tab-calc')){if(downOnBackdrop)closeCalc();downOnBackdrop=false;return}
+  if(e.target.closest('[data-xclose]')){closeCalc();return}
   if(e.target.closest('[data-upd]')){save();renderCalcs();const k=closeCalc();toast(CNAME[k]+' atualizado');
     const tile=document.querySelector(`.kpi[data-key="${k}"]`);if(tile){tile.classList.remove('flash');void tile.offsetWidth;tile.classList.add('flash')}}
 });
