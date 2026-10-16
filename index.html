@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Gest&#xe3;o</title>
+<link rel="icon" id="favicon" type="image/svg+xml" href="">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@500;600&display=swap">
 <style>
 /* Layout: cabe\e7 alho em duas faixas (marca + separadores; m\ea s + parqu\ed metro), conte\fa do a toda a largura; pain\e9 is com faixa de t\ed tulo azul como as tabelas do Excel */
@@ -286,6 +287,19 @@ tbody tr:hover td{background:var(--sunk)}
 .calc.is-man .man-badge{display:inline-block}
 .calc.is-man .man-row,.calc.is-fix .man-row{background:var(--accent-soft)}
 .calc.is-fix [data-mgr]{border-color:var(--accent);color:var(--accent);font-weight:700}
+.group td.cp{cursor:copy;user-select:none;border-radius:6px}
+.group td.cp:hover{background:var(--sunk)}
+.group td.copied{animation:cpf .8s ease-out}
+@keyframes cpf{0%{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}100%{background:transparent;box-shadow:none}}
+.goals-box summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px}
+.goals-box summary::-webkit-details-marker{display:none}
+.goals-box .chev{margin-left:auto;color:var(--muted);transition:transform .2s}
+.goals-box[open] .chev{transform:rotate(180deg)}
+.goals-in{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.goals-pick{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;padding:12px 14px;background:var(--sunk);border-radius:10px}
+.goals-pick label.f{width:200px}
+.goals-empty{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border:1px dashed var(--line);border-radius:10px}
+.mchip{padding:3px 10px;border-radius:999px;font-size:13px;text-transform:capitalize;background:var(--accent-soft);color:var(--accent);border-color:transparent;margin:2px}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
 <script>try{if(localStorage.getItem("gestao-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
@@ -470,9 +484,23 @@ tbody tr:hover td{background:var(--sunk)}
             <div class="row"><button id="addGroup">+ Adicionar supervisor</button><span class="sub">As altera&#xe7;&#xf5;es ficam guardadas logo.</span></div>
           </div>
           <div class="card" style="display:flex;flex-direction:column;gap:10px;grid-column:1/-1">
-            <h2>Objetivos dos indicadores</h2>
-            <span class="sub">Cada indicador tem 5 graus: grau 1 (vermelho) &#xe9; o pior e grau 5 (verde) o melhor. Indica o valor a partir do qual come&#xe7;a cada grau.</span>
-            <div class="tbl-wrap"><table class="goals"><thead><tr><th>Indicador</th><th>Grau 1</th><th>Grau 2 a partir de</th><th>Grau 3 a partir de</th><th>Grau 4 a partir de</th><th>Grau 5 a partir de</th></tr></thead><tbody id="goalRows"></tbody></table></div>
+            <details class="goals-box" id="goalsBox">
+              <summary><h2>Objetivos dos indicadores</h2><span class="sub" id="goalsSum"></span><span class="chev">&#x25be;</span></summary>
+              <div class="goals-in">
+                <span class="sub">Cada indicador tem 5 graus: grau 1 (vermelho) &#xe9; o pior e grau 5 (verde) o melhor. Os <b>objetivos padr&#xe3;o</b> valem para todos os meses. Se num m&#xea;s os crit&#xe9;rios forem diferentes, escolhe o ano e o m&#xea;s e cria objetivos s&#xf3; para esse m&#xea;s.</span>
+                <div class="goals-pick">
+                  <label class="f" for="gScope">Editar<select id="gScope"><option value="def">Objetivos padr&#xe3;o</option><option value="month">Um m&#xea;s espec&#xed;fico</option></select></label>
+                  <label class="f" for="gYear" id="gYearL" hidden>Ano<select id="gYear"></select></label>
+                  <label class="f" for="gMonth" id="gMonthL" hidden>M&#xea;s<select id="gMonth"></select></label>
+                  <span class="grow"></span>
+                  <span id="gState" class="sub"></span>
+                </div>
+                <div id="gEmpty" class="goals-empty" hidden><span>Este m&#xea;s usa os objetivos padr&#xe3;o.</span><button class="primary" id="gCreate">Criar objetivos para este m&#xea;s</button></div>
+                <div class="tbl-wrap" id="gTable"><table class="goals"><thead><tr><th>Indicador</th><th>Grau 1</th><th>Grau 2 a partir de</th><th>Grau 3 a partir de</th><th>Grau 4 a partir de</th><th>Grau 5 a partir de</th></tr></thead><tbody id="goalRows"></tbody></table></div>
+                <div class="row" id="gMonthActs" hidden><button class="ghost" id="gRemove">Remover objetivos deste m&#xea;s (voltar ao padr&#xe3;o)</button></div>
+                <div class="months-custom" id="gList"></div>
+              </div>
+            </details>
             <div class="row" style="justify-content:flex-end"><button class="ghost" id="resetMonth">Limpar os valores dos indicadores deste m&#xea;s</button></div>
           </div>
           <div class="card" style="display:flex;flex-direction:column;gap:10px">
@@ -590,6 +618,7 @@ function stopAlarm(){clearInterval(beepTimer);beepTimer=null;$('stopAlarm').hidd
 function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':'+String(m).padStart(2,'0'):String(m).padStart(2,'0'))+':'+String(x).padStart(2,'0')}
 function tick(){
   const mt=$('meter');mt.classList.remove('low','done');
+  setFav(!S.meterEnd?'ok':S.meterEnd-Date.now()<=0?'done':S.meterEnd-Date.now()<=5*60000?'low':'ok');
   if(!S.meterEnd){$('meterTime').textContent='--:--';$('meterEnd').textContent='';$('meterBar').style.width='0';document.title='Gest\u00e3o';return}
   const left=S.meterEnd-Date.now();
   $('meterEnd').textContent='';const hm=hhmm(new Date(S.meterEnd));if(document.activeElement!==$('meterAt')&&$('meterAt').value!==hm)$('meterAt').value=hm;
@@ -629,7 +658,7 @@ function renderOrg(){
   c.innerHTML=S.org.groups.map(g=>`<div class="card group">
     <div class="gh"><b>${esc(g.sup)||'Sem nome'}</b>${g.name?` <span class="sub">\u00b7 ${esc(g.name)}</span>`:''}</div>
     <div class="tbl-wrap"><table><thead><tr><th>User</th><th>Assistente</th><th>Email</th><th></th></tr></thead><tbody>
-      ${g.rows.map(r=>`<tr><td class="u">${esc(r.user)}</td><td>${esc(r.assist)}</td><td>${esc(r.email)}</td><td class="x"><button class="icon" data-delr="${g.id}|${r.id}" aria-label="Remover">\u00d7</button></td></tr>`).join('')||'<tr><td colspan="4" class="empty">Sem utilizadores</td></tr>'}
+      ${g.rows.map(r=>`<tr><td class="u cp" title="Duplo clique para copiar">${esc(r.user)}</td><td class="cp" title="Duplo clique para copiar">${esc(r.assist)}</td><td class="cp" title="Duplo clique para copiar">${esc(r.email)}</td><td class="x"><button class="icon" data-delr="${g.id}|${r.id}" aria-label="Remover">\u00d7</button></td></tr>`).join('')||'<tr><td colspan="4" class="empty">Sem utilizadores</td></tr>'}
     </tbody></table></div>
     <form class="addr" data-addr="${g.id}">
       <input name="u" placeholder="User" autocomplete="off" required>
@@ -638,6 +667,11 @@ function renderOrg(){
       <button type="submit">Adicionar</button>
     </form></div>`).join('');
 }
+function copyText(t){const done=()=>toast('Copiado: '+t);
+  try{navigator.clipboard.writeText(t).then(done,fb)}catch(e){fb()}
+  function fb(){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(x){toast('N\u00e3o foi poss\u00edvel copiar')}a.remove()}}
+$('groups').addEventListener('dblclick',e=>{const td=e.target.closest('td.cp');if(!td)return;const t=td.textContent.trim();if(!t)return;
+  window.getSelection&&window.getSelection().removeAllRanges();copyText(t);td.classList.remove('copied');void td.offsetWidth;td.classList.add('copied')});
 $('groups').onclick=e=>{const dr=e.target.dataset.delr;
   if(dr){const [gid,rid]=dr.split('|');const g=S.org.groups.find(x=>x.id===gid);g.rows=g.rows.filter(r=>r.id!==rid);save();renderOrg()}};
 $('groups').onsubmit=e=>{e.preventDefault();const f=e.target,g=S.org.groups.find(x=>x.id===f.dataset.addr);if(!g)return;
@@ -645,11 +679,39 @@ $('groups').onsubmit=e=>{e.preventDefault();const f=e.target,g=S.org.groups.find
   const nf=document.querySelector(`[data-addr="${g.id}"] input`);nf&&nf.focus()};
 
 /* Configura\u00e7\u00f5es */
+const MESES=['janeiro','fevereiro','mar\u00e7o','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+let gYM=null;
+const pnum=v=>parseFloat(String(v).replace(',','.'));
+function gTarget(){return $('gScope').value==='def'?S.goals:(S.goalsByMonth||{})[gYM]||null}
 function renderGoals(){
-  $('goalRows').innerHTML=Object.entries(S.goals).map(([k,g])=>`<tr><td>${g.n}</td><td class="sub">abaixo de ${fmtG(k,g.t[0])}</td>
-    ${g.t.map((v,i)=>`<td><input type="number" step="0.01" data-gk="${k}" data-gi="${i}" value="${v}" aria-label="${g.n} grau ${i+2}"></td>`).join('')}</tr>`).join('');
+  S.goalsByMonth=S.goalsByMonth||{};
+  const now=new Date();if(!gYM)gYM=curYM;
+  const [gy,gm]=gYM.split('-').map(Number);
+  const years=[];for(let y=now.getFullYear()+1;y>=now.getFullYear()-3;y--)years.push(y);
+  $('gYear').innerHTML=years.map(y=>`<option ${y===gy?'selected':''}>${y}</option>`).join('');
+  $('gMonth').innerHTML=MESES.map((n,i)=>`<option value="${i+1}" ${i+1===gm?'selected':''}>${n}</option>`).join('');
+  const isM=$('gScope').value==='month';
+  $('gYearL').hidden=$('gMonthL').hidden=!isM;
+  const tgt=gTarget();
+  $('gEmpty').hidden=!(isM&&!tgt);$('gTable').hidden=isM&&!tgt;$('gMonthActs').hidden=!(isM&&tgt);
+  $('gState').textContent=isM?(tgt?'Objetivos pr\u00f3prios de '+MESES[gm-1]+' '+gy:'Sem objetivos pr\u00f3prios'):'Valem para todos os meses sem objetivos pr\u00f3prios';
+  if(tgt)$('goalRows').innerHTML=Object.entries(tgt).map(([k,g])=>`<tr><td>${g.n}</td><td class="sub">abaixo de ${fmtG(k,g.t[0])}</td>
+    ${g.t.map((v,i)=>`<td><input type="text" inputmode="decimal" data-gk="${k}" data-gi="${i}" value="${String(v).replace('.',',')}" aria-label="${g.n} grau ${i+2}"></td>`).join('')}</tr>`).join('');
+  const keys=Object.keys(S.goalsByMonth).sort().reverse();
+  $('gList').innerHTML=keys.length?'<span class="sub">Meses com objetivos pr\u00f3prios:</span> '+keys.map(ym=>`<button class="mchip" data-gym="${ym}">${mLabel(ym)}</button>`).join(''):'';
+  const n=keys.length;$('goalsSum').textContent=n?`${n} m\u00eas${n>1?'es':''} com objetivos pr\u00f3prios`:'S\u00f3 objetivos padr\u00e3o';
 }
-$('goalRows').onchange=e=>{const t=e.target,g=S.goals[t.dataset.gk];if(!g)return;g.t[+t.dataset.gi]=parseFloat(t.value)||0;g.t.sort((a,b)=>a-b);save();renderGoals();renderCalcs()};
+$('gScope').onchange=renderGoals;
+$('gYear').onchange=$('gMonth').onchange=()=>{gYM=$('gYear').value+'-'+String($('gMonth').value).padStart(2,'0');renderGoals()};
+$('gList').onclick=e=>{const ym=e.target.dataset.gym;if(!ym)return;gYM=ym;$('gScope').value='month';renderGoals()};
+$('gCreate').onclick=()=>{S.goalsByMonth[gYM]=JSON.parse(JSON.stringify(S.goals));save();renderGoals();renderCalcs();renderHist();toast('Objetivos criados para '+mLabel(gYM)+'. J\u00e1 os podes alterar.')};
+let gRemArm=false;
+$('gRemove').onclick=e=>{if(!gRemArm){gRemArm=true;e.target.textContent='Clica de novo para remover';setTimeout(()=>{gRemArm=false;e.target.textContent='Remover objetivos deste m\u00eas (voltar ao padr\u00e3o)'},3000);return}
+  gRemArm=false;delete S.goalsByMonth[gYM];save();renderGoals();renderCalcs();renderHist();toast('Este m\u00eas volta a usar os objetivos padr\u00e3o')};
+$('goalRows').onchange=e=>{const t=e.target,tgt=gTarget();if(!tgt||!t.dataset.gk)return;const g=tgt[t.dataset.gk],v=pnum(t.value);
+  if(!isFinite(v)){toast('Valor inv\u00e1lido');renderGoals();return}
+  g.t[+t.dataset.gi]=v;const ok=g.t.every((x,i)=>i===0||x>=g.t[i-1]);
+  save();renderGoals();renderCalcs();renderHist();toast(ok?'Objetivo guardado':'Guardado, mas aten\u00e7\u00e3o: os valores dos graus devem ir aumentando')};
 function renderCfg(){
   renderGoals();renderNotifStatus();
   $('cfgOrg').value=S.org.name;
@@ -711,8 +773,10 @@ function calcFor(m){
   return{m,nh,no,nt,iqs,fh,ivr,ivrN,eff,isMan};
 }
 /* Estados e carinhas */
-let GO=null;const mgrOf=(k,o=GO)=>{const x=o&&o[k];return x!==''&&x!=null&&isFinite(x)?Math.min(5,Math.max(1,Math.round(+x))):0};
-function gradeOf(k,v){const fx=mgrOf(k);if(fx)return fx;const g=S.goals[k];if(!g||!isFinite(v))return 0;return 1+g.t.filter(x=>v>=x).length}
+let GO=null,GM=null;const GG=()=>GM||S.goals;
+const goalsFor=ym=>(S.goalsByMonth&&S.goalsByMonth[ym])||S.goals;
+const mgrOf=(k,o=GO)=>{const x=o&&o[k];return x!==''&&x!=null&&isFinite(x)?Math.min(5,Math.max(1,Math.round(+x))):0};
+function gradeOf(k,v){const fx=mgrOf(k);if(fx)return fx;const g=GG()[k];if(!g||!isFinite(v))return 0;return 1+g.t.filter(x=>v>=x).length}
 function stateOf(k,v){const n=gradeOf(k,v);return n?'g'+n:'none'}
 const WORD=['Sem dados','Muito mau','Mau','Razo\u00e1vel','Bom','Excelente'];
 const LBL={none:'Sem dados',g1:'Grau 1 \u00b7 Muito mau',g2:'Grau 2 \u00b7 Mau',g3:'Grau 3 \u00b7 Razo\u00e1vel',g4:'Grau 4 \u00b7 Bom',g5:'Grau 5 \u00b7 Excelente'};
@@ -721,7 +785,7 @@ function face(st){
   const m={g1:'<path class="m" d="M10.5 23.5 Q16 17 21.5 23.5"/><path class="m" d="M9 9.5 L13 11 M23 9.5 L19 11"/>',g2:'<path class="m" d="M11 22.5 Q16 19 21 22.5"/>',g3:'<path class="m" d="M11 21 H21"/>',g4:'<path class="m" d="M11 19.5 Q16 24 21 19.5"/>',g5:'<path class="mo" d="M9.5 18.5 Q16 28 22.5 18.5 Z"/>',none:'<path class="m" d="M12 21 H20"/>'}[st];
   return `<svg class="face s-${st}" viewBox="0 0 32 32" aria-hidden="true"><circle class="f" cx="16" cy="16" r="14"/>${eyes}${m}</svg>`}
 const fmtG=(k,x)=>{const g=S.goals[k];return String(x).replace('.',',')+(g.u?' '+g.u:'')};
-function needFor(k){const c=calcAll(),m=c.m,g=S.goals[k];if(c.isMan[k]||mgrOf(k))return null;
+function needFor(k){const c=calcAll(),m=c.m,g=GG()[k];if(c.isMan[k]||mgrOf(k))return null;
   if(k==='nps'){const P=m.nps.h.p+m.nps.o.p,D=m.nps.h.d+m.nps.o.d,T=c.nt.t;if(!T)return null;const v=c.nt.r*100,n=gradeOf(k,v);const o={};
     if(n<5){const t=g.t[n-1]/100;o.up=t>=1?null:Math.max(1,Math.ceil((t*T-P+D)/(1-t)-1e-9));o.upTxt=o.up==null?'':`Faltam ${o.up} promotor${o.up>1?'es':''} seguido${o.up>1?'s':''} para o grau ${n+1}`}
     if(n>1){const L=g.t[n-2]/100;o.down=Math.max(0,Math.floor((P-D-L*T)/(1+L)+1e-9));o.downTxt=o.down?`Aguentas ${o.down} detrator${o.down>1?'es':''} sem descer de grau`:'Mais um detrator e desces de grau'}
@@ -731,7 +795,7 @@ function needFor(k){const c=calcAll(),m=c.m,g=S.goals[k];if(c.isMan[k]||mgrOf(k)
     if(n>1){const L=g.t[n-2];o.down=Math.max(0,Math.floor(Sm/L-N+1e-9));o.downTxt=o.down?`Aguentas ${o.down} nota${o.down>1?'s':''} 0 sem descer de grau`:'Uma nota 0 agora e desces de grau'}
     return o}
   return null}
-function goalTxt(k,v){if(mgrOf(k))return'Grau definido \u00e0 m\u00e3o';const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=S.goals[k],n=gradeOf(k,v);if(!n)return'Grau 5 a partir de '+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
+function goalTxt(k,v){if(mgrOf(k))return'Grau definido \u00e0 m\u00e3o';const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=GG()[k],n=gradeOf(k,v);if(!n)return'Grau 5 a partir de '+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
   const next=g.t[n-1],d=next-v;return `Grau ${n+1} a partir de ${fmtG(k,next)} (faltam ${String(+d.toFixed(2)).replace('.',',')}${g.u?' '+g.u:''})`}
 /* Janela das calculadoras */
 const CNAME={nps:'NPS',iqs:'IQS',fh:'Produtividade hora',ivr:'IVR',vy:'Valyou'};
@@ -753,6 +817,10 @@ $('tab-calc').addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCalc();if(e.key==='Enter'&&openKey&&e.target.matches('#tab-calc input'))document.querySelector(`#tab-calc .calc[data-calc="${openKey}"] [data-upd]`).click()});
 /* Dia / noite */
+/* \u00cdcone do separador */
+function favSvg(bg){return 'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${bg}"/><rect x="13" y="34" width="9" height="17" rx="2.5" fill="#fff" opacity=".75"/><rect x="27.5" y="24" width="9" height="27" rx="2.5" fill="#fff" opacity=".9"/><rect x="42" y="13" width="9" height="38" rx="2.5" fill="#fff"/></svg>`)}
+let favState='';function setFav(st){if(st===favState)return;favState=st;$('favicon').href=favSvg(st==='done'?'#C62F2F':st==='low'?'#D98A00':'#0B6BD3')}
+setFav('ok');
 function setTheme(dark){if(dark)document.documentElement.setAttribute('data-theme','dark');else document.documentElement.removeAttribute('data-theme');
   try{localStorage.setItem('gestao-theme',dark?'dark':'light')}catch(e){}
   $('themeBtn').textContent=dark?'\u2600\ufe0f Dia':'\u{1f311} Noite'}
@@ -775,7 +843,7 @@ function distBar(bar,leg,parts){const tot=parts.reduce((a,p)=>a+p.v,0);
   $(bar).innerHTML=tot?parts.map(p=>`<i class="${p.c}" style="width:${p.v/tot*100}%" title="${p.l}: ${p.v}"></i>`).join(''):'';
   $(leg).innerHTML=parts.map(p=>`<span style="--c:var(${p.col})">${p.l} <b class="mono">${p.v}</b>${tot?` (${Math.round(p.v/tot*100)}%)`:''}</span>`).join('')}
 function renderCalcs(){
-  GO=M().mgr||{};
+  GO=M().mgr||{};GM=goalsFor(curYM);
   const c=calcAll(),m=c.m,set=(id,v)=>$(id).textContent=v;
   set('nps-h-t',c.nh.t);set('nps-h-r',pct(c.nh.r));set('nps-o-t',c.no.t);set('nps-o-r',pct(c.no.r));
   set('nps-t-p',m.nps.h.p+m.nps.o.p);set('nps-t-n',m.nps.h.n+m.nps.o.n);set('nps-t-d',m.nps.h.d+m.nps.o.d);set('nps-t-t',c.nt.t);set('nps-t-r',pct(c.nt.r));
@@ -880,7 +948,7 @@ function restore(d,src){if(!d||!d.org||!d.tasks)throw 0;S={...seed(),...d};S.ava
 const backupTxt=()=>JSON.stringify({app:'gestao',saved:new Date().toISOString(),...S,meterEnd:null});
 $('saveFile').onclick=()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([backupTxt()],{type:'text/plain;charset=utf-8'}));
-  a.download='gestao-backup-'+iso(new Date())+'.txt';document.body.appendChild(a);a.click();
+  a.download='GestaoBackup.txt';document.body.appendChild(a);a.click();
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);markBackup();toast('C\u00f3pia guardada nas Transfer\u00eancias')};
 $('openFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();
   rd.onload=()=>{try{restore(JSON.parse(String(rd.result).trim()),f.name);toast('Dados restaurados')}catch(x){$('importMsg').textContent='Este ficheiro n\u00e3o tem uma c\u00f3pia v\u00e1lida desta p\u00e1gina.'}e.target.value=''};rd.readAsText(f)};
@@ -898,12 +966,12 @@ $('wipeCancel').onclick=()=>{wipeArmed=false;$('wipeAll').textContent='Apagar tu
 /* Hist\u00f3rico */
 const HK=[['nps','NPS'],['iqs','IQS'],['fh','Produtividade hora'],['ivr','IVR'],['vy','Valyou']];
 let histKey='nps';
-function monthVals(m){const prev=GO;GO=m.mgr||{};const c=calcFor(m),o={nps:c.eff.nps,iqs:c.eff.iqs,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyOf(m,c)};o.g={};o.fx={};HK.forEach(([k])=>{o.g[k]=gradeOf(k,o[k]);o.fx[k]=!!mgrOf(k)});GO=prev;return o}
+function monthVals(m,ym){const prev=GO,pg=GM;GO=m.mgr||{};GM=ym?goalsFor(ym):GM;const c=calcFor(m),o={nps:c.eff.nps,iqs:c.eff.iqs,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyOf(m,c)};o.g={};o.fx={};HK.forEach(([k])=>{o.g[k]=gradeOf(k,o[k]);o.fx[k]=!!mgrOf(k)});GO=prev;GM=pg;return o}
 const fmtK=(k,v)=>!isFinite(v)?'\u2014':(k==='nps'||k==='iqs')?num(v,2)+' %':num(v,2);
 const mLabel=(ym,short)=>{const [y,mm]=ym.split('-').map(Number);return new Date(y,mm-1,1).toLocaleDateString('pt-PT',short?{month:'short',year:'2-digit'}:{month:'long',year:'numeric'})};
 function renderHist(){
   $('histSeg').innerHTML=HK.map(([k,l])=>`<button data-hk="${k}" class="${k===histKey?'on':''}">${l}</button>`).join('');
-  const rows=Object.keys(S.months).sort().map(ym=>({ym,v:monthVals(S.months[ym])})).filter(r=>HK.some(([k])=>isFinite(r.v[k])||r.v.g[k]));
+  const rows=Object.keys(S.months).sort().map(ym=>({ym,v:monthVals(S.months[ym],ym)})).filter(r=>HK.some(([k])=>isFinite(r.v[k])||r.v.g[k]));
   $('histBody').innerHTML=rows.length?rows.slice().reverse().map(r=>`<tr data-ym="${r.ym}"><td style="text-transform:capitalize;font-weight:700">${mLabel(r.ym)}</td>${HK.map(([k])=>{const n=r.v.g[k],st=n?'g'+n:'none';return `<td><span class="gchip s-${st}">${fmtK(k,r.v[k])}${n?` <small>G${n}${r.v.fx[k]?' \u270e':''}</small>`:''}</span></td>`}).join('')}</tr>`).join('')
     :'<tr><td colspan="6" class="empty">Ainda n\u00e3o h\u00e1 meses com dados. Preenche os indicadores no dashboard.</td></tr>';
   const pts=rows.map(r=>({ym:r.ym,v:r.v[histKey],g:r.v.g[histKey]})).filter(p=>isFinite(p.v));
