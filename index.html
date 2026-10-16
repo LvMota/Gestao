@@ -655,6 +655,7 @@ function renderNotifStatus(){const el=$('notifStatus');if(!el)return;
 function stopAlarm(){clearInterval(beepTimer);beepTimer=null;$('stopAlarm').hidden=true}
 function fmt(ms){const s=Math.max(0,Math.ceil(ms/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return (h?h+':'+String(m).padStart(2,'0'):String(m).padStart(2,'0'))+':'+String(x).padStart(2,'0')}
 function tick(){
+  {const h=Math.floor(Date.now()/3600000);if(h!==quipHour){quipHour=h;renderCalcs()}}
   const mt=$('meter');mt.classList.remove('low','done');
   setFav(!S.meterEnd?'ok':S.meterEnd-Date.now()<=0?'done':S.meterEnd-Date.now()<=5*60000?'low':'ok');
   if(!S.meterEnd){$('meterTime').textContent='--:--';$('meterEnd').textContent='';$('meterBar').style.width='0';document.title='Gest\u00e3o';return}
@@ -838,13 +839,15 @@ $('themeBtn').onclick=()=>setTheme(document.documentElement.getAttribute('data-t
 setTheme(document.documentElement.getAttribute('data-theme')==='dark');
 /* Coment\u00e1rios por grau */
 const QUIPS={
- 1:['\u00c9s muito mau. N\u00e3o melhores n\u00e3o\u2026','Isto n\u00e3o \u00e9 um indicador, \u00e9 um pedido de ajuda.','At\u00e9 o router do cliente tem melhor sinal que este n\u00famero.','O supervisor j\u00e1 est\u00e1 a preparar a conversinha\u2026','Bateste no fundo. A boa not\u00edcia: daqui s\u00f3 se sobe.','LOS total. Nem luz ao fundo da fibra.','Se fosse um teste de velocidade, ainda estava a carregar.'],
- 2:['Mau, mas com potencial\u2026 muito bem escondido.','A piscar a vermelho, como a ONT sem fibra.','J\u00e1 foi pior. Pouco, mas j\u00e1 foi.','N\u00e3o \u00e9 para chorar, mas tamb\u00e9m n\u00e3o \u00e9 para festejar.','A subir devagarinho, \u00e0 velocidade do ADSL.','Mais um empurr\u00e3o e sais do laranja.'],
- 3:['Nem carne nem peixe.','Razo\u00e1vel. O m\u00ednimo para n\u00e3o levar serm\u00e3o.','Sinal est\u00e1vel, mas sem 5 GHz.','D\u00e1 para passar, mas ningu\u00e9m te paga um caf\u00e9 por isto.','Na m\u00e9dia, como o Wi\u2011Fi do vizinho.','Meio caminho andado. Falta a outra metade.'],
- 4:['Bom trabalho! J\u00e1 cheira a pr\u00e9mio.','Est\u00e1s em forma, quase fibra pura.','Bom! Mais um bocadinho e \u00e9s lenda.','O supervisor sorri quando v\u00ea isto.','J\u00e1 d\u00e1 para mostrar \u00e0 equipa sem vergonha.','R\u00e1pido e est\u00e1vel, como uma liga\u00e7\u00e3o bem feita.'],
- 5:['\u00c9s uma m\u00e1quina! \u{1f525}','Excelente. Podes ir para casa mais cedo (n\u00e3o podes).','N\u00edvel lenda. Emoldura isto.','100 Gbps de compet\u00eancia.','Perfeito. At\u00e9 o cliente te ofereceu caf\u00e9.','Nem o speedtest acompanha este ritmo.']};
+ 1:['\u00c9s muito mau. N\u00e3o melhores n\u00e3o\u2026','At\u00e9 o router do cliente tem melhor sinal que este n\u00famero.','LOS total. Nem luz ao fundo da fibra.'],
+ 2:['A piscar a vermelho, como a ONT sem fibra.','A subir devagarinho, \u00e0 velocidade do ADSL.','Mais um empurr\u00e3o e sais do laranja.'],
+ 3:['Nem carne nem peixe.','Sinal est\u00e1vel, mas sem 5 GHz.','Na m\u00e9dia, como o Wi\u2011Fi do vizinho.'],
+ 4:['Bom trabalho! J\u00e1 cheira a pr\u00e9mio.','Est\u00e1s em forma, quase fibra pura.','O supervisor sorri quando v\u00ea isto.'],
+ 5:['\u00c9s uma m\u00e1quina! \u{1f525}','100 Gbps de compet\u00eancia.','N\u00edvel lenda. Emoldura isto.']};
+/* 3 frases por grau, muda de hora a hora */
 function quip(k,n){if(!n)return'Sem n\u00fameros ainda. Mete l\u00e1 os valores, que eu n\u00e3o adivinho.';
-  const L=QUIPS[n],seed=(new Date().toDateString()+k).split('').reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);return L[seed%L.length]}
+  return QUIPS[n][Math.floor(Date.now()/3600000)%3]}
+let quipHour=Math.floor(Date.now()/3600000);
 const steps=(st,n)=>`<span class="steps s-${st}">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span>`;
 function verdict(id,k,v){const st=stateOf(k,v);const el=$(id);el.className='verdict s-'+st;const nd=needFor(k);
   el.innerHTML=face(st)+`<span class="vt"><b>${LBL[st]}</b><small>${goalTxt(k,v)}${nd&&nd.downTxt?' \u00b7 '+nd.downTxt:''}</small></span>`;
