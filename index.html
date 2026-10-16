@@ -134,7 +134,8 @@ tbody tr:hover td{background:var(--sunk)}
 .group td.x{width:30px;padding:2px}
 .addr{display:grid;grid-template-columns:1fr 1.3fr 1.8fr auto;gap:6px}
 .addr input{padding:6px 8px;font-size:14px}
-.tasks{list-style:none;margin:0;padding:0}
+.tasks{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
+.tasks li.empty{grid-column:1/-1}
 .tasks li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
 .tasks li:last-child{border-bottom:none}
 .tasks input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);flex:none}
@@ -316,6 +317,7 @@ tbody tr:hover td{background:var(--sunk)}
 .goals td{white-space:nowrap}.goals .gpre{color:var(--muted);font-weight:700;margin-right:4px}
 .goals td input{width:calc(100% - 20px);display:inline-block}
 .calc.c-re .big{border-top:none;padding-top:0}
+.av-note{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:10px;background:var(--accent-soft);color:var(--fg);font-size:14px}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
 <script>try{if(localStorage.getItem("gestao-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
@@ -361,21 +363,15 @@ tbody tr:hover td{background:var(--sunk)}
             <div class="kpi-vy-box"><div class="kpi-tag">Valyou = (Reincid&#xea;ncia 20% + NPS 30% + IVR 20% + Produtividade 30%) &#xd7; 0,85 + Equipa &#xd7; 0,15</div><div class="kpis" id="kpis"></div></div>
           </div>
         </div>
-        <div class="dash-grid">
-          <div>
-            <div class="sec-head"><h2 id="orgTitle"></h2><span class="sub" id="orgCount"></span></div>
-            <div class="groups" id="groups"></div>
-          </div>
-          <div>
+        <div>
           <div class="sec-head"><h2>Tarefas</h2><span class="sub" id="taskCount"></span></div>
           <div class="card tasks-card">
             <div class="sec-head"><b style="font-family:var(--f-display);font-size:18px;font-weight:700">Para fazer</b><button class="ghost" id="clearDone">Limpar feitas</button></div>
-            <form class="row" id="taskForm" style="margin-bottom:6px">
+            <form class="row" id="taskForm" style="margin-bottom:6px;max-width:720px">
               <input id="taskInput" placeholder="Nova tarefa&#x2026;" autocomplete="off">
               <button class="primary" type="submit">Adicionar</button>
             </form>
             <ul class="tasks" id="taskList"></ul>
-          </div>
           </div>
         </div>
       </section>
@@ -463,6 +459,7 @@ tbody tr:hover td{background:var(--sunk)}
       </section>
 
       <section id="tab-av" class="tabpane" hidden style="flex-direction:column;gap:20px">
+        <div class="av-note">&#x1f512; <span><b>Estes registos n&#xe3;o s&#xe3;o guardados.</b> Desaparecem ao fechar ou recarregar a p&#xe1;gina e nunca entram na c&#xf3;pia de seguran&#xe7;a. Copia a tabela antes de sair.</span></div>
         <form class="card av-form" id="avForm">
           <label class="f" for="avDate">Data<input type="date" id="avDate" required></label>
           <label class="f" for="avSolic">Solicita&#xe7;&#xe3;o<input id="avSolic" autocomplete="off"></label>
@@ -501,12 +498,6 @@ tbody tr:hover td{background:var(--sunk)}
       <!-- CONFIGURA&#xc7;&#xd5;ES -->
       <section id="tab-cfg" class="tabpane" hidden>
         <div class="cfg">
-          <div class="card" style="display:flex;flex-direction:column;gap:12px">
-            <h2>Equipa</h2>
-            <label class="f" for="cfgOrg">Nome da equipa principal<input id="cfgOrg" autocomplete="off"></label>
-            <div id="cfgGroups" style="display:flex;flex-direction:column;gap:12px"></div>
-            <div class="row"><button id="addGroup">+ Adicionar supervisor</button><span class="sub">As altera&#xe7;&#xf5;es ficam guardadas logo.</span></div>
-          </div>
           <div class="card" style="display:flex;flex-direction:column;gap:10px;grid-column:1/-1">
             <details class="goals-box" id="goalsBox">
               <summary><h2>Objetivos dos indicadores</h2><span class="sub" id="goalsSum"></span><span class="chev">&#x25be;</span></summary>
@@ -551,7 +542,7 @@ tbody tr:hover td{background:var(--sunk)}
               <div class="row"><button id="importBtn">Restaurar do texto colado</button></div>
             </div>
             <div class="bk-step danger"><b>Apagar tudo</b>
-              <span class="sub">Apaga equipa, tarefas, indicadores, objetivos e avarias deste navegador. Faz uma c&#xf3;pia antes.</span>
+              <span class="sub">Apaga tarefas, indicadores e objetivos deste navegador. Faz uma c&#xf3;pia antes.</span>
               <div class="row"><button class="btn-danger" id="wipeAll">Apagar tudo</button><button class="ghost" id="wipeCancel" hidden>Cancelar</button></div>
             </div>
             <span id="bkLast" class="sub" style="font-weight:700"></span>
@@ -580,7 +571,8 @@ const GOALS0={re:{n:'Reincid\u00eancia',u:'%',dir:-1,t:[28.5,25,21,18]},nps:{n:'
 const seed=()=>({goalsV:3,goals:JSON.parse(JSON.stringify(GOALS0)),tasks:[],org:{name:'',groups:[]},avarias:[],months:{},meterEnd:null,meterTotal:0});
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-if(!S||!S.org)S=seed();
+if(!S||!S.months)S=seed();
+S.org={name:'',groups:[]}; /* equipa removida: n\u00e3o guardar nomes nem emails */
 if(!S.goals)S.goals=JSON.parse(JSON.stringify(GOALS0));
 if((S.goalsV||1)<3){S.goals=JSON.parse(JSON.stringify(GOALS0));S.goalsV=3;}
 /* Objetivos oficiais de 2026 (maio a dezembro) */
@@ -599,8 +591,9 @@ S.goalsByMonth=S.goalsByMonth||{};if(!Object.keys(S.goalsByMonth).length)S.goals
 if(!S.goals.re){S.goals={re:JSON.parse(JSON.stringify(GOALS0.re)),...S.goals}}
 Object.values(S.months||{}).forEach(m=>{m.man=m.man||{};m.mgr=m.mgr||{};if(m.vy&&m.vy.r!==''&&m.vy.r!=null&&(m.man.re===''||m.man.re==null)&&!m.mgr.re)m.mgr.re=String(m.vy.r)});
 S.avarias=(S.avarias||[]).filter(a=>'solic' in a||'ticket' in a);
-S.avarias.forEach(a=>a.cp=String(a.cp||'').replace(/[-\s]/g,''));
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+S.avarias=[]; /* as avarias nunca s\u00e3o guardadas: s\u00f3 existem enquanto a p\u00e1gina est\u00e1 aberta */
+function save(){try{localStorage.setItem(KEY,JSON.stringify({...S,avarias:[]}))}catch(e){}}
+window.addEventListener('beforeunload',e=>{if(S.avarias&&S.avarias.length){e.preventDefault();e.returnValue=''}});
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2000)}
 
 /* Separadores */
@@ -693,36 +686,6 @@ $('taskList').onclick=e=>{const id=e.target.dataset.del;if(id){S.tasks=S.tasks.f
 $('taskForm').onsubmit=e=>{e.preventDefault();const v=$('taskInput').value.trim();if(!v)return;S.tasks.unshift({id:uid(),text:v,done:false});$('taskInput').value='';save();renderTasks()};
 $('clearDone').onclick=()=>{S.tasks=S.tasks.filter(t=>!t.done);save();renderTasks()};
 
-/* Equipa */
-function renderOrg(){
-  $('orgTitle').textContent=S.org.name||'Equipa';
-  const total=S.org.groups.reduce((a,g)=>a+g.rows.length,0);
-  $('orgCount').textContent=S.org.groups.length?S.org.groups.length+(S.org.groups.length===1?' supervisor':' supervisores')+' \u00b7 '+total+' utilizadores':'';
-  const c=$('groups');
-  if(!S.org.groups.length){c.innerHTML='<div class="card empty">Ainda sem equipa. Adiciona os supervisores nas <button class="ghost" style="padding:0;color:var(--accent)" id="goCfg">Configura\u00e7\u00f5es</button>.</div>';$('goCfg').onclick=()=>showTab('cfg');return}
-  c.innerHTML=S.org.groups.map(g=>`<div class="card group">
-    <div class="gh"><b>${esc(g.sup)||'Sem nome'}</b>${g.name?` <span class="sub">\u00b7 ${esc(g.name)}</span>`:''}</div>
-    <div class="tbl-wrap"><table><thead><tr><th>User</th><th>Assistente</th><th>Email</th><th></th></tr></thead><tbody>
-      ${g.rows.map(r=>`<tr><td class="u cp" title="Duplo clique para copiar">${esc(r.user)}</td><td class="cp" title="Duplo clique para copiar">${esc(r.assist)}</td><td class="cp" title="Duplo clique para copiar">${esc(r.email)}</td><td class="x"><button class="icon" data-delr="${g.id}|${r.id}" aria-label="Remover">\u00d7</button></td></tr>`).join('')||'<tr><td colspan="4" class="empty">Sem utilizadores</td></tr>'}
-    </tbody></table></div>
-    <form class="addr" data-addr="${g.id}">
-      <input name="u" placeholder="User" autocomplete="off" required>
-      <input name="a" placeholder="Assistente" autocomplete="off">
-      <input name="e" placeholder="Email" type="email" autocomplete="off">
-      <button type="submit">Adicionar</button>
-    </form></div>`).join('');
-}
-function copyText(t){const done=()=>toast('Copiado: '+t);
-  try{navigator.clipboard.writeText(t).then(done,fb)}catch(e){fb()}
-  function fb(){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(x){toast('N\u00e3o foi poss\u00edvel copiar')}a.remove()}}
-$('groups').addEventListener('dblclick',e=>{const td=e.target.closest('td.cp');if(!td)return;const t=td.textContent.trim();if(!t)return;
-  window.getSelection&&window.getSelection().removeAllRanges();copyText(t);td.classList.remove('copied');void td.offsetWidth;td.classList.add('copied')});
-$('groups').onclick=e=>{const dr=e.target.dataset.delr;
-  if(dr){const [gid,rid]=dr.split('|');const g=S.org.groups.find(x=>x.id===gid);g.rows=g.rows.filter(r=>r.id!==rid);save();renderOrg()}};
-$('groups').onsubmit=e=>{e.preventDefault();const f=e.target,g=S.org.groups.find(x=>x.id===f.dataset.addr);if(!g)return;
-  g.rows.push({id:uid(),user:f.u.value.trim(),assist:f.a.value.trim(),email:f.e.value.trim()});save();renderOrg();
-  const nf=document.querySelector(`[data-addr="${g.id}"] input`);nf&&nf.focus()};
-
 /* Configura\u00e7\u00f5es */
 const MESES=['janeiro','fevereiro','mar\u00e7o','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 let gYM=null;
@@ -769,22 +732,9 @@ $('goalRows').onchange=e=>{const t=e.target,tgt=gTarget();if(!tgt||!t.dataset.gk
   afterGoals(ok?'Objetivo guardado':'Guardado, mas aten\u00e7\u00e3o: os valores dos graus devem ir '+(g.dir<0?'diminuindo':'aumentando'))};
 function renderCfg(){
   renderGoals();renderNotifStatus();
-  $('cfgOrg').value=S.org.name;
-  $('cfgGroups').innerHTML=S.org.groups.map((g,i)=>`<div class="cfg-group">
-    <label class="f" for="cfg-sup-${g.id}">Supervisor ${i+1}<input id="cfg-sup-${g.id}" data-g="${g.id}" data-f="sup" value="${esc(g.sup)}" autocomplete="off"></label>
-    <label class="f" for="cfg-name-${g.id}">Nome da equipa<input id="cfg-name-${g.id}" data-g="${g.id}" data-f="name" value="${esc(g.name)}" autocomplete="off"></label>
-    <button class="ghost" data-delg="${g.id}">Remover</button>
-  </div>`).join('')||'<div class="empty">Ainda sem supervisores.</div>';
 }
-let pendingDel=null;
-$('cfgGroups').onclick=e=>{const id=e.target.dataset.delg;if(!id)return;
-  if(pendingDel!==id){pendingDel=id;e.target.textContent='Confirmar (apaga os utilizadores)';return}
-  S.org.groups=S.org.groups.filter(g=>g.id!==id);pendingDel=null;save();renderCfg();renderOrg();toast('Supervisor removido')};
 $('notifOn').onclick=()=>{if(!('Notification' in window))return;Notification.requestPermission().then(()=>{renderNotifStatus();if(notifOK())toast('Alertas ativados')})};
 $('notifTest').onclick=()=>{if(!notifOK()){toast('Ativa primeiro os alertas');return}notify('Parqu\u00edmetro: teste','Assim aparece o alerta quando o tempo acabar.',false)};
-$('addGroup').onclick=()=>{const g={id:uid(),sup:'',name:'',rows:[]};S.org.groups.push(g);save();renderCfg();renderOrg();$('cfg-sup-'+g.id).focus()};
-$('cfgOrg').oninput=e=>{S.org.name=e.target.value;save();renderOrg()};
-$('cfgGroups').oninput=e=>{const g=S.org.groups.find(x=>x.id===e.target.dataset.g);if(!g)return;g[e.target.dataset.f]=e.target.value;save();renderOrg()};
 
 /* Calculadoras */
 $('ivrGrid').innerHTML=Array.from({length:11},(_,i)=>`<label for="ivr-${i}" class="${i>=9?'hi':i<=6?'lo':''}">${i}<input id="ivr-${i}" data-ivr="${i}" type="number" min="0"></label>`).join('');
@@ -1010,8 +960,8 @@ $('avCopy').onclick=()=>copyRows(visibleAv());
 $('avCopySel').onclick=()=>copyRows(visibleAv().filter(a=>selected.has(a.id)));
 
 /* C\u00f3pia de seguran\u00e7a */
-function restore(d,src){if(!d||!d.org||!d.tasks)throw 0;S={...seed(),...d};S.avarias=(S.avarias||[]).filter(a=>'solic' in a||'ticket' in a);save();renderAll();renderCfg();$('importMsg').textContent='Dados restaurados'+(src?' de '+src:'')+'.'}
-const backupTxt=()=>JSON.stringify({app:'gestao',saved:new Date().toISOString(),...S,meterEnd:null});
+function restore(d,src){if(!d||!d.tasks||!d.months)throw 0;d.org={name:'',groups:[]};const keep=S.avarias||[];S={...seed(),...d};S.avarias=keep;save();renderAll();renderCfg();$('importMsg').textContent='Dados restaurados'+(src?' de '+src:'')+'.'}
+const backupTxt=()=>JSON.stringify({app:'gestao',saved:new Date().toISOString(),...S,avarias:[],meterEnd:null});
 $('saveFile').onclick=()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([backupTxt()],{type:'text/plain;charset=utf-8'}));
   a.download='GestaoBackup.txt';document.body.appendChild(a);a.click();
@@ -1061,7 +1011,7 @@ $('histBody').onclick=e=>{const tr=e.target.closest('tr[data-ym]');if(!tr)return
 
 /* Lembrete de c\u00f3pia */
 const DAY=86400000;
-function hasData(){return S.tasks.length||S.org.groups.length||S.avarias.length||Object.values(S.months).some(m=>HK.some(([k])=>isFinite(monthVals(m)[k])))}
+function hasData(){return S.tasks.length||Object.values(S.months).some(m=>HK.some(([k])=>isFinite(monthVals(m)[k])))}
 function markBackup(){S.lastBackup=Date.now();save();checkBackup()}
 function checkBackup(){
   const days=S.lastBackup?Math.floor((Date.now()-S.lastBackup)/DAY):null;
@@ -1073,7 +1023,7 @@ function checkBackup(){
 $('bkNow').onclick=()=>$('saveFile').click();
 $('bkLater').onclick=()=>{S.bkSnooze=new Date().toDateString();save();checkBackup()};
 
-function renderAll(){renderTasks();renderOrg();renderAv();renderMonth();renderHist();checkBackup();tick()}
+function renderAll(){renderTasks();renderAv();renderMonth();renderHist();checkBackup();tick()}
 renderAll();
 try{const t=localStorage.getItem(KEY+'-tab');showTab(TITLES[t]?t:'dash')}catch(e){showTab('dash')}
 </script>
