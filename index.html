@@ -110,7 +110,7 @@ tbody tr:hover td{background:var(--sunk)}
 .calc>:last-child,.group>:last-child,.tasks-card>:last-child{margin-bottom:18px}
 
 /* Dashboard */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .kpi{background:none;border:none;border-radius:0;border-right:1px solid var(--line);padding:18px 22px;text-align:left;display:flex;flex-direction:column;gap:4px;font-weight:400;align-items:stretch;position:relative}
 .kpi:last-child{border-right:none}
 .kpi::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .2s}
@@ -251,6 +251,24 @@ tbody tr:hover td{background:var(--sunk)}
 .btn-danger:hover{background:var(--bad);color:var(--surface);border-color:var(--bad)}
 .btn-danger.armed{background:var(--bad);color:var(--surface)}
 .bk-step.danger>b{color:var(--bad)}
+.quip{font-style:italic;font-size:13px;color:var(--st);font-weight:600;line-height:1.35;margin-top:4px;display:block}
+.verdict .quip{margin-top:3px}
+.bk-banner{display:flex;align-items:center;gap:12px;background:var(--warn-soft);border:1px solid var(--warn);border-radius:12px;padding:12px 16px;color:var(--fg)}
+.bk-banner b{color:var(--warn)} .bk-ic{font-size:20px}
+.seg{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:10px}
+.seg button{border:none;background:transparent;padding:6px 12px;color:var(--muted);border-radius:7px}
+.seg button.on{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
+.hist-chart svg{width:100%;height:auto;display:block}
+.hist-chart .band{fill:var(--st-soft);opacity:.85}
+.hist-chart .bl{fill:var(--st);font-size:12px;font-weight:700;font-family:var(--f-body)}
+.hist-chart .gl{stroke:var(--line);stroke-dasharray:4 4}
+.hist-chart .ax{fill:var(--muted);font-size:13px;font-family:var(--f-mono)}
+.hist-chart .ln{fill:none;stroke:var(--fg);stroke-width:2.5;stroke-linejoin:round;opacity:.7}
+.hist-chart .dot{fill:var(--st);stroke:var(--surface);stroke-width:3}
+.hist-chart .vl{fill:var(--fg);font-size:14px;font-weight:700;font-family:var(--f-mono)}
+.hist-tbl tbody tr{cursor:pointer}
+.gchip{display:inline-flex;align-items:baseline;gap:4px;font-family:var(--f-mono);font-weight:600;padding:3px 9px;border-radius:7px;background:var(--st-soft);color:var(--st)}
+.gchip small{font-family:var(--f-body);font-size:11px;font-weight:700;opacity:.8}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
 <script>try{if(localStorage.getItem("gestao-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
@@ -261,6 +279,7 @@ tbody tr:hover td{background:var(--sunk)}
     <div class="brand"><i></i>Gest&#xe3;o</div>
     <nav class="tabs">
       <button class="nav" data-tab="dash" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Dashboard</button>
+      <button class="nav" data-tab="hist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 6-7"/></svg>Hist&#xf3;rico</button>
       <button class="nav" data-tab="av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>Avarias</button>
     </nav>
     <div class="grow"></div>
@@ -286,6 +305,7 @@ tbody tr:hover td{background:var(--sunk)}
   </div>
 </header>
 <div class="content">
+  <div class="bk-banner" id="bkBanner" hidden><span class="bk-ic">&#x1f4be;</span><span><b id="bkMsg"></b> Os dados s&#xf3; existem neste navegador.</span><span class="grow"></span><button class="primary" id="bkNow">Descarregar c&#xf3;pia .txt</button><button class="ghost" id="bkLater">Lembrar amanh&#xe3;</button></div>
       <!-- DASHBOARD -->
       <section id="tab-dash" class="tabpane" style="display:flex;flex-direction:column;gap:24px">
         <div>
@@ -377,6 +397,17 @@ tbody tr:hover td{background:var(--sunk)}
       </div></div>
 
       <!-- AVARIAS -->
+      <section id="tab-hist" class="tabpane" hidden>
+        <div class="card hist-card">
+          <div class="sec-head"><h2>Evolu&#xe7;&#xe3;o por m&#xea;s</h2><div class="seg" id="histSeg"></div></div>
+          <div id="histChart" class="hist-chart"></div>
+        </div>
+        <div class="card" style="margin-top:24px">
+          <div class="sec-head"><h2>Todos os meses</h2><span class="sub">Clica num m&#xea;s para o abrir no dashboard</span></div>
+          <div class="tbl-wrap"><table class="hist-tbl"><thead><tr><th>M&#xea;s</th><th>NPS</th><th>IQS</th><th>Produtividade hora</th><th>IVR</th><th>Valyou</th></tr></thead><tbody id="histBody"></tbody></table></div>
+        </div>
+      </section>
+
       <section id="tab-av" class="tabpane" hidden style="flex-direction:column;gap:20px">
         <form class="card av-form" id="avForm">
           <label class="f" for="avDate">Data<input type="date" id="avDate" required></label>
@@ -384,7 +415,7 @@ tbody tr:hover td{background:var(--sunk)}
           <label class="f" for="avServ">Servi&#xe7;o<input id="avServ" autocomplete="off"></label>
           <label class="f" for="avOlt">OLT<input id="avOlt" autocomplete="off"></label>
           <label class="f" for="avPon">PON<input id="avPon" autocomplete="off"></label>
-          <label class="f" for="avCp">C&#xf3;digo postal<input id="avCp" placeholder="0000-000" autocomplete="off"></label>
+          <label class="f" for="avCp">C&#xf3;digo postal<input id="avCp" placeholder="0000000" inputmode="numeric" autocomplete="off"></label>
           <label class="f" for="avTicket">Ticket<input id="avTicket" autocomplete="off"></label>
           <label class="f wide" for="avRes">Resolu&#xe7;&#xe3;o final<textarea id="avRes" rows="2"></textarea></label>
           <div class="acts"><span class="sub" id="avEditMsg" style="margin-right:auto"></span><button type="button" class="ghost" id="avCancel" hidden>Cancelar edi&#xe7;&#xe3;o</button><button class="primary" type="submit" id="avSubmit">Adicionar &#xe0; tabela</button></div>
@@ -450,6 +481,7 @@ tbody tr:hover td{background:var(--sunk)}
               <span class="sub">Apaga equipa, tarefas, indicadores, objetivos e avarias deste navegador. Faz uma c&#xf3;pia antes.</span>
               <div class="row"><button class="btn-danger" id="wipeAll">Apagar tudo</button><button class="ghost" id="wipeCancel" hidden>Cancelar</button></div>
             </div>
+            <span id="bkLast" class="sub" style="font-weight:700"></span>
             <span id="importMsg" class="sub"></span>
           </div>
         </div>
@@ -479,17 +511,19 @@ if(!S||!S.org)S=seed();
 if(!S.goals)S.goals=JSON.parse(JSON.stringify(GOALS0));
 if((S.goalsV||1)<3){S.goals=JSON.parse(JSON.stringify(GOALS0));S.goalsV=3;}
 S.avarias=(S.avarias||[]).filter(a=>'solic' in a||'ticket' in a);
+S.avarias.forEach(a=>a.cp=String(a.cp||'').replace(/[-\s]/g,''));
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2000)}
 
 /* Separadores */
-const TITLES={dash:'Dashboard',av:'Avarias',cfg:'Configura\u00e7\u00f5es'};
+const TITLES={dash:'Dashboard',hist:'Hist\u00f3rico',av:'Avarias',cfg:'Configura\u00e7\u00f5es'};
 document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>showTab(b.dataset.goto));
 function showTab(t){
   document.querySelectorAll('.nav').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===t));
   document.querySelectorAll('.tabpane').forEach(p=>{p.hidden=p.id!=='tab-'+t;if(!p.hidden&&p.id==='tab-av')p.style.display='flex'});
   if(t==='cfg')renderCfg();
+  if(t==='hist')renderHist();
   try{localStorage.setItem(KEY+'-tab',t)}catch(e){}
   window.scrollTo(0,0);
 }
@@ -508,7 +542,7 @@ function renderMonth(){
 /* Parqu\u00edmetro */
 let actx=null,beepTimer=null,warned=false;
 function audio(){try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume()}catch(e){}}
-function beep(f=880,ms=220){if(!actx)return;try{const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;o.type='square';g.gain.value=.15;o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+ms/1000)}catch(e){}}
+function beep(){} /* sem som: alerta s\u00f3 visual e notifica\u00e7\u00e3o */
 [[15,'15'],[30,'30'],[60,'1h'],[90,'1h30'],[120,'2h']].forEach(([m,l])=>{const b=document.createElement('button');b.textContent=l;b.title=m+' minutos';b.onclick=()=>startMeter(m);$('presets').appendChild(b)});
 $('startCustom').onclick=()=>{const m=parseInt($('customMin').value);if(m>0){startMeter(m);$('customMin').value=''}else toast('Indica os minutos')};
 $('customMin').onkeydown=e=>{if(e.key==='Enter')$('startCustom').click()};
@@ -519,7 +553,7 @@ function startMeter(m){audio();askNotif();stopAlarm();closeNotif();S.meterEnd=Da
 let lastNotif=null,tWarn=null,tEnd=null;
 const notifOK=()=>'Notification' in window&&Notification.permission==='granted';
 function askNotif(){try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission().then(renderNotifStatus)}catch(e){}}
-function notify(title,body,sticky){if(!notifOK())return;try{closeNotif();const n=new Notification(title,{body,tag:'parquimetro',renotify:true,requireInteraction:!!sticky});n.onclick=()=>{window.focus();n.close()};lastNotif=n}catch(e){}}
+function notify(title,body,sticky){if(!notifOK())return;try{closeNotif();const n=new Notification(title,{body,tag:'parquimetro',renotify:true,requireInteraction:!!sticky,silent:true});n.onclick=()=>{window.focus();n.close()};lastNotif=n}catch(e){}}
 function closeNotif(){try{lastNotif&&lastNotif.close()}catch(e){}lastNotif=null}
 function schedule(){clearTimeout(tWarn);clearTimeout(tEnd);if(!S.meterEnd)return;const left=S.meterEnd-Date.now();
   if(left-5*60000>0)tWarn=setTimeout(tick,left-5*60000+50);if(left>0)tEnd=setTimeout(tick,left+50)}
@@ -630,9 +664,11 @@ document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{
 let resetArmed=false;
 $('resetMonth').onclick=e=>{if(!resetArmed){resetArmed=true;e.target.textContent='Clica de novo para limpar';setTimeout(()=>{resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas'},3000);return}
   S.months[curYM]=emptyMonth(curYM);resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas';save();renderMonth();toast('M\u00eas limpo')};
+function vyOf(m,c){const n=gradeOf('nps',c.nt.r*100),i=gradeOf('ivr',c.ivr);const xs=[m.vy.r,n||'',i||'',m.vy.p,m.vy.eq];
+  if(!xs.every(x=>x!==''&&x!=null&&isFinite(x)))return NaN;const v=((+m.vy.r)*0.2+n*0.3+i*0.2+(+m.vy.p)*0.3)*0.85+(+m.vy.eq)*0.15;return Math.round(v*100+1e-6)/100}
 const npsOf=x=>{const t=x.p+x.n+x.d;return{t,r:t?(x.p-x.d)/t:NaN}};
-function calcAll(){
-  const m=M();
+function calcAll(){return calcFor(M())}
+function calcFor(m){
   const nh=npsOf(m.nps.h),no=npsOf(m.nps.o),nt=npsOf({p:m.nps.h.p+m.nps.o.p,n:m.nps.h.n+m.nps.o.n,d:m.nps.h.d+m.nps.o.d});
   const iF=m.iqs.o.f+m.iqs.h.f,iQ=m.iqs.o.q+m.iqs.h.q;
   const iqs={o:m.iqs.o.f?m.iqs.o.q/m.iqs.o.f:NaN,h:m.iqs.h.f?m.iqs.h.q/m.iqs.h.f:NaN,t:iF?iQ/iF:NaN,f:iF,q:iQ};
@@ -650,7 +686,17 @@ function face(st){
   const m={g1:'<path class="m" d="M10.5 23.5 Q16 17 21.5 23.5"/><path class="m" d="M9 9.5 L13 11 M23 9.5 L19 11"/>',g2:'<path class="m" d="M11 22.5 Q16 19 21 22.5"/>',g3:'<path class="m" d="M11 21 H21"/>',g4:'<path class="m" d="M11 19.5 Q16 24 21 19.5"/>',g5:'<path class="mo" d="M9.5 18.5 Q16 28 22.5 18.5 Z"/>',none:'<path class="m" d="M12 21 H20"/>'}[st];
   return `<svg class="face s-${st}" viewBox="0 0 32 32" aria-hidden="true"><circle class="f" cx="16" cy="16" r="14"/>${eyes}${m}</svg>`}
 const fmtG=(k,x)=>{const g=S.goals[k];return String(x).replace('.',',')+(g.u?' '+g.u:'')};
-function goalTxt(k,v){const g=S.goals[k],n=gradeOf(k,v);if(!n)return'Grau 5 a partir de '+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
+function needFor(k){const c=calcAll(),m=c.m,g=S.goals[k];
+  if(k==='nps'){const P=m.nps.h.p+m.nps.o.p,D=m.nps.h.d+m.nps.o.d,T=c.nt.t;if(!T)return null;const v=c.nt.r*100,n=gradeOf(k,v);const o={};
+    if(n<5){const t=g.t[n-1]/100;o.up=t>=1?null:Math.max(1,Math.ceil((t*T-P+D)/(1-t)-1e-9));o.upTxt=o.up==null?'':`Faltam ${o.up} promotor${o.up>1?'es':''} seguido${o.up>1?'s':''} para o grau ${n+1}`}
+    if(n>1){const L=g.t[n-2]/100;o.down=Math.max(0,Math.floor((P-D-L*T)/(1+L)+1e-9));o.downTxt=o.down?`Aguentas ${o.down} detrator${o.down>1?'es':''} sem descer de grau`:'Mais um detrator e desces de grau'}
+    return o}
+  if(k==='ivr'){const N=c.ivrN;if(!N)return null;const Sm=m.ivr.reduce((a,x,i)=>a+x*i,0),n=gradeOf(k,c.ivr);const o={};
+    if(n<5){const t=g.t[n-1];o.up=t>=10?null:Math.max(1,Math.ceil((t*N-Sm)/(10-t)-1e-9));o.upTxt=o.up==null?'':`Faltam ${o.up} nota${o.up>1?'s':''} 10 seguida${o.up>1?'s':''} para o grau ${n+1}`}
+    if(n>1){const L=g.t[n-2];o.down=Math.max(0,Math.floor(Sm/L-N+1e-9));o.downTxt=o.down?`Aguentas ${o.down} nota${o.down>1?'s':''} 0 sem descer de grau`:'Uma nota 0 agora e desces de grau'}
+    return o}
+  return null}
+function goalTxt(k,v){const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=S.goals[k],n=gradeOf(k,v);if(!n)return'Grau 5 a partir de '+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
   const next=g.t[n-1],d=next-v;return `Grau ${n+1} a partir de ${fmtG(k,next)} (faltam ${String(+d.toFixed(2)).replace('.',',')}${g.u?' '+g.u:''})`}
 /* Janela das calculadoras */
 const CNAME={nps:'NPS',iqs:'IQS',fh:'Produtividade hora',ivr:'IVR',vy:'Valyou'};
@@ -675,9 +721,18 @@ function setTheme(dark){if(dark)document.documentElement.setAttribute('data-them
   $('themeBtn').textContent=dark?'\u2600\ufe0f Dia':'\u{1f311} Noite'}
 $('themeBtn').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')!=='dark');
 setTheme(document.documentElement.getAttribute('data-theme')==='dark');
+/* Coment\u00e1rios por grau */
+const QUIPS={
+ 1:['\u00c9s muito mau. N\u00e3o melhores n\u00e3o\u2026','Isto n\u00e3o \u00e9 um indicador, \u00e9 um pedido de ajuda.','At\u00e9 o router do cliente tem melhor sinal que este n\u00famero.','O supervisor j\u00e1 est\u00e1 a preparar a conversinha\u2026','Bateste no fundo. A boa not\u00edcia: daqui s\u00f3 se sobe.','LOS total. Nem luz ao fundo da fibra.','Se fosse um teste de velocidade, ainda estava a carregar.'],
+ 2:['Mau, mas com potencial\u2026 muito bem escondido.','A piscar a vermelho, como a ONT sem fibra.','J\u00e1 foi pior. Pouco, mas j\u00e1 foi.','N\u00e3o \u00e9 para chorar, mas tamb\u00e9m n\u00e3o \u00e9 para festejar.','A subir devagarinho, \u00e0 velocidade do ADSL.','Mais um empurr\u00e3o e sais do laranja.'],
+ 3:['Nem carne nem peixe.','Razo\u00e1vel. O m\u00ednimo para n\u00e3o levar serm\u00e3o.','Sinal est\u00e1vel, mas sem 5 GHz.','D\u00e1 para passar, mas ningu\u00e9m te paga um caf\u00e9 por isto.','Na m\u00e9dia, como o Wi\u2011Fi do vizinho.','Meio caminho andado. Falta a outra metade.'],
+ 4:['Bom trabalho! J\u00e1 cheira a pr\u00e9mio.','Est\u00e1s em forma, quase fibra pura.','Bom! Mais um bocadinho e \u00e9s lenda.','O supervisor sorri quando v\u00ea isto.','J\u00e1 d\u00e1 para mostrar \u00e0 equipa sem vergonha.','R\u00e1pido e est\u00e1vel, como uma liga\u00e7\u00e3o bem feita.'],
+ 5:['\u00c9s uma m\u00e1quina! \u{1f525}','Excelente. Podes ir para casa mais cedo (n\u00e3o podes).','N\u00edvel lenda. Emoldura isto.','100 Gbps de compet\u00eancia.','Perfeito. At\u00e9 o cliente te ofereceu caf\u00e9.','Nem o speedtest acompanha este ritmo.']};
+function quip(k,n){if(!n)return'Sem n\u00fameros ainda. Mete l\u00e1 os valores, que eu n\u00e3o adivinho.';
+  const L=QUIPS[n],seed=(new Date().toDateString()+k).split('').reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);return L[seed%L.length]}
 const steps=(st,n)=>`<span class="steps s-${st}">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span>`;
-function verdict(id,k,v){const st=stateOf(k,v);const el=$(id);el.className='verdict s-'+st;
-  el.innerHTML=face(st)+`<span class="vt"><b>${LBL[st]}</b><small>${goalTxt(k,v)}</small></span>`;
+function verdict(id,k,v){const st=stateOf(k,v);const el=$(id);el.className='verdict s-'+st;const nd=needFor(k);
+  el.innerHTML=face(st)+`<span class="vt"><b>${LBL[st]}</b><small>${goalTxt(k,v)}${nd&&nd.downTxt?' \u00b7 '+nd.downTxt:''}</small><em class="quip">\u201c${quip(k,gradeOf(k,v))}\u201d</em></span>`;
   const row=el.closest('.big');row.className='big s-'+st;el.closest('.calc').className=el.closest('.calc').className.replace(/ s-\w+/g,'')+' s-'+st;return st}
 function distBar(bar,leg,parts){const tot=parts.reduce((a,p)=>a+p.v,0);
   $(bar).innerHTML=tot?parts.map(p=>`<i class="${p.c}" style="width:${p.v/tot*100}%" title="${p.l}: ${p.v}"></i>`).join(''):'';
@@ -713,17 +768,19 @@ function renderCalcs(){
   const k=[['NPS',pct(c.nt.r),c.nt.t+' respostas'],['IQS',pct(c.iqs.t),c.iqs.q+' IQS / '+c.iqs.f+' fechadas'],['Produtividade hora',num(c.fh,2),m.horas?(m.trat||0)+' tratadas \u00b7 '+m.horas+' h':'sem horas'],['IVR',num(c.ivr,2),c.ivrN+' respostas'],['Valyou',m.vy.at!==''?num(+m.vy.at,2):'\u2014',m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa']];
   const keys=['nps','iqs','fh','ivr','vy'];
   $('kpis').innerHTML=k.map(([l,v,sub],i)=>{const key=keys[i],val=kv[key],st=stateOf(key,val),n=gradeOf(key,val);
-    return `<button class="kpi s-${st}"><div class="kh"><span>${l}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`}).join('');
+    return `<button class="kpi s-${st}"><div class="kh"><span>${l}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><em class="quip">\u201c${quip(key,n)}\u201d</em><span class="tap">Atualizar \u203a</span></button>`}).join('');
   $('kpis').querySelectorAll('button').forEach((b,i)=>b.onclick=()=>openCalc(keys[i]));
 }
 
 /* Avarias */
 const AVF=[['solic','Solicita\u00e7\u00e3o'],['serv','Servi\u00e7o'],['olt','OLT'],['pon','PON'],['cp','C\u00f3digo postal'],['ticket','Ticket'],['res','Resolu\u00e7\u00e3o final']];
+const cpClean=v=>String(v||'').replace(/[-\s\u2013\u2014]/g,'');
+$('avCp').addEventListener('input',e=>{const c=cpClean(e.target.value);if(c!==e.target.value)e.target.value=c});
 const AVIN={solic:'avSolic',serv:'avServ',olt:'avOlt',pon:'avPon',cp:'avCp',ticket:'avTicket',res:'avRes'};
 let editId=null;const selected=new Set();
 $('avDate').value=new Date().getDay()===6?iso(new Date()):lastSaturday();
 $('avForm').onsubmit=e=>{e.preventDefault();
-  const rec={date:$('avDate').value};AVF.forEach(([k])=>rec[k]=$(AVIN[k]).value.trim());
+  const rec={date:$('avDate').value};AVF.forEach(([k])=>rec[k]=$(AVIN[k]).value.trim());rec.cp=cpClean(rec.cp);
   if(!AVF.some(([k])=>rec[k])){toast('Preenche pelo menos um campo');return}
   if(editId){Object.assign(S.avarias.find(a=>a.id===editId),rec);toast('Registo atualizado')}
   else{S.avarias.push({id:uid(),...rec});toast('Adicionado \u00e0 tabela')}
@@ -783,11 +840,11 @@ const backupTxt=()=>JSON.stringify({app:'gestao',saved:new Date().toISOString(),
 $('saveFile').onclick=()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([backupTxt()],{type:'text/plain;charset=utf-8'}));
   a.download='gestao-backup-'+iso(new Date())+'.txt';document.body.appendChild(a);a.click();
-  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast('C\u00f3pia guardada nas Transfer\u00eancias')};
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);markBackup();toast('C\u00f3pia guardada nas Transfer\u00eancias')};
 $('openFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();
   rd.onload=()=>{try{restore(JSON.parse(String(rd.result).trim()),f.name);toast('Dados restaurados')}catch(x){$('importMsg').textContent='Este ficheiro n\u00e3o tem uma c\u00f3pia v\u00e1lida desta p\u00e1gina.'}e.target.value=''};rd.readAsText(f)};
 $('exportBtn').onclick=()=>{const txt=backupTxt();$('backupText').value=txt;
-  navigator.clipboard.writeText(txt).then(()=>toast('C\u00f3pia copiada. Cola no Bloco de Notas e guarda como .txt'),()=>{$('backupText').select();toast('Seleciona o texto e copia com Ctrl+C')})};
+  navigator.clipboard.writeText(txt).then(()=>{markBackup();toast('C\u00f3pia copiada. Cola no Bloco de Notas e guarda como .txt')},()=>{$('backupText').select();toast('Seleciona o texto e copia com Ctrl+C')})};
 $('importBtn').onclick=()=>{try{restore(JSON.parse($('backupText').value.trim()));toast('Dados restaurados')}catch(e){$('importMsg').textContent='O texto n\u00e3o \u00e9 uma c\u00f3pia v\u00e1lida desta p\u00e1gina. Cola o texto completo.'}};
 let wipeArmed=false;
 $('wipeAll').onclick=()=>{
@@ -797,7 +854,49 @@ $('wipeAll').onclick=()=>{
   renderAll();renderCfg();$('importMsg').textContent='Todos os dados foram apagados.';toast('Tudo apagado')};
 $('wipeCancel').onclick=()=>{wipeArmed=false;$('wipeAll').textContent='Apagar tudo';$('wipeAll').classList.remove('armed');$('wipeCancel').hidden=true};
 
-function renderAll(){renderTasks();renderOrg();renderAv();renderMonth();tick()}
+/* Hist\u00f3rico */
+const HK=[['nps','NPS'],['iqs','IQS'],['fh','Produtividade hora'],['ivr','IVR'],['vy','Valyou']];
+let histKey='nps';
+function monthVals(m){const c=calcFor(m);return{nps:c.nt.r*100,iqs:c.iqs.t*100,fh:c.fh,ivr:c.ivr,vy:vyOf(m,c)}}
+const fmtK=(k,v)=>!isFinite(v)?'\u2014':(k==='nps'||k==='iqs')?num(v,2)+' %':num(v,2);
+const mLabel=(ym,short)=>{const [y,mm]=ym.split('-').map(Number);return new Date(y,mm-1,1).toLocaleDateString('pt-PT',short?{month:'short',year:'2-digit'}:{month:'long',year:'numeric'})};
+function renderHist(){
+  $('histSeg').innerHTML=HK.map(([k,l])=>`<button data-hk="${k}" class="${k===histKey?'on':''}">${l}</button>`).join('');
+  const rows=Object.keys(S.months).sort().map(ym=>({ym,v:monthVals(S.months[ym])})).filter(r=>HK.some(([k])=>isFinite(r.v[k])));
+  $('histBody').innerHTML=rows.length?rows.slice().reverse().map(r=>`<tr data-ym="${r.ym}"><td style="text-transform:capitalize;font-weight:700">${mLabel(r.ym)}</td>${HK.map(([k])=>{const st=stateOf(k,r.v[k]);return `<td><span class="gchip s-${st}">${fmtK(k,r.v[k])}${st!=='none'?` <small>G${st.slice(1)}</small>`:''}</span></td>`}).join('')}</tr>`).join('')
+    :'<tr><td colspan="6" class="empty">Ainda n\u00e3o h\u00e1 meses com dados. Preenche os indicadores no dashboard.</td></tr>';
+  const pts=rows.map(r=>({ym:r.ym,v:r.v[histKey]})).filter(p=>isFinite(p.v));
+  const el=$('histChart');
+  if(!pts.length){el.innerHTML='<div class="empty" style="padding:60px 0;text-align:center">Sem dados de '+HK.find(x=>x[0]===histKey)[1]+' em nenhum m\u00eas.</div>';return}
+  const g=S.goals[histKey].t,W=1000,H=340,L=64,R=24,T=20,B=40;
+  let lo=Math.min(...pts.map(p=>p.v),g[0]),hi=Math.max(...pts.map(p=>p.v),g[3]);const pad=(hi-lo)*0.15||1;lo-=pad;hi+=pad;
+  if(histKey==='nps'||histKey==='iqs'){lo=Math.max(lo,histKey==='nps'?-100:0);hi=Math.min(hi,100)}
+  const y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo)),x0=L+60,x1=W-R-110,x=i=>pts.length===1?(x0+x1)/2:x0+(x1-x0)*i/(pts.length-1);
+  const edges=[lo,...g,hi];let bands='';for(let i=0;i<5;i++){const a=Math.max(edges[i],lo),b=Math.min(edges[i+1],hi);if(b<=a)continue;
+    bands+=`<rect class="band s-g${i+1}" x="${L}" y="${y(b)}" width="${W-L-R}" height="${y(a)-y(b)}"/><text class="bl s-g${i+1}" x="${W-R-6}" y="${y(b)+14}" text-anchor="end">Grau ${i+1}</text>`}
+  const ticks=g.map(t=>`<text class="ax" x="${L-8}" y="${y(t)+4}" text-anchor="end">${fmtK(histKey,t).replace(' %','%')}</text><line class="gl" x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}"/>`).join('');
+  const line=pts.length>1?`<polyline class="ln" points="${pts.map((p,i)=>x(i)+','+y(p.v)).join(' ')}"/>`:'';
+  const dots=pts.map((p,i)=>{const st=stateOf(histKey,p.v);return `<circle class="dot s-${st}" cx="${x(i)}" cy="${y(p.v)}" r="7"/><text class="vl" x="${x(i)}" y="${y(p.v)-14}" text-anchor="middle">${fmtK(histKey,p.v)}</text><text class="ax" x="${x(i)}" y="${H-12}" text-anchor="middle">${mLabel(p.ym,true)}</text>`}).join('');
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolu\u00e7\u00e3o mensal">${bands}${ticks}${line}${dots}</svg>`;
+}
+$('histSeg').onclick=e=>{const k=e.target.dataset.hk;if(k){histKey=k;renderHist()}};
+$('histBody').onclick=e=>{const tr=e.target.closest('tr[data-ym]');if(!tr)return;curYM=tr.dataset.ym;renderMonth();showTab('dash')};
+
+/* Lembrete de c\u00f3pia */
+const DAY=86400000;
+function hasData(){return S.tasks.length||S.org.groups.length||S.avarias.length||Object.values(S.months).some(m=>HK.some(([k])=>isFinite(monthVals(m)[k])))}
+function markBackup(){S.lastBackup=Date.now();save();checkBackup()}
+function checkBackup(){
+  const days=S.lastBackup?Math.floor((Date.now()-S.lastBackup)/DAY):null;
+  const el=$('bkLast');if(el)el.textContent=S.lastBackup?'\u00daltima c\u00f3pia: '+new Date(S.lastBackup).toLocaleDateString('pt-PT',{day:'numeric',month:'long'})+(days?` (h\u00e1 ${days} dia${days>1?'s':''})`:' (hoje)'):'Ainda n\u00e3o fizeste nenhuma c\u00f3pia.';
+  const show=hasData()&&(days===null||days>=7)&&S.bkSnooze!==new Date().toDateString();
+  $('bkBanner').hidden=!show;
+  if(show)$('bkMsg').textContent=days===null?'Ainda n\u00e3o fizeste nenhuma c\u00f3pia de seguran\u00e7a.':`A \u00faltima c\u00f3pia de seguran\u00e7a foi h\u00e1 ${days} dias.`;
+}
+$('bkNow').onclick=()=>$('saveFile').click();
+$('bkLater').onclick=()=>{S.bkSnooze=new Date().toDateString();save();checkBackup()};
+
+function renderAll(){renderTasks();renderOrg();renderAv();renderMonth();renderHist();checkBackup();tick()}
 renderAll();
 try{const t=localStorage.getItem(KEY+'-tab');showTab(TITLES[t]?t:'dash')}catch(e){showTab('dash')}
 </script>
