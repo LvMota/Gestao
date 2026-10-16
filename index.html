@@ -53,6 +53,12 @@ header.top{position:sticky;top:0;z-index:5;background:var(--head);color:var(--he
 
 /* Parqu\ed metro */
 .meter{align-self:center;display:flex;align-items:center;gap:6px;background:var(--head-sunk);border-radius:999px;padding:5px 6px 5px 16px}
+.mes .today-btn{margin-left:10px;padding:5px 12px;border-radius:999px;background:var(--accent-soft);border-color:transparent;color:var(--accent);font-size:13px}
+.mes .today-btn:hover{background:var(--accent);color:var(--accent-fg)}
+.meter .mt-lbl{font-size:12px;font-weight:700;color:var(--head-muted);margin-left:4px}
+.meter input[type=time]{width:128px;font-size:15px;padding:4px 10px}
+.meter .mt-go{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-family:var(--f-body);font-weight:700;padding:4px 14px}
+.meter .mt-go:hover{color:var(--accent-fg);filter:brightness(1.08)}
 .meter .pk{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:5px;background:var(--accent);color:var(--accent-fg)!important;font-family:var(--f-display);font-size:14px!important;letter-spacing:0!important;margin-right:2px!important}
 .meter .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--head-muted);margin-right:4px}
 .meter .time{font-family:var(--f-mono);font-weight:600;font-size:17px;font-variant-numeric:tabular-nums;min-width:62px;color:var(--head-fg)}
@@ -293,18 +299,17 @@ tbody tr:hover td{background:var(--sunk)}
         <span class="time" id="meterTime">--:--</span>
         <span class="bar"><i id="meterBar"></i></span>
         <span class="end" id="meterEnd"></span>
-        <span id="presets" class="row" style="gap:4px"></span>
-        <input id="customMin" type="number" min="1" max="600" placeholder="min" aria-label="Minutos">
-        <button id="startCustom" aria-label="Iniciar">&#x25b6;</button>
-        <button id="add15">+15</button>
-        <button id="stopMeter" aria-label="Parar">&#x25a0;</button>
+        <label class="mt-lbl" for="meterAt">Acaba &#xe0;s</label>
+        <input id="meterAt" type="time" aria-label="Hora a que acaba o estacionamento">
+        <button id="meterSet" class="mt-go">Avisar</button>
+        <button id="stopMeter" aria-label="Cancelar" title="Cancelar">&#x25a0;</button>
         <button id="stopAlarm" class="stopA" hidden>Parar alarme</button>
       </div>
     <button class="nav theme" id="themeBtn" title="Mudar entre dia e noite"></button>
     <button class="nav gear" data-tab="cfg" aria-label="Configura&#xe7;&#xf5;es" title="Configura&#xe7;&#xf5;es"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
   <div class="top-2">
-    <div class="mes"><button class="ghost" id="mPrev" aria-label="M&#xea;s anterior">&#x2039;</button><b id="mesLabel"></b><button class="ghost" id="mNext" aria-label="M&#xea;s seguinte">&#x203a;</button></div>
+    <div class="mes"><button class="ghost" id="mPrev" aria-label="M&#xea;s anterior">&#x2039;</button><b id="mesLabel"></b><button class="ghost" id="mNext" aria-label="M&#xea;s seguinte">&#x203a;</button><button class="today-btn" id="mToday" hidden>&#x21ba; M&#xea;s atual</button></div>
     <div class="grow"></div>
 
   </div>
@@ -537,8 +542,10 @@ function showTab(t){
 let curYM=ymKey(new Date());
 const M=()=>{if(!S.months[curYM])S.months[curYM]=emptyMonth(curYM);return S.months[curYM]};
 function shiftMonth(k){const [y,m]=curYM.split('-').map(Number);curYM=ymKey(new Date(y,m-1+k,1));renderMonth()}
+$('mToday').onclick=()=>{curYM=ymKey(new Date());renderMonth();toast('De volta ao m\u00eas atual')};
 $('mPrev').onclick=()=>shiftMonth(-1);$('mNext').onclick=()=>shiftMonth(1);
 function renderMonth(){
+  $('mToday').hidden=curYM===ymKey(new Date());
   const [y,m]=curYM.split('-').map(Number);
   $('mesLabel').textContent=new Date(y,m-1,1).toLocaleDateString('pt-PT',{month:'long',year:'numeric'});
   fillCalcInputs();renderCalcs();
@@ -548,10 +555,13 @@ function renderMonth(){
 let actx=null,beepTimer=null,warned=false;
 function audio(){try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume()}catch(e){}}
 function beep(){} /* sem som: alerta s\u00f3 visual e notifica\u00e7\u00e3o */
-[[15,'15'],[30,'30'],[60,'1h'],[90,'1h30'],[120,'2h']].forEach(([m,l])=>{const b=document.createElement('button');b.textContent=l;b.title=m+' minutos';b.onclick=()=>startMeter(m);$('presets').appendChild(b)});
-$('startCustom').onclick=()=>{const m=parseInt($('customMin').value);if(m>0){startMeter(m);$('customMin').value=''}else toast('Indica os minutos')};
-$('customMin').onkeydown=e=>{if(e.key==='Enter')$('startCustom').click()};
-$('add15').onclick=()=>{audio();if(S.meterEnd&&S.meterEnd>Date.now()){S.meterEnd+=15*60000;S.meterTotal+=15*60000;warned=false;S.meterWarned=null;save();schedule();tick()}else startMeter(15)};
+function setMeterAt(){const v=$('meterAt').value;if(!v){toast('Escolhe a hora a que acaba o estacionamento');return}
+  const [h,mi]=v.split(':').map(Number),d=new Date();d.setHours(h,mi,0,0);
+  if(d.getTime()<=Date.now()){toast('Essa hora j\u00e1 passou');return}
+  askNotif();stopAlarm();closeNotif();S.meterEnd=d.getTime();S.meterTotal=S.meterEnd-Date.now();warned=false;S.meterWarned=null;S.meterNotified=null;save();schedule();tick();
+  toast('Aviso marcado para as '+v)}
+$('meterSet').onclick=setMeterAt;
+$('meterAt').onkeydown=e=>{if(e.key==='Enter')setMeterAt()};
 $('stopMeter').onclick=$('stopAlarm').onclick=()=>{S.meterEnd=null;save();stopAlarm();schedule();closeNotif();tick()};
 function startMeter(m){audio();askNotif();stopAlarm();closeNotif();S.meterEnd=Date.now()+m*60000;S.meterTotal=m*60000;warned=false;S.meterWarned=null;S.meterNotified=null;save();schedule();tick();toast('Parqu\u00edmetro: '+m+' min')}
 /* Alertas do Windows (notifica\u00e7\u00f5es do Chrome) */
@@ -572,7 +582,7 @@ function tick(){
   const mt=$('meter');mt.classList.remove('low','done');
   if(!S.meterEnd){$('meterTime').textContent='--:--';$('meterEnd').textContent='';$('meterBar').style.width='0';document.title='Gest\u00e3o';return}
   const left=S.meterEnd-Date.now();
-  $('meterEnd').textContent='at\u00e9 '+new Date(S.meterEnd).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+  $('meterEnd').textContent='';const hhmm=new Date(S.meterEnd).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});if(document.activeElement!==$('meterAt')&&$('meterAt').value!==hhmm)$('meterAt').value=hhmm;
   if(left<=0){
     mt.classList.add('done');$('meterTime').textContent='00:00';$('meterBar').style.width='100%';document.title='\u23f0 Parqu\u00edmetro!';
     if(S.meterNotified!==S.meterEnd){S.meterNotified=S.meterEnd;save();notify('\u23f0 Parqu\u00edmetro: o tempo acabou','Acabou \u00e0s '+new Date(S.meterEnd).toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'})+'. Clica para abrir a Gest\u00e3o.',true)}
@@ -814,8 +824,7 @@ $('avBody').onclick=e=>{
   const ed=e.target.dataset.edit,del=e.target.dataset.delav;
   if(ed){const a=S.avarias.find(x=>x.id===ed);editId=ed;$('avDate').value=a.date;AVF.forEach(([k])=>$(AVIN[k]).value=a[k]||'');
     $('avSubmit').textContent='Guardar altera\u00e7\u00f5es';$('avCancel').hidden=false;$('avEditMsg').textContent='A editar um registo';renderAv();window.scrollTo(0,0);$('avSolic').focus()}
-  if(del){if(pendingAvDel!==del){pendingAvDel=del;e.target.textContent='?';e.target.title='Clica de novo para apagar';return}
-    S.avarias=S.avarias.filter(x=>x.id!==del);selected.delete(del);pendingAvDel=null;if(editId===del)endEdit();save();renderAv()}
+  if(del){S.avarias=S.avarias.filter(x=>x.id!==del);selected.delete(del);if(editId===del)endEdit();save();renderAv()}
 };
 $('avBody').onchange=e=>{const id=e.target.dataset.sel;if(!id)return;e.target.checked?selected.add(id):selected.delete(id);renderAv()};
 $('avAll').onchange=e=>{visibleAv().forEach(a=>e.target.checked?selected.add(a.id):selected.delete(a.id));renderAv()};
