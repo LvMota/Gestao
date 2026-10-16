@@ -117,7 +117,7 @@ tbody tr:hover td{background:var(--sunk)}
 .calc>:last-child,.group>:last-child,.tasks-card>:last-child{margin-bottom:18px}
 
 /* Dashboard */
-.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));overflow:hidden;border-radius:0 0 12px 12px}
 .kpi{background:none;border:none;border-radius:0;border-right:1px solid var(--line);padding:18px 22px;text-align:left;display:flex;flex-direction:column;gap:4px;font-weight:400;align-items:stretch;position:relative}
 .kpi:last-child{border-right:none}
 .kpi::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .2s}
@@ -300,6 +300,22 @@ tbody tr:hover td{background:var(--sunk)}
 .goals-pick label.f{width:200px}
 .goals-empty{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border:1px dashed var(--line);border-radius:10px}
 .mchip{padding:3px 10px;border-radius:999px;font-size:13px;text-transform:capitalize;background:var(--accent-soft);color:var(--accent);border-color:transparent;margin:2px}
+.kpi-wrap{display:grid;grid-template-columns:minmax(250px,1.15fr) minmax(0,5fr);gap:18px;align-items:stretch}
+.kpi-iqs-box,.kpi-vy-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.kpi-iqs-box{border:2px solid var(--accent)}
+.kpi-tag{font-size:12px;font-weight:700;letter-spacing:.02em;padding:8px 16px;background:var(--sunk);color:var(--muted);border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-iqs-box .kpi-tag{background:var(--accent);color:var(--accent-fg);border-bottom:none}
+#kpiIqs{flex:1;display:flex}#kpiIqs .kpi{flex:1;border-right:none}
+.kpi-big b{font-size:40px!important}
+.kpi{white-space:normal!important}
+.kpi .kh>span{min-width:0;line-height:1.5}
+.kpi .w{font-style:normal;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:1px 6px;border-radius:999px;margin-left:4px;letter-spacing:0}
+.kpi-total{border-left:2px solid var(--line)!important}
+.kpi-total b{font-size:38px!important}
+.goals .gdir{display:block;margin-top:4px;padding:3px 6px;font-size:12px;font-family:var(--f-body);width:auto}
+.goals td{white-space:nowrap}.goals .gpre{color:var(--muted);font-weight:700;margin-right:4px}
+.goals td input{width:calc(100% - 20px);display:inline-block}
+.calc.c-re .big{border-top:none;padding-top:0}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
 <script>try{if(localStorage.getItem("gestao-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
@@ -340,7 +356,10 @@ tbody tr:hover td{background:var(--sunk)}
       <section id="tab-dash" class="tabpane" style="display:flex;flex-direction:column;gap:24px">
         <div>
           <div class="sec-head"><div class="row" style="gap:14px;min-width:0"><h2>Indicadores do m&#xea;s</h2><span id="vyQuip" class="quip-head"></span></div><span class="sub">Clica num indicador para o atualizar</span></div>
-          <div class="kpis" id="kpis"></div>
+          <div class="kpi-wrap">
+            <div class="kpi-iqs-box"><div class="kpi-tag">&#x26a0; Aten&#xe7;&#xe3;o &#xb7; taxa obrigat&#xf3;ria</div><div id="kpiIqs"></div></div>
+            <div class="kpi-vy-box"><div class="kpi-tag">Valyou = (Reincid&#xea;ncia 20% + NPS 30% + IVR 20% + Produtividade 30%) &#xd7; 0,85 + Equipa &#xd7; 0,15</div><div class="kpis" id="kpis"></div></div>
+          </div>
         </div>
         <div class="dash-grid">
           <div>
@@ -409,10 +428,15 @@ tbody tr:hover td{background:var(--sunk)}
             <div class="big" id="ivr-bigrow"><span>Nota &#xb7; <span id="ivr-n" style="text-transform:none"></span></span><span class="verdict" id="ivr-v"></span><b id="ivr-r"></b></div>
           </div>
 
+          <div class="card calc c-re" data-calc="re">
+            <div class="ch"><h2>Reincid&#xea;ncia</h2><span class="sub">Menor &#xe9; melhor &#xb7; conta 20% no Valyou</span></div>
+            <div class="big" id="re-bigrow"><span>Reincid&#xea;ncia</span><span class="verdict" id="re-v"></span><b id="re-big"></b></div>
+          </div>
+
           <div class="card calc c-vy" data-calc="vy">
             <div class="ch"><h2>Valyou</h2><span class="sub">(Reinc. &#xd7; 0,2 + NPS &#xd7; 0,3 + IVR &#xd7; 0,2 + Prod. &#xd7; 0,3) &#xd7; 0,85 + Valyou equipa &#xd7; 0,15</span></div>
             <div class="vy-grid">
-              <label class="f" for="vy-r">N&#xed;vel reincid&#xea;ncia<input id="vy-r" data-k="vy.r" type="number" min="1" max="5" step="1"></label>
+              <label class="f" for="vy-r">N&#xed;vel reincid&#xea;ncia (auto)<input id="vy-r" type="number" disabled title="Grau da reincid&#xea;ncia do m&#xea;s"></label>
               <label class="f" for="vy-n">N&#xed;vel NPS (auto)<input id="vy-n" type="number" disabled title="Grau do NPS do m&#xea;s"></label>
               <label class="f" for="vy-i">N&#xed;vel IVR (auto)<input id="vy-i" type="number" disabled title="Grau do IVR do m&#xea;s"></label>
               <label class="f" for="vy-p">N&#xed;vel produtividade<input id="vy-p" data-k="vy.p" type="number" min="1" max="5" step="1"></label>
@@ -434,7 +458,7 @@ tbody tr:hover td{background:var(--sunk)}
         </div>
         <div class="card" style="margin-top:24px">
           <div class="sec-head"><h2>Todos os meses</h2><span class="sub">Clica num m&#xea;s para o abrir no dashboard</span></div>
-          <div class="tbl-wrap"><table class="hist-tbl"><thead><tr><th>M&#xea;s</th><th>NPS</th><th>IQS</th><th>Produtividade hora</th><th>IVR</th><th>Valyou</th></tr></thead><tbody id="histBody"></tbody></table></div>
+          <div class="tbl-wrap"><table class="hist-tbl"><thead><tr id="histHead"></tr></thead><tbody id="histBody"></tbody></table></div>
         </div>
       </section>
 
@@ -496,7 +520,7 @@ tbody tr:hover td{background:var(--sunk)}
                   <span id="gState" class="sub"></span>
                 </div>
                 <div id="gEmpty" class="goals-empty" hidden><span>Este m&#xea;s usa os objetivos padr&#xe3;o.</span><button class="primary" id="gCreate">Criar objetivos para este m&#xea;s</button></div>
-                <div class="tbl-wrap" id="gTable"><table class="goals"><thead><tr><th>Indicador</th><th>Grau 1</th><th>Grau 2 a partir de</th><th>Grau 3 a partir de</th><th>Grau 4 a partir de</th><th>Grau 5 a partir de</th></tr></thead><tbody id="goalRows"></tbody></table></div>
+                <div class="tbl-wrap" id="gTable"><table class="goals"><thead><tr><th>Indicador</th><th>Grau 1</th><th>Grau 2</th><th>Grau 3</th><th>Grau 4</th><th>Grau 5</th></tr></thead><tbody id="goalRows"></tbody></table></div>
                 <div class="row" id="gMonthActs" hidden><button class="ghost" id="gRemove">Remover objetivos deste m&#xea;s (voltar ao padr&#xe3;o)</button></div>
                 <div class="months-custom" id="gList"></div>
               </div>
@@ -546,14 +570,16 @@ const ptDate=d=>d?d.split('-').reverse().join('/'):'';
 function lastSaturday(d=new Date()){const x=new Date(d);x.setDate(x.getDate()-((x.getDay()+1)%7));return iso(x)}
 function weekdaysIn(ym){const [y,m]=ym.split('-').map(Number);let n=0;for(let d=new Date(y,m-1,1);d.getMonth()===m-1;d.setDate(d.getDate()+1)){const w=d.getDay();if(w&&w<6)n++}return n}
 
-const emptyMonth=ym=>({diasTrab:weekdaysIn(ym),diasFeitos:0,nps:{h:{p:0,n:0,d:0},o:{p:0,n:0,d:0}},iqs:{h:{f:0,q:0},o:{f:0,q:0}},man:{nps:'',iqs:'',fh:'',ivr:'',vy:''},mgr:{nps:'',iqs:'',fh:'',ivr:'',vy:''},horas:0,trat:0,ivr:Array(11).fill(0),vy:{r:'',n:'',i:'',p:'',eq:'',at:''}});
-const GOALS0={nps:{n:'NPS',u:'%',t:[65,72.5,80,87.5]},iqs:{n:'IQS',u:'%',t:[40,42.5,45,47.5]},fh:{n:'Produtividade hora',u:'',t:[1.6,2,2.6,4]},ivr:{n:'IVR',u:'',t:[9,9.15,9.45,9.6]},vy:{n:'Valyou',u:'',t:[2.5,3,3.5,4]}};
+const emptyMonth=ym=>({diasTrab:weekdaysIn(ym),diasFeitos:0,nps:{h:{p:0,n:0,d:0},o:{p:0,n:0,d:0}},iqs:{h:{f:0,q:0},o:{f:0,q:0}},man:{re:'',nps:'',iqs:'',fh:'',ivr:'',vy:''},mgr:{re:'',nps:'',iqs:'',fh:'',ivr:'',vy:''},horas:0,trat:0,ivr:Array(11).fill(0),vy:{r:'',n:'',i:'',p:'',eq:'',at:''}});
+const GOALS0={re:{n:'Reincid\u00eancia',u:'%',dir:-1,t:[20,15,10,5]},nps:{n:'NPS',u:'%',t:[65,72.5,80,87.5]},iqs:{n:'IQS',u:'%',t:[40,42.5,45,47.5]},fh:{n:'Produtividade hora',u:'',t:[1.6,2,2.6,4]},ivr:{n:'IVR',u:'',t:[9,9.15,9.45,9.6]},vy:{n:'Valyou',u:'',t:[2.5,3,3.5,4]}};
 const seed=()=>({goalsV:3,goals:JSON.parse(JSON.stringify(GOALS0)),tasks:[],org:{name:'',groups:[]},avarias:[],months:{},meterEnd:null,meterTotal:0});
 let S;
 try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!S||!S.org)S=seed();
 if(!S.goals)S.goals=JSON.parse(JSON.stringify(GOALS0));
 if((S.goalsV||1)<3){S.goals=JSON.parse(JSON.stringify(GOALS0));S.goalsV=3;}
+if(!S.goals.re){S.goals={re:JSON.parse(JSON.stringify(GOALS0.re)),...S.goals}}
+Object.values(S.months||{}).forEach(m=>{m.man=m.man||{};m.mgr=m.mgr||{};if(m.vy&&m.vy.r!==''&&m.vy.r!=null&&(m.man.re===''||m.man.re==null)&&!m.mgr.re)m.mgr.re=String(m.vy.r)});
 S.avarias=(S.avarias||[]).filter(a=>'solic' in a||'ticket' in a);
 S.avarias.forEach(a=>a.cp=String(a.cp||'').replace(/[-\s]/g,''));
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
@@ -695,8 +721,9 @@ function renderGoals(){
   const tgt=gTarget();
   $('gEmpty').hidden=!(isM&&!tgt);$('gTable').hidden=isM&&!tgt;$('gMonthActs').hidden=!(isM&&tgt);
   $('gState').textContent=isM?(tgt?'Objetivos pr\u00f3prios de '+MESES[gm-1]+' '+gy:'Sem objetivos pr\u00f3prios'):'Valem para todos os meses sem objetivos pr\u00f3prios';
-  if(tgt)$('goalRows').innerHTML=Object.entries(tgt).map(([k,g])=>`<tr><td>${g.n}</td><td class="sub">abaixo de ${fmtG(k,g.t[0])}</td>
-    ${g.t.map((v,i)=>`<td><input type="text" inputmode="decimal" data-gk="${k}" data-gi="${i}" value="${String(v).replace('.',',')}" aria-label="${g.n} grau ${i+2}"></td>`).join('')}</tr>`).join('');
+  if(tgt){if(!tgt.re)tgt.re=JSON.parse(JSON.stringify(S.goals.re));const ord=['re','nps','ivr','fh','vy','iqs'];
+  $('goalRows').innerHTML=ord.filter(k=>tgt[k]).map(k=>{const g=tgt[k],lo=g.dir<0;return `<tr><td>${g.n}<select class="gdir" data-gk="${k}" data-gdir="1" aria-label="Sentido"><option value="1" ${lo?'':'selected'}>Maior \u00e9 melhor</option><option value="-1" ${lo?'selected':''}>Menor \u00e9 melhor</option></select></td><td class="sub">${lo?'acima de':'abaixo de'} ${fmtG(k,g.t[0])}</td>
+    ${g.t.map((v,i)=>`<td><span class="gpre">${lo?'\u2264':'\u2265'}</span><input type="text" inputmode="decimal" data-gk="${k}" data-gi="${i}" value="${String(v).replace('.',',')}" aria-label="${g.n} grau ${i+2}"></td>`).join('')}</tr>`}).join('')}
   const keys=Object.keys(S.goalsByMonth).sort().reverse();
   $('gList').innerHTML=keys.length?'<span class="sub">Meses com objetivos pr\u00f3prios:</span> '+keys.map(ym=>`<button class="mchip" data-gym="${ym}">${mLabel(ym)}</button>`).join(''):'';
   const n=keys.length;$('goalsSum').textContent=n?`${n} m\u00eas${n>1?'es':''} com objetivos pr\u00f3prios`:'S\u00f3 objetivos padr\u00e3o';
@@ -708,10 +735,12 @@ $('gCreate').onclick=()=>{S.goalsByMonth[gYM]=JSON.parse(JSON.stringify(S.goals)
 let gRemArm=false;
 $('gRemove').onclick=e=>{if(!gRemArm){gRemArm=true;e.target.textContent='Clica de novo para remover';setTimeout(()=>{gRemArm=false;e.target.textContent='Remover objetivos deste m\u00eas (voltar ao padr\u00e3o)'},3000);return}
   gRemArm=false;delete S.goalsByMonth[gYM];save();renderGoals();renderCalcs();renderHist();toast('Este m\u00eas volta a usar os objetivos padr\u00e3o')};
-$('goalRows').onchange=e=>{const t=e.target,tgt=gTarget();if(!tgt||!t.dataset.gk)return;const g=tgt[t.dataset.gk],v=pnum(t.value);
+$('goalRows').onchange=e=>{const t=e.target,tgt=gTarget();if(!tgt||!t.dataset.gk)return;const g=tgt[t.dataset.gk];
+  if(t.dataset.gdir){g.dir=+t.value;save();renderGoals();renderCalcs();renderHist();toast('Sentido atualizado. Confirma os limites dos graus.');return}
+  const v=pnum(t.value);
   if(!isFinite(v)){toast('Valor inv\u00e1lido');renderGoals();return}
-  g.t[+t.dataset.gi]=v;const ok=g.t.every((x,i)=>i===0||x>=g.t[i-1]);
-  save();renderGoals();renderCalcs();renderHist();toast(ok?'Objetivo guardado':'Guardado, mas aten\u00e7\u00e3o: os valores dos graus devem ir aumentando')};
+  g.t[+t.dataset.gi]=v;const ok=g.t.every((x,i)=>i===0||(g.dir<0?x<=g.t[i-1]:x>=g.t[i-1]));
+  save();renderGoals();renderCalcs();renderHist();toast(ok?'Objetivo guardado':'Guardado, mas aten\u00e7\u00e3o: os valores dos graus devem ir '+(g.dir<0?'diminuindo':'aumentando'))};
 function renderCfg(){
   renderGoals();renderNotifStatus();
   $('cfgOrg').value=S.org.name;
@@ -758,8 +787,8 @@ let resetArmed=false;
 $('resetMonth').onclick=e=>{if(!resetArmed){resetArmed=true;e.target.textContent='Clica de novo para limpar';setTimeout(()=>{resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas'},3000);return}
   S.months[curYM]=emptyMonth(curYM);resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas';save();renderMonth();toast('M\u00eas limpo')};
 const manV=(m,k)=>{const v=(m.man||{})[k];return v!==''&&v!=null&&isFinite(v)?+v:null};
-function vyOf(m,c){const mv=manV(m,'vy');if(mv!=null)return mv;const n=gradeOf('nps',c.eff.nps),i=gradeOf('ivr',c.eff.ivr);const xs=[m.vy.r,n||'',i||'',m.vy.p,m.vy.eq];
-  if(!xs.every(x=>x!==''&&x!=null&&isFinite(x)))return NaN;const v=((+m.vy.r)*0.2+n*0.3+i*0.2+(+m.vy.p)*0.3)*0.85+(+m.vy.eq)*0.15;return Math.round(v*100+1e-6)/100}
+function vyOf(m,c){const mv=manV(m,'vy');if(mv!=null)return mv;const rr=gradeOf('re',c.eff.re),n=gradeOf('nps',c.eff.nps),i=gradeOf('ivr',c.eff.ivr);const xs=[rr||'',n||'',i||'',m.vy.p,m.vy.eq];
+  if(!xs.every(x=>x!==''&&x!=null&&isFinite(x)))return NaN;const v=(rr*0.2+n*0.3+i*0.2+(+m.vy.p)*0.3)*0.85+(+m.vy.eq)*0.15;return Math.round(v*100+1e-6)/100}
 const npsOf=x=>{const t=x.p+x.n+x.d;return{t,r:t?(x.p-x.d)/t:NaN}};
 function calcAll(){return calcFor(M())}
 function calcFor(m){
@@ -770,13 +799,14 @@ function calcFor(m){
   const ivrN=m.ivr.reduce((a,b)=>a+b,0),ivr=ivrN?m.ivr.reduce((a,c,i)=>a+c*i,0)/ivrN:NaN;
   const isMan={},eff={};[['nps',nt.r*100],['iqs',iqs.t*100],['fh',fh],['ivr',ivr]].forEach(([k,a])=>{const v=manV(m,k);isMan[k]=v!=null;eff[k]=v!=null?v:a});
   isMan.vy=manV(m,'vy')!=null;
+  {const v=manV(m,'re');eff.re=v!=null?v:NaN;isMan.re=false}
   return{m,nh,no,nt,iqs,fh,ivr,ivrN,eff,isMan};
 }
 /* Estados e carinhas */
 let GO=null,GM=null;const GG=()=>GM||S.goals;
 const goalsFor=ym=>(S.goalsByMonth&&S.goalsByMonth[ym])||S.goals;
 const mgrOf=(k,o=GO)=>{const x=o&&o[k];return x!==''&&x!=null&&isFinite(x)?Math.min(5,Math.max(1,Math.round(+x))):0};
-function gradeOf(k,v){const fx=mgrOf(k);if(fx)return fx;const g=GG()[k];if(!g||!isFinite(v))return 0;return 1+g.t.filter(x=>v>=x).length}
+function gradeOf(k,v){const fx=mgrOf(k);if(fx)return fx;const g=GG()[k]||S.goals[k];if(!g||!isFinite(v))return 0;return 1+(g.dir<0?g.t.filter(x=>v<=x).length:g.t.filter(x=>v>=x).length)}
 function stateOf(k,v){const n=gradeOf(k,v);return n?'g'+n:'none'}
 const WORD=['Sem dados','Muito mau','Mau','Razo\u00e1vel','Bom','Excelente'];
 const LBL={none:'Sem dados',g1:'Grau 1 \u00b7 Muito mau',g2:'Grau 2 \u00b7 Mau',g3:'Grau 3 \u00b7 Razo\u00e1vel',g4:'Grau 4 \u00b7 Bom',g5:'Grau 5 \u00b7 Excelente'};
@@ -795,17 +825,17 @@ function needFor(k){const c=calcAll(),m=c.m,g=GG()[k];if(c.isMan[k]||mgrOf(k))re
     if(n>1){const L=g.t[n-2];o.down=Math.max(0,Math.floor(Sm/L-N+1e-9));o.downTxt=o.down?`Aguentas ${o.down} nota${o.down>1?'s':''} 0 sem descer de grau`:'Uma nota 0 agora e desces de grau'}
     return o}
   return null}
-function goalTxt(k,v){if(mgrOf(k))return'Grau definido \u00e0 m\u00e3o';const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=GG()[k],n=gradeOf(k,v);if(!n)return'Grau 5 a partir de '+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
-  const next=g.t[n-1],d=next-v;return `Grau ${n+1} a partir de ${fmtG(k,next)} (faltam ${String(+d.toFixed(2)).replace('.',',')}${g.u?' '+g.u:''})`}
+function goalTxt(k,v){if(mgrOf(k))return'Grau definido \u00e0 m\u00e3o';const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=GG()[k]||S.goals[k],n=gradeOf(k,v),lo=g.dir<0;if(!n)return'Grau 5 '+(lo?'at\u00e9 ':'a partir de ')+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
+  const next=g.t[n-1],d=Math.abs(next-v);return `Grau ${n+1} ${lo?'at\u00e9':'a partir de'} ${fmtG(k,next)} (${lo?'desce':'faltam'} ${String(+d.toFixed(2)).replace('.',',')}${g.u?' '+g.u:''})`}
 /* Janela das calculadoras */
-const CNAME={nps:'NPS',iqs:'IQS',fh:'Produtividade hora',ivr:'IVR',vy:'Valyou'};
+const CNAME={re:'Reincid\u00eancia',nps:'NPS',iqs:'IQS',fh:'Produtividade hora',ivr:'IVR',vy:'Valyou'};
 let openKey=null;
 function openCalc(k){openKey=k;document.querySelectorAll('#tab-calc .calc').forEach(c=>c.hidden=c.dataset.calc!==k);$('tab-calc').hidden=false;
   const f=document.querySelector(`#tab-calc .calc[data-calc="${k}"] input:not([disabled])`);f&&setTimeout(()=>f.focus(),30)}
 function closeCalc(){if($('tab-calc').hidden)return;$('tab-calc').hidden=true;const k=openKey;openKey=null;return k}
-const MANU={nps:['%','ex.: 72,5'],iqs:['%','ex.: 45,2'],fh:['','ex.: 2,3'],ivr:['','ex.: 9,3'],vy:['','ex.: 3,1']};
+const MANU={re:['%','ex.: 8,5'],nps:['%','ex.: 72,5'],iqs:['%','ex.: 45,2'],fh:['','ex.: 2,3'],ivr:['','ex.: 9,3'],vy:['','ex.: 3,1']};
 document.querySelectorAll('#tab-calc .calc').forEach(c=>{
-  {const k=c.dataset.calc,[u,ph]=MANU[k];c.querySelector('.big').insertAdjacentHTML('beforebegin',`<div class="man-row"><label class="f" for="man-${k}">Resultado manual${u?' ('+u+')':''}<input id="man-${k}" data-man="${k}" type="number" step="0.01" placeholder="${ph}"></label><span class="sub">Escreve o resultado se n\u00e3o quiseres preencher os campos acima (preench\u00ea-los apaga o valor manual). O grau manual fica fixo mesmo que os crit\u00e9rios mudem.</span><span class="man-badge">\u270e A usar valor manual</span><label class="f" for="mgr-${k}">Grau manual<select id="mgr-${k}" data-mgr="${k}"><option value="">Autom\u00e1tico</option>${[1,2,3,4,5].map(n=>`<option value="${n}">Grau ${n}</option>`).join('')}</select></label></div>`)}
+  {const k=c.dataset.calc,[u,ph]=MANU[k];c.querySelector('.big').insertAdjacentHTML('beforebegin',`<div class="man-row"><label class="f" for="man-${k}">${k==='re'?'Taxa de reincid\u00eancia':'Resultado manual'}${u?' ('+u+')':''}<input id="man-${k}" data-man="${k}" type="number" step="0.01" placeholder="${ph}"></label><span class="sub">${k==='re'?'Escreve a taxa de reincid\u00eancia do m\u00eas. Se quiseres, fixa tamb\u00e9m o grau.':'Escreve o resultado se n\u00e3o quiseres preencher os campos acima (preench\u00ea-los apaga o valor manual). O grau manual fica fixo mesmo que os crit\u00e9rios mudem.'}</span><span class="man-badge">\u270e A usar valor manual</span><label class="f" for="mgr-${k}">Grau manual<select id="mgr-${k}" data-mgr="${k}"><option value="">Autom\u00e1tico</option>${[1,2,3,4,5].map(n=>`<option value="${n}">Grau ${n}</option>`).join('')}</select></label></div>`)}
   c.querySelector('.ch').insertAdjacentHTML('beforeend','<button class="x-close" data-xclose aria-label="Fechar">\u00d7</button>');
   let a=c.querySelector('.calc-acts');if(!a){a=document.createElement('div');a.className='calc-acts';c.appendChild(a)}
   a.insertAdjacentHTML('beforeend','<button class="primary" data-upd>Atualizar</button>');
@@ -813,7 +843,7 @@ document.querySelectorAll('#tab-calc .calc').forEach(c=>{
 $('tab-calc').addEventListener('click',e=>{
   if(e.target===$('tab-calc')||e.target.closest('[data-xclose]')){closeCalc();return}
   if(e.target.closest('[data-upd]')){save();renderCalcs();const k=closeCalc();toast(CNAME[k]+' atualizado');
-    const i=['nps','iqs','fh','ivr','vy'].indexOf(k),tile=$('kpis').children[i];if(tile){tile.classList.remove('flash');void tile.offsetWidth;tile.classList.add('flash')}}
+    const tile=document.querySelector(`.kpi[data-key="${k}"]`);if(tile){tile.classList.remove('flash');void tile.offsetWidth;tile.classList.add('flash')}}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCalc();if(e.key==='Enter'&&openKey&&e.target.matches('#tab-calc input'))document.querySelector(`#tab-calc .calc[data-calc="${openKey}"] [data-upd]`).click()});
 /* Dia / noite */
@@ -855,6 +885,7 @@ function renderCalcs(){
   const eq=m.vy.eq,at=m.vy.at;
   if(eq!==''&&at!==''){const d=at-eq;$('vy-cmp').innerHTML=`<span class="${d>=0?'up':'down'}">${d>=0?'+':''}${num(d,2)}</span>`}else set('vy-cmp','\u2014');
   const npsV=c.eff.nps,iqsV=c.eff.iqs,P2=v=>isFinite(v)?num(v,2)+' %':'\u2014';
+  const gR=gradeOf('re',c.eff.re);m.vy.r=gR||'';$('vy-r').value=gR||'';
   const gN=gradeOf('nps',npsV),gI=gradeOf('ivr',c.eff.ivr);m.vy.n=gN||'';m.vy.i=gI||'';$('vy-n').value=gN||'';$('vy-i').value=gI||'';
   const gP=gradeOf('fh',c.eff.fh);$('vy-p').placeholder=gP?'Sugest\u00e3o: '+gP:'';
   const nums=[m.vy.r,m.vy.n,m.vy.i,m.vy.p,m.vy.eq];
@@ -864,7 +895,7 @@ function renderCalcs(){
   m.vy.at=isFinite(vyV)?vyV:'';$('vy-at').value=isFinite(vyV)?vyV.toFixed(2):'';
   verdict('nps-v','nps',npsV);set('nps-big',P2(npsV));
   verdict('iqs-v','iqs',iqsV);if(c.isMan.iqs)set('iqs-big',P2(iqsV));else $('iqs-big').innerHTML=$('iqs-t-r').innerHTML;
-  verdict('fh-v','fh',c.eff.fh);verdict('ivr-v','ivr',c.eff.ivr);verdict('vy-v','vy',vyV);{const st=stateOf('vy',vyV);$('vyQuip').className='quip-head s-'+st;$('vyQuip').innerHTML=face(st)+`<em>\u201c${quip('vy',gradeOf('vy',vyV))}\u201d</em><small>Valyou ${isFinite(vyV)?num(vyV,2):'\u2014'}</small>`}set('vy-big',num(vyV,2));
+  verdict('re-v','re',c.eff.re);set('re-big',P2(c.eff.re));verdict('fh-v','fh',c.eff.fh);verdict('ivr-v','ivr',c.eff.ivr);verdict('vy-v','vy',vyV);{const st=stateOf('vy',vyV);$('vyQuip').className='quip-head s-'+st;$('vyQuip').innerHTML=face(st)+`<em>\u201c${quip('vy',gradeOf('vy',vyV))}\u201d</em><small>Valyou ${isFinite(vyV)?num(vyV,2):'\u2014'}</small>`}set('vy-big',num(vyV,2));
   [['nps-h-r',c.nh.r*100,'nps'],['nps-o-r',c.no.r*100,'nps'],['nps-t-r',npsV,'nps'],['iqs-o-r',c.iqs.o*100,'iqs'],['iqs-h-r',c.iqs.h*100,'iqs'],['iqs-t-r',iqsV,'iqs']].forEach(([id,v,k])=>{const e=$(id);e.classList.remove('s-g1','s-g2','s-g3','s-g4','s-g5','s-none');e.classList.add('s-'+stateOf(k,v))});
   const P=m.nps.h.p+m.nps.o.p,N=m.nps.h.n+m.nps.o.n,D=m.nps.h.d+m.nps.o.d;
   distBar('nps-bar','nps-leg',[{l:'Promotores',v:P,c:'p',col:'--ok'},{l:'Neutros',v:N,c:'n',col:'--warn'},{l:'Detratores',v:D,c:'d',col:'--bad'}]);
@@ -873,13 +904,18 @@ function renderCalcs(){
   document.querySelectorAll('[data-ivr]').forEach(i=>i.classList.toggle('has',+i.value>0));
   const kv={nps:npsV,iqs:iqsV,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyV};
   document.querySelectorAll('#tab-calc .calc').forEach(el=>{el.classList.toggle('is-man',!!c.isMan[el.dataset.calc]);el.classList.toggle('is-fix',!!mgrOf(el.dataset.calc))});
-  const MAN='\u270e valor manual';
-  const k=[['NPS',P2(npsV),c.isMan.nps?MAN:c.nt.t+' respostas'],['IQS',P2(iqsV),c.isMan.iqs?MAN:c.iqs.q+' IQS / '+c.iqs.f+' fechadas'],['Produtividade hora',num(c.eff.fh,2),c.isMan.fh?MAN:m.horas?(m.trat||0)+' tratadas \u00b7 '+m.horas+' h':'sem horas'],['IVR',num(c.eff.ivr,2),c.isMan.ivr?MAN:c.ivrN+' respostas'],['Valyou',num(vyV,2),c.isMan.vy?MAN:m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa']];
-  const keys=['nps','iqs','fh','ivr','vy'];
-  $('kpis').innerHTML=k.map(([l,v,sub],i)=>{const key=keys[i],val=kv[key],st=stateOf(key,val),n=gradeOf(key,val);
-    if(mgrOf(key))sub+=' \u00b7 \u270e grau fixo';
-    return `<button class="kpi s-${st}"><div class="kh"><span>${l}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`}).join('');
-  $('kpis').querySelectorAll('button').forEach((b,i)=>b.onclick=()=>openCalc(keys[i]));
+  const MAN='\u270e valor manual';kv.re=c.eff.re;
+  const KD={re:['Reincid\u00eancia',P2(c.eff.re),isFinite(c.eff.re)?'taxa do m\u00eas':'sem valor','20%'],
+    nps:['NPS',P2(npsV),c.isMan.nps?MAN:c.nt.t+' respostas','30%'],
+    ivr:['IVR',num(c.eff.ivr,2),c.isMan.ivr?MAN:c.ivrN+' respostas','20%'],
+    fh:['Produtividade',num(c.eff.fh,2),c.isMan.fh?MAN:m.horas?(m.trat||0)+' tratadas \u00b7 '+m.horas+' h':'sem horas','30%'],
+    vy:['Valyou',num(vyV,2),c.isMan.vy?MAN:m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa',''],
+    iqs:['IQS',P2(iqsV),c.isMan.iqs?MAN:c.iqs.q+' IQS / '+c.iqs.f+' fechadas','']};
+  const tile=key=>{const [l,v,sub0,w]=KD[key],val=kv[key],st=stateOf(key,val),n=gradeOf(key,val);let sub=sub0;if(mgrOf(key))sub+=' \u00b7 \u270e grau fixo';
+    return `<button class="kpi s-${st}${key==='vy'?' kpi-total':''}${key==='iqs'?' kpi-big':''}" data-key="${key}"><div class="kh"><span>${l}${w?` <i class="w">${w}</i>`:''}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`};
+  $('kpis').innerHTML=['re','nps','ivr','fh','vy'].map(tile).join('');
+  $('kpiIqs').innerHTML=tile('iqs');
+  document.querySelectorAll('.kpi[data-key]').forEach(b=>b.onclick=()=>openCalc(b.dataset.key));
 }
 
 /* Avarias */
@@ -964,25 +1000,27 @@ $('wipeAll').onclick=()=>{
 $('wipeCancel').onclick=()=>{wipeArmed=false;$('wipeAll').textContent='Apagar tudo';$('wipeAll').classList.remove('armed');$('wipeCancel').hidden=true};
 
 /* Hist\u00f3rico */
-const HK=[['nps','NPS'],['iqs','IQS'],['fh','Produtividade hora'],['ivr','IVR'],['vy','Valyou']];
+const HK=[['re','Reincid\u00eancia'],['nps','NPS'],['ivr','IVR'],['fh','Produtividade hora'],['vy','Valyou'],['iqs','IQS']];
 let histKey='nps';
-function monthVals(m,ym){const prev=GO,pg=GM;GO=m.mgr||{};GM=ym?goalsFor(ym):GM;const c=calcFor(m),o={nps:c.eff.nps,iqs:c.eff.iqs,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyOf(m,c)};o.g={};o.fx={};HK.forEach(([k])=>{o.g[k]=gradeOf(k,o[k]);o.fx[k]=!!mgrOf(k)});GO=prev;GM=pg;return o}
-const fmtK=(k,v)=>!isFinite(v)?'\u2014':(k==='nps'||k==='iqs')?num(v,2)+' %':num(v,2);
+function monthVals(m,ym){const prev=GO,pg=GM;GO=m.mgr||{};GM=ym?goalsFor(ym):GM;const c=calcFor(m),o={re:c.eff.re,nps:c.eff.nps,iqs:c.eff.iqs,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyOf(m,c)};o.g={};o.fx={};HK.forEach(([k])=>{o.g[k]=gradeOf(k,o[k]);o.fx[k]=!!mgrOf(k)});GO=prev;GM=pg;return o}
+const fmtK=(k,v)=>!isFinite(v)?'\u2014':(k==='nps'||k==='iqs'||k==='re')?num(v,2)+' %':num(v,2);
 const mLabel=(ym,short)=>{const [y,mm]=ym.split('-').map(Number);return new Date(y,mm-1,1).toLocaleDateString('pt-PT',short?{month:'short',year:'2-digit'}:{month:'long',year:'numeric'})};
 function renderHist(){
+  $('histHead').innerHTML='<th>M\u00eas</th>'+HK.map(([k,l])=>`<th>${l}</th>`).join('');
   $('histSeg').innerHTML=HK.map(([k,l])=>`<button data-hk="${k}" class="${k===histKey?'on':''}">${l}</button>`).join('');
   const rows=Object.keys(S.months).sort().map(ym=>({ym,v:monthVals(S.months[ym],ym)})).filter(r=>HK.some(([k])=>isFinite(r.v[k])||r.v.g[k]));
   $('histBody').innerHTML=rows.length?rows.slice().reverse().map(r=>`<tr data-ym="${r.ym}"><td style="text-transform:capitalize;font-weight:700">${mLabel(r.ym)}</td>${HK.map(([k])=>{const n=r.v.g[k],st=n?'g'+n:'none';return `<td><span class="gchip s-${st}">${fmtK(k,r.v[k])}${n?` <small>G${n}${r.v.fx[k]?' \u270e':''}</small>`:''}</span></td>`}).join('')}</tr>`).join('')
-    :'<tr><td colspan="6" class="empty">Ainda n\u00e3o h\u00e1 meses com dados. Preenche os indicadores no dashboard.</td></tr>';
+    :'<tr><td colspan="7" class="empty">Ainda n\u00e3o h\u00e1 meses com dados. Preenche os indicadores no dashboard.</td></tr>';
   const pts=rows.map(r=>({ym:r.ym,v:r.v[histKey],g:r.v.g[histKey]})).filter(p=>isFinite(p.v));
   const el=$('histChart');
   if(!pts.length){el.innerHTML='<div class="empty" style="padding:60px 0;text-align:center">Sem dados de '+HK.find(x=>x[0]===histKey)[1]+' em nenhum m\u00eas.</div>';return}
-  const g=S.goals[histKey].t,W=1000,H=340,L=64,R=24,T=20,B=40;
+  const G0=S.goals[histKey],g=G0.dir<0?G0.t.slice().reverse():G0.t,W=1000,H=340,L=64,R=24,T=20,B=40;
   let lo=Math.min(...pts.map(p=>p.v),g[0]),hi=Math.max(...pts.map(p=>p.v),g[3]);const pad=(hi-lo)*0.15||1;lo-=pad;hi+=pad;
+  if(histKey==='re')lo=Math.max(lo,0);
   if(histKey==='nps'||histKey==='iqs'){lo=Math.max(lo,histKey==='nps'?-100:0);hi=Math.min(hi,100)}
   const y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo)),x0=L+60,x1=W-R-110,x=i=>pts.length===1?(x0+x1)/2:x0+(x1-x0)*i/(pts.length-1);
   const edges=[lo,...g,hi];let bands='';for(let i=0;i<5;i++){const a=Math.max(edges[i],lo),b=Math.min(edges[i+1],hi);if(b<=a)continue;
-    bands+=`<rect class="band s-g${i+1}" x="${L}" y="${y(b)}" width="${W-L-R}" height="${y(a)-y(b)}"/><text class="bl s-g${i+1}" x="${W-R-6}" y="${y(b)+14}" text-anchor="end">Grau ${i+1}</text>`}
+    const gi=G0.dir<0?5-i:i+1;bands+=`<rect class="band s-g${gi}" x="${L}" y="${y(b)}" width="${W-L-R}" height="${y(a)-y(b)}"/><text class="bl s-g${gi}" x="${W-R-6}" y="${y(b)+14}" text-anchor="end">Grau ${gi}</text>`}
   const ticks=g.map(t=>`<text class="ax" x="${L-8}" y="${y(t)+4}" text-anchor="end">${fmtK(histKey,t).replace(' %','%')}</text><line class="gl" x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}"/>`).join('');
   const line=pts.length>1?`<polyline class="ln" points="${pts.map((p,i)=>x(i)+','+y(p.v)).join(' ')}"/>`:'';
   const dots=pts.map((p,i)=>{const st=p.g?'g'+p.g:'none';return `<circle class="dot s-${st}" cx="${x(i)}" cy="${y(p.v)}" r="7"/><text class="vl" x="${x(i)}" y="${y(p.v)-14}" text-anchor="middle">${fmtK(histKey,p.v)}</text><text class="ax" x="${x(i)}" y="${H-12}" text-anchor="middle">${mLabel(p.ym,true)}</text>`}).join('');
