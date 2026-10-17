@@ -134,6 +134,10 @@ tbody tr:hover td{background:var(--sunk)}
 .tasks input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);flex:none}
 .tasks .txt{flex:1;min-width:0;overflow-wrap:anywhere}
 .tasks li.done .txt{text-decoration:line-through;color:var(--muted)}
+.tasks .tk-edit{flex:1;min-width:0;padding:5px 8px}
+.tasks .icon.ed:hover,.tasks .icon.ok:hover{color:var(--accent)}
+.tasks .icon.ok{color:var(--ok)}
+.tasks .icon.ed{opacity:0;transition:opacity .15s}.tasks li:hover .icon.ed,.tasks .icon.ed:focus-visible{opacity:1}
 
 /* Calculadoras */
 .calcs{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}
@@ -331,6 +335,29 @@ tbody tr:hover td{background:var(--sunk)}
 @media (prefers-reduced-motion:reduce){.kpi{transition:none}.kpi:hover{transform:none}.kpi:hover .face{animation:none}}
 .disclaimer{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--warn-soft);border:1px solid var(--warn);color:var(--fg);font-size:13px;line-height:1.5}
 .disclaimer b{color:var(--warn)}
+.set{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;align-items:start}
+.set-nav{display:flex;flex-direction:column;gap:4px;position:sticky;top:90px}
+.set-nav button{display:grid;grid-template-columns:28px 1fr;grid-template-rows:auto auto;column-gap:8px;text-align:left;background:transparent;border:1px solid transparent;border-radius:10px;padding:10px 12px;color:var(--fg);font-weight:700}
+.set-nav button span{grid-row:1/3;font-size:18px;align-self:center}
+.set-nav button small{font-weight:500;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.set-nav button:hover{background:var(--sunk);color:var(--fg);border-color:transparent}
+.set-nav button.on{background:var(--surface);border-color:var(--line);box-shadow:var(--shadow)}
+.set-nav button.on{color:var(--accent)}
+.set-body{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 24px;box-shadow:var(--shadow);min-height:300px}
+.set-pane{display:flex;flex-direction:column;gap:16px}
+.set-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.set-head h2{font-size:18px}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid var(--sep)}
+.set-row>div:first-child{display:flex;flex-direction:column;gap:2px;min-width:0}
+.set-row b{font-size:15px}
+.set-pane p.sub{margin:0}
+.paste-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.set-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.set-foot select{width:200px}
+.goals-pick{display:flex;gap:8px;align-items:center;padding:0;background:none}
+.goals-pick select{width:auto;min-width:110px}
+.goals-empty .row select{width:200px}
+.danger-txt{color:var(--bad)!important}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
 </head>
@@ -508,57 +535,56 @@ tbody tr:hover td{background:var(--sunk)}
 
       <!-- CONFIGURA&#xc7;&#xd5;ES -->
       <section id="tab-cfg" class="tabpane" hidden>
-        <div class="cfg">
-          <div class="card" style="display:flex;flex-direction:column;gap:10px;grid-column:1/-1">
-            <details class="goals-box" id="goalsBox">
-              <summary><h2>Objetivos dos indicadores</h2><span class="sub" id="goalsSum"></span><span class="chev">&#x25be;</span></summary>
-              <div class="goals-in">
-                <div class="disclaimer">&#x26a0; <span>Estes valores e crit&#xe9;rios servem apenas para teste e simula&#xe7;&#xe3;o pessoal. N&#xe3;o s&#xe3;o crit&#xe9;rios oficiais, n&#xe3;o est&#xe3;o confirmados e n&#xe3;o s&#xe3;o usados para qualquer avalia&#xe7;&#xe3;o.</span></div>
-                <span class="sub">Os objetivos s&#xe3;o definidos <b>m&#xea;s a m&#xea;s</b>. Escolhe o ano e o m&#xea;s. Para criar os de um m&#xea;s novo, copia os de outro m&#xea;s e depois altera o que mudou. Cada indicador tem 5 graus: grau 1 (vermelho) &#xe9; o pior e grau 5 (verde) o melhor.</span>
-                <div class="goals-pick">
-                  <label class="f" for="gYear">Ano<select id="gYear"></select></label>
-                  <label class="f" for="gMonth">M&#xea;s<select id="gMonth"></select></label>
-                  <span class="grow"></span>
-                  <span id="gState" class="gstate"></span>
-                </div>
-                <div id="gEmpty" class="goals-empty" hidden>
-                  <span id="gEmptyMsg"></span>
-                  <div class="row"><label class="f" for="gFrom" style="width:220px">Copiar objetivos de<select id="gFrom"></select></label><button class="primary" id="gCreate" style="align-self:flex-end">Criar objetivos deste m&#xea;s</button></div>
-                </div>
-                <div class="tbl-wrap" id="gTable"><table class="goals"><thead><tr><th>Indicador</th><th>Grau 1</th><th>Grau 2</th><th>Grau 3</th><th>Grau 4</th><th>Grau 5</th></tr></thead><tbody id="goalRows"></tbody></table></div>
-                <div class="row" id="gMonthActs" hidden style="flex-wrap:wrap">
-                  <label class="f" for="gFrom2" style="width:220px">Substituir pelos de<select id="gFrom2"></select></label><button id="gCopy" style="align-self:flex-end">Copiar</button>
-                  <span class="grow"></span><button class="ghost" id="gRemove" style="align-self:flex-end">Apagar objetivos deste m&#xea;s</button>
-                </div>
-                <div class="months-custom" id="gList"></div>
+        <div class="set">
+          <nav class="set-nav" id="setNav">
+            <button data-sp="goals" class="on"><span>&#x1f3af;</span>Objetivos<small id="goalsSum"></small></button>
+            <button data-sp="alerts"><span>&#x1f514;</span>Alertas<small>Parqu&#xed;metro</small></button>
+            <button data-sp="backup"><span>&#x1f4be;</span>C&#xf3;pia de seguran&#xe7;a<small id="bkLast"></small></button>
+            <button data-sp="data"><span>&#x1f5d1;&#xfe0f;</span>Limpar dados<small>M&#xea;s ou tudo</small></button>
+          </nav>
+
+          <div class="set-body">
+            <!-- Objetivos -->
+            <div class="set-pane" data-pane="goals">
+              <div class="set-head"><h2>Objetivos dos indicadores</h2>
+                <div class="goals-pick"><select id="gYear" aria-label="Ano"></select><select id="gMonth" aria-label="M&#xea;s"></select><span id="gState" class="gstate"></span></div>
               </div>
-            </details>
-            <div class="row" style="justify-content:flex-end"><button class="ghost" id="resetMonth">Limpar os valores dos indicadores deste m&#xea;s</button></div>
-          </div>
-          <div class="card" style="display:flex;flex-direction:column;gap:10px">
-            <h2>Alertas do parqu&#xed;metro</h2>
-            <span class="sub" id="notifStatus"></span>
-            <div class="row"><button class="primary" id="notifOn">Ativar alertas</button><button id="notifTest">Testar alerta</button></div>
-            <span class="sub">Os alertas aparecem mesmo com o Chrome minimizado ou noutro separador, desde que esta p&#xe1;gina esteja aberta. Se n&#xe3;o aparecerem, confirma que o modo "N&#xe3;o incomodar" do Windows est&#xe1; desligado.</span>
-          </div>
-          <div class="card" style="display:flex;flex-direction:column;gap:10px">
-            <h2>C&#xf3;pia de seguran&#xe7;a</h2>
-            <span class="sub">Os dados ficam guardados s&#xf3; neste navegador, nunca no GitHub. Faz uma c&#xf3;pia de vez em quando e guarda-a num ficheiro .txt no PC.</span>
-            <div class="bk-step"><b>1. Fazer c&#xf3;pia</b>
-              <div class="row" style="flex-wrap:wrap"><button class="primary" id="exportBtn">Copiar texto da c&#xf3;pia</button><button id="saveFile">Descarregar como .txt</button></div>
-              <span class="sub">"Copiar texto" p&#xf5;e a c&#xf3;pia na &#xe1;rea de transfer&#xea;ncia: cola-a no Bloco de Notas e guarda o .txt.</span>
+              <div class="disclaimer">&#x26a0; <span>Estes valores e crit&#xe9;rios servem apenas para teste e simula&#xe7;&#xe3;o pessoal. N&#xe3;o s&#xe3;o crit&#xe9;rios oficiais, n&#xe3;o est&#xe3;o confirmados e n&#xe3;o s&#xe3;o usados para qualquer avalia&#xe7;&#xe3;o.</span></div>
+              <div id="gEmpty" class="goals-empty" hidden>
+                <span id="gEmptyMsg"></span>
+                <div class="row"><select id="gFrom" aria-label="Copiar de"></select><button class="primary" id="gCreate">Criar objetivos deste m&#xea;s</button></div>
+              </div>
+              <div class="tbl-wrap" id="gTable"><table class="goals"><thead><tr><th>Indicador</th><th>Grau 1</th><th>Grau 2</th><th>Grau 3</th><th>Grau 4</th><th>Grau 5</th></tr></thead><tbody id="goalRows"></tbody></table></div>
+              <div class="set-foot" id="gMonthActs" hidden>
+                <span class="sub">Substituir pelos de</span><select id="gFrom2" aria-label="Substituir pelos de"></select><button id="gCopy">Copiar</button>
+                <span class="grow"></span><button class="ghost danger-txt" id="gRemove">Apagar objetivos deste m&#xea;s</button>
+              </div>
+              <div class="months-custom" id="gList"></div>
             </div>
-            <div class="bk-step"><b>2. Restaurar c&#xf3;pia</b>
-              <div class="row" style="flex-wrap:wrap"><label class="btn-file primary-file" for="openFile">Inserir ficheiro .txt<input type="file" id="openFile" accept=".txt,.json,text/plain,application/json"></label><span class="sub">ou cola o texto aqui em baixo</span></div>
-              <textarea id="backupText" rows="4" placeholder="Cola aqui o texto da c&#xf3;pia"></textarea>
-              <div class="row"><button id="importBtn">Restaurar do texto colado</button></div>
+
+            <!-- Alertas -->
+            <div class="set-pane" data-pane="alerts" hidden>
+              <div class="set-head"><h2>Alertas do parqu&#xed;metro</h2></div>
+              <div class="set-row"><div><b>Notifica&#xe7;&#xf5;es do Windows</b><span class="sub" id="notifStatus"></span></div><div class="row"><button id="notifTest">Testar</button><button class="primary" id="notifOn">Ativar</button></div></div>
+              <p class="sub">Aparecem mesmo com o Chrome minimizado, desde que a p&#xe1;gina esteja aberta. Se n&#xe3;o aparecerem, desliga o "N&#xe3;o incomodar" do Windows.</p>
             </div>
-            <div class="bk-step danger"><b>Apagar tudo</b>
-              <span class="sub">Apaga tarefas, indicadores e objetivos deste navegador. Faz uma c&#xf3;pia antes.</span>
-              <div class="row"><button class="btn-danger" id="wipeAll">Apagar tudo</button><button class="ghost" id="wipeCancel" hidden>Cancelar</button></div>
+
+            <!-- C&#xf3;pia de seguran&#xe7;a -->
+            <div class="set-pane" data-pane="backup" hidden>
+              <div class="set-head"><h2>C&#xf3;pia de seguran&#xe7;a</h2></div>
+              <p class="sub">Os dados ficam s&#xf3; neste navegador. Guarda uma c&#xf3;pia no PC de vez em quando.</p>
+              <div class="set-row"><div><b>Fazer c&#xf3;pia</b><span class="sub">Copia o texto e cola no Bloco de Notas, ou descarrega o ficheiro.</span></div><div class="row"><button id="saveFile">Descarregar .txt</button><button class="primary" id="exportBtn">Copiar texto</button></div></div>
+              <div class="set-row"><div><b>Restaurar c&#xf3;pia</b><span class="sub">Escolhe o ficheiro GestaoBackup.txt ou cola o texto em baixo.</span></div><div class="row"><label class="btn-file primary-file" for="openFile">Inserir ficheiro .txt<input type="file" id="openFile" accept=".txt,.json,text/plain,application/json"></label></div></div>
+              <div class="paste-row"><textarea id="backupText" rows="3" placeholder="Cola aqui o texto da c&#xf3;pia"></textarea><button id="importBtn">Restaurar do texto</button></div>
+              <span id="importMsg" class="sub"></span>
             </div>
-            <span id="bkLast" class="sub" style="font-weight:700"></span>
-            <span id="importMsg" class="sub"></span>
+
+            <!-- Limpar dados -->
+            <div class="set-pane" data-pane="data" hidden>
+              <div class="set-head"><h2>Limpar dados</h2></div>
+              <div class="set-row"><div><b>Limpar o m&#xea;s aberto</b><span class="sub">Apaga os valores dos indicadores do m&#xea;s que est&#xe1; aberto no Dashboard.</span></div><button class="btn-danger" id="resetMonth">Limpar m&#xea;s</button></div>
+              <div class="set-row"><div><b>Apagar tudo</b><span class="sub">Tarefas, indicadores e objetivos deste navegador. Faz uma c&#xf3;pia antes.</span></div><div class="row"><button class="ghost" id="wipeCancel" hidden>Cancelar</button><button class="btn-danger" id="wipeAll">Apagar tudo</button></div></div>
+            </div>
           </div>
         </div>
       </section>
@@ -688,14 +714,23 @@ setInterval(tick,1000);
 schedule();
 
 /* Tarefas */
+let editTask=null;
+function saveTaskEdit(){if(!editTask)return;const i=$('tke-'+editTask),t=S.tasks.find(x=>x.id===editTask);editTask=null;if(i&&t){const v=i.value.trim();if(v){t.text=v;save();toast('Tarefa atualizada')}}renderTasks()}
 function renderTasks(){
   const l=$('taskList');const open=S.tasks.filter(t=>!t.done).length;$('taskCount').textContent=S.tasks.length?open+' por fazer \u00b7 '+(S.tasks.length-open)+' feitas':'';
   if(!S.tasks.length){l.innerHTML='<li class="empty">Sem tarefas.</li>';return}
   const sorted=[...S.tasks.filter(t=>!t.done),...S.tasks.filter(t=>t.done)];
-  l.innerHTML=sorted.map(t=>`<li class="${t.done?'done':''}"><input type="checkbox" id="tk-${t.id}" data-id="${t.id}" ${t.done?'checked':''} aria-label="Feita"><label for="tk-${t.id}" class="txt">${esc(t.text)}</label><button class="icon" data-del="${t.id}" aria-label="Apagar">\u00d7</button></li>`).join('');
+  l.innerHTML=sorted.map(t=>`<li class="${t.done?'done':''}"><input type="checkbox" id="tk-${t.id}" data-id="${t.id}" ${t.done?'checked':''} aria-label="Feita">${editTask===t.id?`<input class="tk-edit" id="tke-${t.id}" data-edit="${t.id}" value="${esc(t.text)}" aria-label="Editar tarefa"><button class="icon ok" data-save="${t.id}" aria-label="Guardar" title="Guardar">\u2713</button>`:`<span class="txt" data-dbl="${t.id}" title="Duplo clique para editar">${esc(t.text)}</span><button class="icon ed" data-ed="${t.id}" aria-label="Editar" title="Editar">\u270e</button>`}<button class="icon" data-del="${t.id}" aria-label="Apagar" title="Apagar">\u00d7</button></li>`).join('');
+  if(editTask){const i=$('tke-'+editTask);if(i){i.focus();i.select()}}
 }
 $('taskList').onchange=e=>{const t=S.tasks.find(x=>x.id===e.target.dataset.id);if(t){t.done=e.target.checked;save();renderTasks()}};
-$('taskList').onclick=e=>{const id=e.target.dataset.del;if(id){S.tasks=S.tasks.filter(t=>t.id!==id);save();renderTasks()}};
+$('taskList').onclick=e=>{const d=e.target.dataset;
+  if(d.del){if(editTask===d.del)editTask=null;S.tasks=S.tasks.filter(t=>t.id!==d.del);save();renderTasks();return}
+  if(d.ed){if(editTask&&editTask!==d.ed)saveTaskEdit();editTask=d.ed;renderTasks();return}
+  if(d.save){saveTaskEdit();return}};
+$('taskList').addEventListener('dblclick',e=>{const id=e.target.dataset.dbl;if(!id)return;e.preventDefault();if(editTask&&editTask!==id)saveTaskEdit();editTask=id;renderTasks()});
+$('taskList').addEventListener('keydown',e=>{if(!e.target.dataset.edit)return;if(e.key==='Enter'){e.preventDefault();saveTaskEdit()}if(e.key==='Escape'){editTask=null;renderTasks()}});
+$('taskList').addEventListener('focusout',e=>{if(!e.target.dataset.edit)return;setTimeout(()=>{if(editTask&&document.activeElement&&!document.activeElement.closest('#taskList li'))saveTaskEdit()},120)});
 $('taskForm').onsubmit=e=>{e.preventDefault();const v=$('taskInput').value.trim();if(!v)return;S.tasks.unshift({id:uid(),text:v,done:false});$('taskInput').value='';save();renderTasks()};
 $('clearDone').onclick=()=>{S.tasks=S.tasks.filter(t=>!t.done);save();renderTasks()};
 
@@ -727,7 +762,7 @@ function renderGoals(){
         <td>${inp(0,lo?'\u2265':'<')}</td>${g.t.map((v,i)=>`<td>${inp(i,lo?'<':'\u2265')}</td>`).join('')}</tr>`}).join('')}
   const keys=Object.keys(S.goalsByMonth).sort().reverse();
   $('gList').innerHTML=keys.length?'<span class="sub">Meses com objetivos:</span> '+keys.map(ym=>`<button class="mchip${ym===gYM?' on':''}" data-gym="${ym}">${mLabel(ym)}</button>`).join(''):'';
-  $('goalsSum').textContent=keys.length+(keys.length===1?' m\u00eas com objetivos':' meses com objetivos');
+  $('goalsSum').textContent=keys.length+(keys.length===1?' m\u00eas configurado':' meses configurados');
 }
 const copyGoals=from=>JSON.parse(JSON.stringify(from==='__base'?GOALS0:S.goalsByMonth[from]));
 const afterGoals=msg=>{save();renderGoals();renderCalcs();renderHist();toast(msg)};
@@ -743,6 +778,7 @@ $('goalRows').onchange=e=>{const t=e.target,tgt=gTarget();if(!tgt||!t.dataset.gk
   const v=pnum(t.value);if(!isFinite(v)){toast('Valor inv\u00e1lido');renderGoals();return}
   g.t[+t.dataset.gi]=v;const ok=g.t.every((x,i)=>i===0||(g.dir<0?x<=g.t[i-1]:x>=g.t[i-1]));
   afterGoals(ok?'Objetivo guardado':'Guardado, mas aten\u00e7\u00e3o: os valores dos graus devem ir '+(g.dir<0?'diminuindo':'aumentando'))};
+$('setNav').onclick=e=>{const b=e.target.closest('[data-sp]');if(!b)return;document.querySelectorAll('#setNav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.set-pane').forEach(p=>p.hidden=p.dataset.pane!==b.dataset.sp)};
 function renderCfg(){
   renderGoals();renderNotifStatus();
 }
@@ -773,8 +809,8 @@ $('tab-calc').addEventListener('input',e=>{
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{
   const m=M()[b.dataset.close];Object.keys(m.h).forEach(f=>{m.o[f]+=m.h[f];m.h[f]=0});save();fillCalcInputs();renderCalcs();toast('Dia fechado')});
 let resetArmed=false;
-$('resetMonth').onclick=e=>{if(!resetArmed){resetArmed=true;e.target.textContent='Clica de novo para limpar';setTimeout(()=>{resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas'},3000);return}
-  S.months[curYM]=emptyMonth(curYM);resetArmed=false;e.target.textContent='Limpar os valores dos indicadores deste m\u00eas';save();renderMonth();toast('M\u00eas limpo')};
+$('resetMonth').onclick=e=>{if(!resetArmed){resetArmed=true;e.target.textContent='Confirmar';setTimeout(()=>{resetArmed=false;e.target.textContent='Limpar m\u00eas'},3000);return}
+  S.months[curYM]=emptyMonth(curYM);resetArmed=false;e.target.textContent='Limpar m\u00eas';save();renderMonth();toast('M\u00eas limpo')};
 const manV=(m,k)=>{const v=(m.man||{})[k];return v!==''&&v!=null&&isFinite(v)?+v:null};
 function vyOf(m,c){const mv=manV(m,'vy');if(mv!=null)return mv;const rr=gradeOf('re',c.eff.re),n=gradeOf('nps',c.eff.nps),i=gradeOf('ivr',c.eff.ivr);const xs=[rr||'',n||'',i||'',m.vy.p,m.vy.eq];
   if(!xs.every(x=>x!==''&&x!=null&&isFinite(x)))return NaN;const v=(rr*0.2+n*0.3+i*0.2+(+m.vy.p)*0.3)*0.85+(+m.vy.eq)*0.15;return Math.round(v*100+1e-6)/100}
@@ -1027,7 +1063,7 @@ function hasData(){return S.tasks.length||Object.values(S.months).some(m=>HK.som
 function markBackup(){S.lastBackup=Date.now();save();checkBackup()}
 function checkBackup(){
   const days=S.lastBackup?Math.floor((Date.now()-S.lastBackup)/DAY):null;
-  const el=$('bkLast');if(el)el.textContent=S.lastBackup?'\u00daltima c\u00f3pia: '+new Date(S.lastBackup).toLocaleDateString('pt-PT',{day:'numeric',month:'long'})+(days?` (h\u00e1 ${days} dia${days>1?'s':''})`:' (hoje)'):'Ainda n\u00e3o fizeste nenhuma c\u00f3pia.';
+  const el=$('bkLast');if(el)el.textContent=S.lastBackup?'\u00daltima: '+new Date(S.lastBackup).toLocaleDateString('pt-PT',{day:'numeric',month:'long'})+(days?` (h\u00e1 ${days} dia${days>1?'s':''})`:' (hoje)'):'Sem c\u00f3pias ainda';
   const show=hasData()&&(days===null||days>=7)&&S.bkSnooze!==new Date().toDateString();
   $('bkBanner').hidden=!show;
   if(show)$('bkMsg').textContent=days===null?'Ainda n\u00e3o fizeste nenhuma c\u00f3pia de seguran\u00e7a.':`A \u00faltima c\u00f3pia de seguran\u00e7a foi h\u00e1 ${days} dias.`;
