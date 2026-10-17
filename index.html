@@ -10,23 +10,16 @@
 <style>
 /* Layout: cabe\e7 alho em duas faixas (marca + separadores; m\ea s + parqu\ed metro), conte\fa do a toda a largura; pain\e9 is com faixa de t\ed tulo azul como as tabelas do Excel */
 :root{
-  --bg:#FFFFFF; --surface:#FFFFFF; --sunk:#F1F5FB; --fg:#0F1B2D; --muted:#5A6B82; --line:#DCE3EE;
-  --band:#0B5CAD; --band-fg:#FFFFFF; --band-sub:#BFD6F2;
-  --accent:#0B6BD3; --accent-fg:#FFFFFF; --accent-soft:#DCEAFB;
-  --head:#FFFFFF; --head-fg:#0F1B2D; --head-muted:#5A6B82; --head-sunk:#EEF3F9;
-  --ok:#17834F; --ok-soft:#DDF2E6; --g2:#D9620F; --g2-soft:#FCE6D6; --g4:#5E9E1E; --g4-soft:#E6F3D6; --warn:#B26B00; --warn-soft:#FCEFD9; --bad:#C62F2F; --bad-soft:#FBE1E1;
-  --shadow:0 1px 2px rgba(15,27,45,.05),0 6px 18px rgba(15,27,45,.06); --scrim:rgba(15,27,45,.45);
-  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
-  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
-}
-:root[data-theme="dark"]{
-  --bg:#0A1730; --surface:#10213F; --sunk:#172C52; --fg:#E6EEF9; --muted:#93A7C6; --line:#22406B;
+  --bg:#0A1730; --surface:#10213F; --sunk:#172C52; --fg:#E6EEF9; --muted:#93A7C6; --line:#22406B; --sep:rgba(255,255,255,.07);
   --band:#1B4F94; --band-fg:#EEF5FF; --band-sub:#A9C6EC;
   --accent:#5AAEFF; --accent-fg:#06121F; --accent-soft:#173A68;
   --head:#081329; --head-fg:#E6EEF9; --head-muted:#8AA2C4; --head-sunk:#13284B;
   --ok:#45C486; --ok-soft:#123A2C; --g2:#FF8A3D; --g2-soft:#40261A; --g4:#A6D45A; --g4-soft:#283A22; --warn:#F0B44C; --warn-soft:#3D3018; --bad:#FF7272; --bad-soft:#431E2A;
-  --shadow:0 1px 2px rgba(0,0,0,.25),0 8px 22px rgba(0,0,0,.25); --scrim:rgba(2,8,20,.65); color-scheme:dark}
+  --shadow:0 1px 2px rgba(0,0,0,.25),0 8px 22px rgba(0,0,0,.25); --scrim:rgba(2,8,20,.65); color-scheme:dark;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
 
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -117,7 +110,7 @@ tbody tr:hover td{background:var(--sunk)}
 .calc>:last-child,.group>:last-child,.tasks-card>:last-child{margin-bottom:18px}
 
 /* Dashboard */
-.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));overflow:hidden;border-radius:0 0 12px 12px}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-radius:0 0 12px 12px}
 .kpi{background:none;border:none;border-radius:0;border-right:1px solid var(--line);padding:18px 22px;text-align:left;display:flex;flex-direction:column;gap:4px;font-weight:400;align-items:stretch;position:relative}
 .kpi:last-child{border-right:none}
 .kpi::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .2s}
@@ -304,23 +297,48 @@ tbody tr:hover td{background:var(--sunk)}
 .gstate{font-size:13px;font-weight:700;text-transform:none}
 .mchip{padding:3px 10px;border-radius:999px;font-size:13px;text-transform:capitalize;background:var(--accent-soft);color:var(--accent);border-color:transparent;margin:2px}
 .kpi-wrap{display:grid;grid-template-columns:minmax(250px,1.15fr) minmax(0,5fr);gap:18px;align-items:stretch}
-.kpi-iqs-box,.kpi-vy-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.kpi-iqs-box,.kpi-vy-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:visible;display:flex;flex-direction:column;box-shadow:var(--shadow)}
 .kpi-tag{font-size:12px;font-weight:700;letter-spacing:.02em;padding:8px 16px;background:var(--sunk);color:var(--muted);border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #kpiIqs{flex:1;display:flex}#kpiIqs .kpi{flex:1;border-right:none}
 .kpi-big b{font-size:40px!important}
 .kpi{white-space:normal!important}
 .kpi .kh>span{min-width:0;line-height:1.5}
 .kpi .w{font-style:normal;font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:1px 6px;border-radius:999px;margin-left:4px;letter-spacing:0}
-.kpi-total{border-left:2px solid var(--line)!important}
+.kpi-total{border-left:1px solid var(--sep)!important}
 .kpi-total b{font-size:38px!important}
 .goals .gdir{display:block;margin-top:4px;padding:3px 6px;font-size:12px;font-family:var(--f-body);width:auto}
 .goals td{white-space:nowrap}.goals .gpre{color:var(--muted);font-weight:700;margin-right:4px}
 .goals td input{width:calc(100% - 20px);display:inline-block}
 .calc.c-re .big{border-top:none;padding-top:0}
 .av-note{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:10px;background:var(--accent-soft);color:var(--fg);font-size:14px}
+/* Anima\e7 \e3 o ao passar o rato nos indicadores */
+.kpi-tag{border-radius:11px 11px 0 0}
+.kpis .kpi:first-child{border-bottom-left-radius:11px}.kpis .kpi:last-child{border-bottom-right-radius:11px}
+#kpiIqs .kpi{border-radius:0 0 11px 11px}
+.kpi{background-color:var(--surface)!important;transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,border-radius .3s;transform-origin:50% 100%}
+.kpis .kpi{border-right:1px solid var(--sep)!important}.kpis .kpi:last-child{border-right:none!important}
+.kpi:hover,.kpis .kpi:hover{transform:translateY(-8px) scale(1.045);z-index:4;border-radius:14px!important;border-color:transparent!important;box-shadow:0 20px 40px rgba(0,0,0,.55),0 0 0 2px var(--st)}
+.kpi:focus{outline:none}.kpi:focus-visible{outline:2px solid var(--st);outline-offset:2px}
+.kpi .pop{position:absolute;right:16px;top:8px;font-size:24px;line-height:1;opacity:0;transform:translateY(14px) scale(.3) rotate(-30deg);transition:all .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:5;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25))}
+.kpi:hover .pop{opacity:1;transform:translateY(-30px) scale(1) rotate(0)}
+.kpi:hover .face{animation:var(--fa) .9s ease-in-out infinite}
+.kpi:hover b{animation:var(--ba,none) .9s ease-in-out infinite}
+.kpi.s-g5{--fa:fa-party;--ba:ba-hop} .kpi.s-g4{--fa:fa-nod} .kpi.s-g3{--fa:fa-shrug} .kpi.s-g2{--fa:fa-sweat} .kpi.s-g1{--fa:fa-rage;--ba:ba-shake} .kpi.s-none{--fa:fa-sleep}
+.kpi.s-g1:hover{animation:card-shake .5s ease-in-out}
+.kpi.s-g5:hover .steps i.on{animation:steps-glow 1s ease-in-out infinite alternate}
+@keyframes fa-party{0%{transform:rotate(0) scale(1)}40%{transform:rotate(200deg) scale(1.25)}70%{transform:rotate(360deg) scale(1.1)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes fa-nod{0%,100%{transform:translateY(0)}30%{transform:translateY(4px) rotate(4deg)}60%{transform:translateY(-2px)}}
+@keyframes fa-shrug{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
+@keyframes fa-sweat{0%,100%{transform:translateX(0)}20%{transform:translateX(-2px) rotate(-4deg)}40%{transform:translateX(2px) rotate(4deg)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}}
+@keyframes fa-rage{0%,100%{transform:scale(1.15) translateX(0)}10%,50%,90%{transform:scale(1.2) translateX(-2px)}30%,70%{transform:scale(1.2) translateX(2px)}}
+@keyframes fa-sleep{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(-18deg) translateY(2px)}}
+@keyframes ba-hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}60%{transform:translateY(0)}75%{transform:translateY(-2px)}}
+@keyframes ba-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+@keyframes card-shake{0%,100%{rotate:0deg}20%{rotate:-1.2deg}40%{rotate:1.2deg}60%{rotate:-.8deg}80%{rotate:.5deg}}
+@keyframes steps-glow{from{filter:brightness(1)}to{filter:brightness(1.35);box-shadow:0 0 8px var(--st)}}
+@media (prefers-reduced-motion:reduce){.kpi,.kpi .pop{transition:none}.kpi:hover{transform:none}.kpi:hover .face,.kpi:hover b,.kpi.s-g1:hover,.kpi.s-g5:hover .steps i.on{animation:none}}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
-<script>try{if(localStorage.getItem("gestao-theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
 </head>
 <body>
 <header class="top">
@@ -343,7 +361,6 @@ tbody tr:hover td{background:var(--sunk)}
         <button id="stopMeter" aria-label="Cancelar" title="Cancelar">&#x25a0;</button>
         <button id="stopAlarm" class="stopA" hidden>Parar alarme</button>
       </div>
-    <button class="nav theme" id="themeBtn" title="Mudar entre dia e noite"></button>
     <button class="nav gear" data-tab="cfg" aria-label="Configura&#xe7;&#xf5;es" title="Configura&#xe7;&#xf5;es"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
   <div class="top-2">
@@ -832,11 +849,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCalc();if(e.key
 function favSvg(bg){return 'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${bg}"/><rect x="13" y="34" width="9" height="17" rx="2.5" fill="#fff" opacity=".75"/><rect x="27.5" y="24" width="9" height="27" rx="2.5" fill="#fff" opacity=".9"/><rect x="42" y="13" width="9" height="38" rx="2.5" fill="#fff"/></svg>`)}
 let favState='';function setFav(st){if(st===favState)return;favState=st;$('favicon').href=favSvg(st==='done'?'#C62F2F':st==='low'?'#D98A00':'#0B6BD3')}
 setFav('ok');
-function setTheme(dark){if(dark)document.documentElement.setAttribute('data-theme','dark');else document.documentElement.removeAttribute('data-theme');
-  try{localStorage.setItem('gestao-theme',dark?'dark':'light')}catch(e){}
-  $('themeBtn').textContent=dark?'\u2600\ufe0f Dia':'\u{1f311} Noite'}
-$('themeBtn').onclick=()=>setTheme(document.documentElement.getAttribute('data-theme')!=='dark');
-setTheme(document.documentElement.getAttribute('data-theme')==='dark');
+
 /* Coment\u00e1rios por grau */
 const QUIPS={
  1:['\u00c9s muito mau. N\u00e3o melhores n\u00e3o\u2026','At\u00e9 o router do cliente tem melhor sinal que este n\u00famero.','LOS total. Nem luz ao fundo da fibra.'],
@@ -848,6 +861,7 @@ const QUIPS={
 function quip(k,n){if(!n)return'Sem n\u00fameros ainda. Mete l\u00e1 os valores, que eu n\u00e3o adivinho.';
   return QUIPS[n][Math.floor(Date.now()/3600000)%3]}
 let quipHour=Math.floor(Date.now()/3600000);
+const POP={g1:'\u{1f480}',g2:'\u{1f62c}',g3:'\u{1f937}',g4:'\u{1f44d}',g5:'\u{1f525}',none:'\u{1f4a4}'};
 const steps=(st,n)=>`<span class="steps s-${st}">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span>`;
 function verdict(id,k,v){const st=stateOf(k,v);const el=$(id);el.className='verdict s-'+st;const nd=needFor(k);
   el.innerHTML=face(st)+`<span class="vt"><b>${LBL[st]}</b><small>${goalTxt(k,v)}${nd&&nd.downTxt?' \u00b7 '+nd.downTxt:''}</small></span>`;
@@ -895,7 +909,7 @@ function renderCalcs(){
     vy:['Valyou',num(vyV,2),c.isMan.vy?MAN:m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa',''],
     iqs:['IQS',P2(iqsV),c.isMan.iqs?MAN:c.iqs.q+' IQS / '+c.iqs.f+' fechadas','']};
   const tile=key=>{const [l,v,sub0,w]=KD[key],val=kv[key],st=stateOf(key,val),n=gradeOf(key,val);let sub=sub0;if(mgrOf(key))sub+=' \u00b7 \u270e grau fixo';
-    return `<button class="kpi s-${st}${key==='vy'?' kpi-total':''}${key==='iqs'?' kpi-big':''}" data-key="${key}"><div class="kh"><span>${l}${w?` <i class="w">${w}</i>`:''}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`};
+    return `<button class="kpi s-${st}${key==='vy'?' kpi-total':''}${key==='iqs'?' kpi-big':''}" data-key="${key}"><span class="pop" aria-hidden="true">${POP[st]}</span><div class="kh"><span>${l}${w?` <i class="w">${w}</i>`:''}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`};
   $('kpis').innerHTML=['re','nps','ivr','fh','vy'].map(tile).join('');
   $('kpiIqs').innerHTML=tile('iqs');
   document.querySelectorAll('.kpi[data-key]').forEach(b=>b.onclick=()=>openCalc(b.dataset.key));
