@@ -315,29 +315,19 @@ tbody tr:hover td{background:var(--sunk)}
 .kpi-tag{border-radius:11px 11px 0 0}
 .kpis .kpi:first-child{border-bottom-left-radius:11px}.kpis .kpi:last-child{border-bottom-right-radius:11px}
 #kpiIqs .kpi{border-radius:0 0 11px 11px}
-.kpi{background-color:var(--surface)!important;transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,border-radius .3s;transform-origin:50% 100%}
+.kpi{background-color:var(--surface)!important;transition:transform .25s ease-out,box-shadow .3s,border-radius .3s;transform-origin:50% 50%}
 .kpis .kpi{border-right:1px solid var(--sep)!important}.kpis .kpi:last-child{border-right:none!important}
-.kpi:hover,.kpis .kpi:hover{transform:translateY(-8px) scale(1.045);z-index:4;border-radius:14px!important;border-color:transparent!important;box-shadow:0 20px 40px rgba(0,0,0,.55),0 0 0 2px var(--st)}
+.kpi:hover,.kpis .kpi:hover{transform:scale(1.05);z-index:4;border-radius:14px!important;border-color:transparent!important;box-shadow:0 20px 40px rgba(0,0,0,.55),0 0 0 2px var(--st)}
 .kpi:focus{outline:none}.kpi:focus-visible{outline:2px solid var(--st);outline-offset:2px}
-.kpi .pop{position:absolute;right:14px;top:0;font-size:26px;line-height:1;opacity:0;transform:translateY(14px) scale(.3) rotate(-30deg);transition:all .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:5;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25))}
-.kpi:hover .pop{opacity:1;transform:translateY(-48px) scale(1) rotate(0);animation:pop-float 1.6s ease-in-out .35s infinite}
-@keyframes pop-float{0%,100%{transform:translateY(-48px) rotate(0)}50%{transform:translateY(-54px) rotate(8deg)}}
 .kpi:hover .face{animation:var(--fa) .9s ease-in-out infinite}
-.kpi:hover b{animation:var(--ba,none) .9s ease-in-out infinite}
-.kpi.s-g5{--fa:fa-party;--ba:ba-hop} .kpi.s-g4{--fa:fa-nod} .kpi.s-g3{--fa:fa-shrug} .kpi.s-g2{--fa:fa-sweat} .kpi.s-g1{--fa:fa-rage;--ba:ba-shake} .kpi.s-none{--fa:fa-sleep}
-.kpi.s-g1:hover{animation:card-shake .5s ease-in-out}
-.kpi.s-g5:hover .steps i.on{animation:steps-glow 1s ease-in-out infinite alternate}
+.kpi.s-g5{--fa:fa-party} .kpi.s-g4{--fa:fa-nod} .kpi.s-g3{--fa:fa-shrug} .kpi.s-g2{--fa:fa-sweat} .kpi.s-g1{--fa:fa-rage} .kpi.s-none{--fa:fa-sleep}
 @keyframes fa-party{0%{transform:rotate(0) scale(1)}40%{transform:rotate(200deg) scale(1.25)}70%{transform:rotate(360deg) scale(1.1)}100%{transform:rotate(360deg) scale(1)}}
 @keyframes fa-nod{0%,100%{transform:translateY(0)}30%{transform:translateY(4px) rotate(4deg)}60%{transform:translateY(-2px)}}
 @keyframes fa-shrug{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
 @keyframes fa-sweat{0%,100%{transform:translateX(0)}20%{transform:translateX(-2px) rotate(-4deg)}40%{transform:translateX(2px) rotate(4deg)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}}
 @keyframes fa-rage{0%,100%{transform:scale(1.15) translateX(0)}10%,50%,90%{transform:scale(1.2) translateX(-2px)}30%,70%{transform:scale(1.2) translateX(2px)}}
 @keyframes fa-sleep{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(-18deg) translateY(2px)}}
-@keyframes ba-hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}60%{transform:translateY(0)}75%{transform:translateY(-2px)}}
-@keyframes ba-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
-@keyframes card-shake{0%,100%{rotate:0deg}20%{rotate:-1.2deg}40%{rotate:1.2deg}60%{rotate:-.8deg}80%{rotate:.5deg}}
-@keyframes steps-glow{from{filter:brightness(1)}to{filter:brightness(1.35);box-shadow:0 0 8px var(--st)}}
-@media (prefers-reduced-motion:reduce){.kpi,.kpi .pop{transition:none}.kpi:hover{transform:none}.kpi:hover .face,.kpi:hover b,.kpi.s-g1:hover,.kpi.s-g5:hover .steps i.on{animation:none}}
+@media (prefers-reduced-motion:reduce){.kpi{transition:none}.kpi:hover{transform:none}.kpi:hover .face{animation:none}}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
 </head>
@@ -910,7 +900,7 @@ function renderCalcs(){
     vy:['Valyou',num(vyV,2),c.isMan.vy?MAN:m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa',''],
     iqs:['IQS',P2(iqsV),c.isMan.iqs?MAN:c.iqs.q+' IQS / '+c.iqs.f+' fechadas','']};
   const tile=key=>{const [l,v,sub0,w]=KD[key],val=kv[key],st=stateOf(key,val),n=gradeOf(key,val);let sub=sub0;if(mgrOf(key))sub+=' \u00b7 \u270e grau fixo';
-    return `<button class="kpi s-${st}${key==='vy'?' kpi-total':''}${key==='iqs'?' kpi-big':''}" data-key="${key}"><span class="pop" aria-hidden="true">${POP[st]}</span><div class="kh"><span>${l}${w?` <i class="w">${w}</i>`:''}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`};
+    return `<button class="kpi s-${st}${key==='vy'?' kpi-total':''}${key==='iqs'?' kpi-big':''}" data-key="${key}"><div class="kh"><span>${l}${w?` <i class="w">${w}</i>`:''}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`};
   $('kpis').innerHTML=['re','nps','ivr','fh','vy'].map(tile).join('');
   $('kpiIqs').innerHTML=tile('iqs');
   document.querySelectorAll('.kpi[data-key]').forEach(b=>b.onclick=()=>openCalc(b.dataset.key));
