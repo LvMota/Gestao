@@ -989,8 +989,8 @@ $('wipeAll').onclick=()=>{
 $('wipeCancel').onclick=()=>{wipeArmed=false;$('wipeAll').textContent='Apagar tudo';$('wipeAll').classList.remove('armed');$('wipeCancel').hidden=true};
 
 /* Hist\u00f3rico */
-const HK=[['re','Reincid\u00eancia'],['nps','NPS'],['ivr','IVR'],['fh','Produtividade hora'],['vy','Valyou'],['iqs','IQS']];
-let histKey='nps';
+const HK=[['vy','Valyou'],['re','Reincid\u00eancia'],['nps','NPS'],['ivr','IVR'],['fh','Produtividade'],['iqs','IQS']];
+let histKey='vy';
 function monthVals(m,ym){const prev=GO,pg=GM;GO=m.mgr||{};GM=ym?goalsFor(ym):GM;const c=calcFor(m),o={re:c.eff.re,nps:c.eff.nps,iqs:c.eff.iqs,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyOf(m,c)};o.g={};o.fx={};HK.forEach(([k])=>{o.g[k]=gradeOf(k,o[k]);o.fx[k]=!!mgrOf(k)});GO=prev;GM=pg;return o}
 const fmtK=(k,v)=>!isFinite(v)?'\u2014':(k==='nps'||k==='iqs'||k==='re')?num(v,2)+' %':num(v,2);
 const mLabel=(ym,short)=>{const [y,mm]=ym.split('-').map(Number);return new Date(y,mm-1,1).toLocaleDateString('pt-PT',short?{month:'short',year:'2-digit'}:{month:'long',year:'numeric'})};
