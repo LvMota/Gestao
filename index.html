@@ -104,7 +104,7 @@ tbody tr:hover td{background:var(--sunk)}
 /* Pain\e9 is com faixa de t\ed tulo */
 .calc,.group,.tasks-card{padding:0;overflow:hidden;display:flex;flex-direction:column;gap:16px}
 .calc>.ch,.group>.gh,.tasks-card>.sec-head{background:var(--band);color:var(--band-fg);padding:11px 20px;margin:0;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.calc>.ch .sub,.group>.gh .sub,.tasks-card>.sec-head .sub,.calc>.ch .ivr-legend{color:var(--band-sub)}
+.calc>.ch .sub,.group>.gh .sub,.tasks-card>.sec-head .sub,.calc>.ch .k3-legend{color:var(--band-sub)}
 .tasks-card>.sec-head .ghost{color:var(--band-sub);padding:0} .tasks-card>.sec-head .ghost:hover{color:var(--band-fg)}
 .calc>:not(.ch),.group>:not(.gh),.tasks-card>:not(.sec-head){margin-inline:20px}
 .calc>:last-child,.group>:last-child,.tasks-card>:last-child{margin-bottom:18px}
@@ -141,8 +141,8 @@ tbody tr:hover td{background:var(--sunk)}
 
 /* Calculadoras */
 .calcs{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}
-.c-nps{grid-column:span 7} .c-iqs{grid-column:span 5} .c-fh{grid-column:span 4} .c-ivr{grid-column:span 8} .c-vy{grid-column:span 12}
-@media (max-width:1250px){.c-nps,.c-iqs,.c-fh,.c-ivr{grid-column:span 12}}
+.c-k2{grid-column:span 7} .c-k6{grid-column:span 5} .c-k4{grid-column:span 4} .c-k3{grid-column:span 8} .c-k5{grid-column:span 12}
+@media (max-width:1250px){.c-k2,.c-k6,.c-k4,.c-k3{grid-column:span 12}}
 .calc .ch h2{font-size:20px}
 .calc table{table-layout:fixed}
 .calc>table{width:calc(100% - 40px)}
@@ -161,17 +161,17 @@ tbody tr:hover td{background:var(--sunk)}
 .big span{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
 .big b{white-space:nowrap;font-family:var(--f-mono);font-size:42px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;color:var(--accent)}
 .calc-acts{display:flex;gap:8px;justify-content:flex-end}
-.ivr{display:grid;grid-template-columns:repeat(11,1fr);gap:8px}
-.ivr label{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--f-mono);font-size:15px;color:var(--muted);font-weight:600}
-.ivr input{padding:10px 0;text-align:center;font-family:var(--f-mono);font-size:17px}
-.ivr label.hi{color:var(--ok)} .ivr label.lo{color:var(--bad)}
-.ivr-legend{display:flex;gap:16px;font-size:13px}
-.calc>.ch .ivr-legend .up,.calc>.ch .ivr-legend .down{color:var(--band-fg);font-weight:700}
-.vy-grid{display:grid;grid-template-columns:repeat(4,1fr) 1px repeat(2,1fr);gap:14px;align-items:end}
-.vy-grid .sep{background:var(--line);align-self:stretch}
-.vy-grid input{font-family:var(--f-mono);font-size:17px;text-align:center;padding:9px 4px}
-.fh-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fh-grid input{font-family:var(--f-mono);font-size:17px;padding:9px 10px}
+.k3{display:grid;grid-template-columns:repeat(11,1fr);gap:8px}
+.k3 label{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--f-mono);font-size:15px;color:var(--muted);font-weight:600}
+.k3 input{padding:10px 0;text-align:center;font-family:var(--f-mono);font-size:17px}
+.k3 label.hi{color:var(--ok)} .k3 label.lo{color:var(--bad)}
+.k3-legend{display:flex;gap:16px;font-size:13px}
+.calc>.ch .k3-legend .up,.calc>.ch .k3-legend .down{color:var(--band-fg);font-weight:700}
+.k5-grid{display:grid;grid-template-columns:repeat(4,1fr) 1px repeat(2,1fr);gap:14px;align-items:end}
+.k5-grid .sep{background:var(--line);align-self:stretch}
+.k5-grid input{font-family:var(--f-mono);font-size:17px;text-align:center;padding:9px 4px}
+.k4-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.k4-grid input{font-family:var(--f-mono);font-size:17px;padding:9px 10px}
 
 /* Avarias */
 .av-form{display:grid;grid-template-columns:150px repeat(6,minmax(0,1fr));gap:12px;border-top:4px solid var(--band)}
@@ -227,8 +227,8 @@ tbody tr:hover td{background:var(--sunk)}
 .dist .db .p{background:var(--ok)} .dist .db .n{background:var(--warn)} .dist .db .d{background:var(--bad)}
 .dist .dl{display:flex;gap:18px;font-size:13px;color:var(--muted)}
 .dist .dl span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:var(--c)}
-.ivr input.has{border-color:var(--st);background:var(--st-soft);color:var(--fg);font-weight:600}
-.ivr label{--st:var(--warn);--st-soft:var(--warn-soft)} .ivr label.hi{--st:var(--ok);--st-soft:var(--ok-soft)} .ivr label.lo{--st:var(--bad);--st-soft:var(--bad-soft)}
+.k3 input.has{border-color:var(--st);background:var(--st-soft);color:var(--fg);font-weight:600}
+.k3 label{--st:var(--warn);--st-soft:var(--warn-soft)} .k3 label.hi{--st:var(--ok);--st-soft:var(--ok-soft)} .k3 label.lo{--st:var(--bad);--st-soft:var(--bad-soft)}
 .goals{width:100%}
 .goals td{padding:6px 6px}
 .goals input,.goals select{padding:6px 8px;font-family:var(--f-mono);font-size:14px}
@@ -301,9 +301,9 @@ tbody tr:hover td{background:var(--sunk)}
 .gstate{font-size:13px;font-weight:700;text-transform:none}
 .mchip{padding:3px 10px;border-radius:999px;font-size:13px;text-transform:capitalize;background:var(--accent-soft);color:var(--accent);border-color:transparent;margin:2px}
 .kpi-wrap{display:grid;grid-template-columns:minmax(250px,1.15fr) minmax(0,5fr);gap:18px;align-items:stretch}
-.kpi-iqs-box,.kpi-vy-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:visible;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.kpi-k6-box,.kpi-k5-box{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:visible;display:flex;flex-direction:column;box-shadow:var(--shadow)}
 .kpi-tag{font-size:12px;font-weight:700;letter-spacing:.02em;padding:8px 16px;background:var(--sunk);color:var(--muted);border-bottom:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#kpiIqs{flex:1;display:flex}#kpiIqs .kpi{flex:1;border-right:none}
+#kpiK6{flex:1;display:flex}#kpiK6 .kpi{flex:1;border-right:none}
 .kpi-big b{font-size:40px!important}
 .kpi{white-space:normal!important}
 .kpi .kh>span{min-width:0;line-height:1.5}
@@ -313,12 +313,12 @@ tbody tr:hover td{background:var(--sunk)}
 .goals .gdir{display:block;margin-top:4px;padding:3px 6px;font-size:12px;font-family:var(--f-body);width:auto}
 .goals td{white-space:nowrap}.goals .gpre{color:var(--muted);font-weight:700;margin-right:4px}
 .goals td input{width:calc(100% - 20px);display:inline-block}
-.calc.c-re .big{border-top:none;padding-top:0}
+.calc.c-k1 .big{border-top:none;padding-top:0}
 .av-note{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:10px;background:var(--accent-soft);color:var(--fg);font-size:14px}
 /* Anima\e7 \e3 o ao passar o rato nos indicadores */
 .kpi-tag{border-radius:11px 11px 0 0}
 .kpis .kpi:first-child{border-bottom-left-radius:11px}.kpis .kpi:last-child{border-bottom-right-radius:11px}
-#kpiIqs .kpi{border-radius:0 0 11px 11px}
+#kpiK6 .kpi{border-radius:0 0 11px 11px}
 .kpi{background-color:var(--surface)!important;transition:transform .25s ease-out,box-shadow .3s,border-radius .3s;transform-origin:50% 50%}
 .kpis .kpi{border-right:1px solid var(--sep)!important}.kpis .kpi:last-child{border-right:none!important}
 .kpi:hover,.kpis .kpi:hover{transform:scale(1.05);z-index:4;border-radius:14px!important;border-color:transparent!important;box-shadow:0 20px 40px rgba(0,0,0,.55),0 0 0 2px var(--st)}
@@ -358,6 +358,7 @@ tbody tr:hover td{background:var(--sunk)}
 .goals-pick select{width:auto;min-width:110px}
 .goals-empty .row select{width:200px}
 .danger-txt{color:var(--bad)!important}
+.nm-in{width:280px;font-weight:700}
 .toast{position:fixed;right:32px;bottom:28px;background:var(--head);color:var(--head-fg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:30;border-left:4px solid var(--accent)}
 </style>
 </head>
@@ -395,10 +396,10 @@ tbody tr:hover td{background:var(--sunk)}
       <!-- DASHBOARD -->
       <section id="tab-dash" class="tabpane" style="display:flex;flex-direction:column;gap:24px">
         <div>
-          <div class="sec-head"><div class="row" style="gap:14px;min-width:0"><h2>Indicadores do m&#xea;s</h2><span id="vyQuip" class="quip-head"></span></div><span class="sub">Clica num indicador para o atualizar</span></div>
+          <div class="sec-head"><div class="row" style="gap:14px;min-width:0"><h2>Indicadores do m&#xea;s</h2><span id="totQuip" class="quip-head"></span></div><span class="sub" id="kpiHint">Clica num indicador para o atualizar</span></div>
           <div class="kpi-wrap">
-            <div class="kpi-iqs-box"><div class="kpi-tag">&#x26a0; Aten&#xe7;&#xe3;o &#xb7; taxa obrigat&#xf3;ria</div><div id="kpiIqs"></div></div>
-            <div class="kpi-vy-box"><div class="kpi-tag">Valyou = (Reincid&#xea;ncia 20% + NPS 30% + IVR 20% + Produtividade 30%) &#xd7; 0,85 + Equipa &#xd7; 0,15</div><div class="kpis" id="kpis"></div></div>
+            <div class="kpi-k6-box"><div class="kpi-tag">&#x26a0; Aten&#xe7;&#xe3;o &#xb7; taxa obrigat&#xf3;ria</div><div id="kpiK6"></div></div>
+            <div class="kpi-k5-box"><div class="kpi-tag"><span data-nm="k5"></span> = (<span data-nm="k1"></span> 20% + <span data-nm="k2"></span> 30% + <span data-nm="k3"></span> 20% + <span data-nm="k4"></span> 30%) &#xd7; 0,85 + Equipa &#xd7; 0,15</div><div class="kpis" id="kpis"></div></div>
           </div>
         </div>
         <div>
@@ -417,69 +418,69 @@ tbody tr:hover td{background:var(--sunk)}
       <!-- CALCULADORAS (janela) -->
       <div id="tab-calc" class="modal" hidden role="dialog" aria-modal="true"><div class="modal-box">
         <div class="calcs">
-          <div class="card calc c-nps" data-calc="nps">
-            <div class="ch"><h2>NPS</h2><span class="sub">(Promotores &#x2212; Detratores) &#xf7; Total</span></div>
+          <div class="card calc c-k2" data-calc="k2">
+            <div class="ch"><h2 data-nm="k2"></h2><span class="sub">(Promotores &#x2212; Detratores) &#xf7; Total</span></div>
             <table>
-              <thead><tr><th></th><th>Promotor</th><th>Neutro</th><th>Detrator</th><th>Total</th><th>NPS</th></tr></thead>
+              <thead><tr><th></th><th>Promotor</th><th>Neutro</th><th>Detrator</th><th>Total</th><th data-nm="k2"></th></tr></thead>
               <tbody>
-                <tr><td>Hoje</td><td><input id="nps-h-p" data-k="nps.h.p" type="number" min="0"></td><td><input id="nps-h-n" data-k="nps.h.n" type="number" min="0"></td><td><input id="nps-h-d" data-k="nps.h.d" type="number" min="0"></td><td class="out" id="nps-h-t"></td><td class="out" id="nps-h-r"></td></tr>
-                <tr><td>At&#xe9; ontem</td><td><input id="nps-o-p" data-k="nps.o.p" type="number" min="0"></td><td><input id="nps-o-n" data-k="nps.o.n" type="number" min="0"></td><td><input id="nps-o-d" data-k="nps.o.d" type="number" min="0"></td><td class="out" id="nps-o-t"></td><td class="out" id="nps-o-r"></td></tr>
-                <tr class="tot"><td>Total</td><td id="nps-t-p"></td><td id="nps-t-n"></td><td id="nps-t-d"></td><td id="nps-t-t"></td><td id="nps-t-r" class="res"></td></tr>
+                <tr><td>Hoje</td><td><input id="k2-h-p" data-k="k2.h.p" type="number" min="0"></td><td><input id="k2-h-n" data-k="k2.h.n" type="number" min="0"></td><td><input id="k2-h-d" data-k="k2.h.d" type="number" min="0"></td><td class="out" id="k2-h-t"></td><td class="out" id="k2-h-r"></td></tr>
+                <tr><td>At&#xe9; ontem</td><td><input id="k2-o-p" data-k="k2.o.p" type="number" min="0"></td><td><input id="k2-o-n" data-k="k2.o.n" type="number" min="0"></td><td><input id="k2-o-d" data-k="k2.o.d" type="number" min="0"></td><td class="out" id="k2-o-t"></td><td class="out" id="k2-o-r"></td></tr>
+                <tr class="tot"><td>Total</td><td id="k2-t-p"></td><td id="k2-t-n"></td><td id="k2-t-d"></td><td id="k2-t-t"></td><td id="k2-t-r" class="res"></td></tr>
               </tbody>
             </table>
-            <div class="dist"><div class="db" id="nps-bar"></div><div class="dl" id="nps-leg"></div></div>
-            <div class="big" id="nps-bigrow"><span>NPS do m&#xea;s</span><span class="verdict" id="nps-v"></span><b id="nps-big"></b></div>
-            <div class="calc-acts"><span class="sub" style="margin-right:auto;align-self:center">Fechar dia soma o Hoje ao At&#xe9; ontem e limpa o Hoje.</span><button data-close="nps">Fechar dia</button></div>
+            <div class="dist"><div class="db" id="k2-bar"></div><div class="dl" id="k2-leg"></div></div>
+            <div class="big" id="k2-bigrow"><span><span data-nm="k2"></span> do m&#xea;s</span><span class="verdict" id="k2-v"></span><b id="k2-big"></b></div>
+            <div class="calc-acts"><span class="sub" style="margin-right:auto;align-self:center">Fechar dia soma o Hoje ao At&#xe9; ontem e limpa o Hoje.</span><button data-close="k2">Fechar dia</button></div>
           </div>
 
-          <div class="card calc c-iqs" data-calc="iqs">
-            <div class="ch"><h2>IQS</h2><span class="sub">Qtd. IQS &#xf7; Fechadas</span></div>
+          <div class="card calc c-k6" data-calc="k6">
+            <div class="ch"><h2 data-nm="k6"></h2><span class="sub">Quantidade &#xf7; Fechadas</span></div>
             <table>
               <thead><tr><th></th><th>At&#xe9; ontem</th><th>Hoje</th><th>Total</th></tr></thead>
               <tbody>
-                <tr><td>Fechadas</td><td><input id="iqs-o-f" data-k="iqs.o.f" type="number" min="0"></td><td><input id="iqs-h-f" data-k="iqs.h.f" type="number" min="0"></td><td class="out" id="iqs-t-f"></td></tr>
-                <tr><td>Qtd. IQS</td><td><input id="iqs-o-q" data-k="iqs.o.q" type="number" min="0"></td><td><input id="iqs-h-q" data-k="iqs.h.q" type="number" min="0"></td><td class="out" id="iqs-t-q"></td></tr>
-                <tr class="tot"><td>Taxa IQS</td><td id="iqs-o-r"></td><td id="iqs-h-r"></td><td id="iqs-t-r" class="res"></td></tr>
+                <tr><td>Fechadas</td><td><input id="k6-o-f" data-k="k6.o.f" type="number" min="0"></td><td><input id="k6-h-f" data-k="k6.h.f" type="number" min="0"></td><td class="out" id="k6-t-f"></td></tr>
+                <tr><td>Quantidade</td><td><input id="k6-o-q" data-k="k6.o.q" type="number" min="0"></td><td><input id="k6-h-q" data-k="k6.h.q" type="number" min="0"></td><td class="out" id="k6-t-q"></td></tr>
+                <tr class="tot"><td>Taxa</td><td id="k6-o-r"></td><td id="k6-h-r"></td><td id="k6-t-r" class="res"></td></tr>
               </tbody>
             </table>
-            <div class="big" id="iqs-bigrow"><span>Taxa IQS</span><span class="verdict" id="iqs-v"></span><b id="iqs-big"></b></div>
-            <div class="calc-acts"><button data-close="iqs">Fechar dia</button></div>
+            <div class="big" id="k6-bigrow"><span><span data-nm="k6"></span></span><span class="verdict" id="k6-v"></span><b id="k6-big"></b></div>
+            <div class="calc-acts"><button data-close="k6">Fechar dia</button></div>
           </div>
 
-          <div class="card calc c-fh" data-calc="fh">
-            <div class="ch"><h2>Produtividade hora</h2><span class="sub">Tratadas &#xf7; Horas</span></div>
-            <div class="fh-grid">
+          <div class="card calc c-k4" data-calc="k4">
+            <div class="ch"><h2 data-nm="k4"></h2><span class="sub">Tratadas &#xf7; Horas</span></div>
+            <div class="k4-grid">
               <label class="f" for="horas">Horas trabalhadas<input id="horas" data-k="horas" type="number" min="0" step="0.5"></label>
               <label class="f" for="trat">Tratadas no m&#xea;s<input id="trat" data-k="trat" type="number" min="0"></label>
             </div>
-            <div class="big" id="fh-bigrow"><span>Produtividade</span><span class="verdict" id="fh-v"></span><b id="fh-r"></b></div>
+            <div class="big" id="k4-bigrow"><span><span data-nm="k4"></span></span><span class="verdict" id="k4-v"></span><b id="k4-r"></b></div>
           </div>
 
-          <div class="card calc c-ivr" data-calc="ivr">
-            <div class="ch"><h2>IVR</h2><span class="ivr-legend"><span>Quantidade de respostas por nota</span><span class="down">0&#x2013;6</span><span class="up">9&#x2013;10</span></span></div>
-            <div class="ivr" id="ivrGrid"></div>
-            <div class="dist"><div class="db" id="ivr-bar"></div><div class="dl" id="ivr-leg"></div></div>
-            <div class="big" id="ivr-bigrow"><span>Nota &#xb7; <span id="ivr-n" style="text-transform:none"></span></span><span class="verdict" id="ivr-v"></span><b id="ivr-r"></b></div>
+          <div class="card calc c-k3" data-calc="k3">
+            <div class="ch"><h2 data-nm="k3"></h2><span class="k3-legend"><span>Quantidade de respostas por nota</span><span class="down">0&#x2013;6</span><span class="up">9&#x2013;10</span></span></div>
+            <div class="k3" id="k3Grid"></div>
+            <div class="dist"><div class="db" id="k3-bar"></div><div class="dl" id="k3-leg"></div></div>
+            <div class="big" id="k3-bigrow"><span>Nota &#xb7; <span id="k3-n" style="text-transform:none"></span></span><span class="verdict" id="k3-v"></span><b id="k3-r"></b></div>
           </div>
 
-          <div class="card calc c-re" data-calc="re">
-            <div class="ch"><h2>Reincid&#xea;ncia</h2><span class="sub">Menor &#xe9; melhor &#xb7; conta 20% no Valyou</span></div>
-            <div class="big" id="re-bigrow"><span>Reincid&#xea;ncia</span><span class="verdict" id="re-v"></span><b id="re-big"></b></div>
+          <div class="card calc c-k1" data-calc="k1">
+            <div class="ch"><h2 data-nm="k1"></h2><span class="sub">Menor &#xe9; melhor &#xb7; conta 20% no <span data-nm="k5"></span></span></div>
+            <div class="big" id="k1-bigrow"><span><span data-nm="k1"></span></span><span class="verdict" id="k1-v"></span><b id="k1-big"></b></div>
           </div>
 
-          <div class="card calc c-vy" data-calc="vy">
-            <div class="ch"><h2>Valyou</h2><span class="sub">(Reinc. &#xd7; 0,2 + NPS &#xd7; 0,3 + IVR &#xd7; 0,2 + Prod. &#xd7; 0,3) &#xd7; 0,85 + Valyou equipa &#xd7; 0,15</span></div>
-            <div class="vy-grid">
-              <label class="f" for="vy-r">N&#xed;vel reincid&#xea;ncia (auto)<input id="vy-r" type="number" disabled title="Grau da reincid&#xea;ncia do m&#xea;s"></label>
-              <label class="f" for="vy-n">N&#xed;vel NPS (auto)<input id="vy-n" type="number" disabled title="Grau do NPS do m&#xea;s"></label>
-              <label class="f" for="vy-i">N&#xed;vel IVR (auto)<input id="vy-i" type="number" disabled title="Grau do IVR do m&#xea;s"></label>
-              <label class="f" for="vy-p">N&#xed;vel produtividade<input id="vy-p" data-k="vy.p" type="number" min="1" max="5" step="1"></label>
+          <div class="card calc c-k5" data-calc="k5">
+            <div class="ch"><h2 data-nm="k5"></h2><span class="sub">(<span data-nm="k1"></span> &#xd7; 0,2 + <span data-nm="k2"></span> &#xd7; 0,3 + <span data-nm="k3"></span> &#xd7; 0,2 + <span data-nm="k4"></span> &#xd7; 0,3) &#xd7; 0,85 + equipa &#xd7; 0,15</span></div>
+            <div class="k5-grid">
+              <label class="f" for="k5-r">N&#xed;vel <span data-nm="k1"></span> (auto)<input id="k5-r" type="number" disabled title="Grau autom&#xe1;tico do m&#xea;s"></label>
+              <label class="f" for="k5-n">N&#xed;vel <span data-nm="k2"></span> (auto)<input id="k5-n" type="number" disabled title="Grau autom&#xe1;tico do m&#xea;s"></label>
+              <label class="f" for="k5-i">N&#xed;vel <span data-nm="k3"></span> (auto)<input id="k5-i" type="number" disabled title="Grau autom&#xe1;tico do m&#xea;s"></label>
+              <label class="f" for="k5-p">N&#xed;vel <span data-nm="k4"></span><input id="k5-p" data-k="k5.p" type="number" min="1" max="5" step="1"></label>
               <span class="sep"></span>
-              <label class="f" for="vy-eq">Valyou equipa<input id="vy-eq" data-k="vy.eq" type="number" step="0.01"></label>
-              <label class="f" for="vy-at">Valyou atual (auto)<input id="vy-at" type="number" disabled></label>
+              <label class="f" for="k5-eq"><span data-nm="k5"></span> equipa<input id="k5-eq" data-k="k5.eq" type="number" step="0.01"></label>
+              <label class="f" for="k5-at"><span data-nm="k5"></span> atual (auto)<input id="k5-at" type="number" disabled></label>
             </div>
-            <div class="big" id="vy-bigrow"><span>Valyou atual</span><span class="verdict" id="vy-v"></span><b id="vy-big"></b></div>
-            <div class="sub" style="text-align:right">Diferen&#xe7;a para a equipa: <b id="vy-cmp" class="mono"></b></div>
+            <div class="big" id="k5-bigrow"><span><span data-nm="k5"></span> atual</span><span class="verdict" id="k5-v"></span><b id="k5-big"></b></div>
+            <div class="sub" style="text-align:right">Diferen&#xe7;a para a equipa: <b id="k5-cmp" class="mono"></b></div>
           </div>
         </div>
       </div></div>
@@ -537,7 +538,8 @@ tbody tr:hover td{background:var(--sunk)}
       <section id="tab-cfg" class="tabpane" hidden>
         <div class="set">
           <nav class="set-nav" id="setNav">
-            <button data-sp="goals" class="on"><span>&#x1f3af;</span>Objetivos<small id="goalsSum"></small></button>
+            <button data-sp="names" class="on"><span>&#x270f;&#xfe0f;</span>Nomes<small>Indicadores</small></button>
+            <button data-sp="goals"><span>&#x1f3af;</span>Objetivos<small id="goalsSum"></small></button>
             <button data-sp="alerts"><span>&#x1f514;</span>Alertas<small>Parqu&#xed;metro</small></button>
             <button data-sp="backup"><span>&#x1f4be;</span>C&#xf3;pia de seguran&#xe7;a<small id="bkLast"></small></button>
             <button data-sp="data"><span>&#x1f5d1;&#xfe0f;</span>Limpar dados<small>M&#xea;s ou tudo</small></button>
@@ -545,7 +547,12 @@ tbody tr:hover td{background:var(--sunk)}
 
           <div class="set-body">
             <!-- Objetivos -->
-            <div class="set-pane" data-pane="goals">
+            <div class="set-pane" data-pane="names">
+              <div class="set-head"><h2>Nomes dos indicadores</h2></div>
+              <p class="sub">D&#xe1; o nome que quiseres a cada indicador. Os nomes ficam guardados s&#xf3; neste navegador, n&#xe3;o no c&#xf3;digo do site.</p>
+              <div id="nameRows"></div>
+            </div>
+            <div class="set-pane" data-pane="goals" hidden>
               <div class="set-head"><h2>Objetivos dos indicadores</h2>
                 <div class="goals-pick"><select id="gYear" aria-label="Ano"></select><select id="gMonth" aria-label="M&#xea;s"></select><span id="gState" class="gstate"></span></div>
               </div>
@@ -604,32 +611,43 @@ const ptDate=d=>d?d.split('-').reverse().join('/'):'';
 function lastSaturday(d=new Date()){const x=new Date(d);x.setDate(x.getDate()-((x.getDay()+1)%7));return iso(x)}
 function weekdaysIn(ym){const [y,m]=ym.split('-').map(Number);let n=0;for(let d=new Date(y,m-1,1);d.getMonth()===m-1;d.setDate(d.getDate()+1)){const w=d.getDay();if(w&&w<6)n++}return n}
 
-const emptyMonth=ym=>({diasTrab:weekdaysIn(ym),diasFeitos:0,nps:{h:{p:0,n:0,d:0},o:{p:0,n:0,d:0}},iqs:{h:{f:0,q:0},o:{f:0,q:0}},man:{re:'',nps:'',iqs:'',fh:'',ivr:'',vy:''},mgr:{re:'',nps:'',iqs:'',fh:'',ivr:'',vy:''},horas:0,trat:0,ivr:Array(11).fill(0),vy:{r:'',n:'',i:'',p:'',eq:'',at:''}});
-const GOALS0={re:{n:'Reincid\u00eancia',u:'%',dir:-1,t:[28.5,25,21,18]},nps:{n:'NPS',u:'%',t:[65,72.5,80,87.5]},iqs:{n:'IQS',u:'%',t:[40,42.5,45,47.5]},fh:{n:'Produtividade hora',u:'',t:[1.6,2,2.6,4]},ivr:{n:'IVR',u:'',t:[9,9.15,9.45,9.6]},vy:{n:'Valyou',u:'',t:[2.5,3,3.5,4]}};
-const seed=()=>({goalsV:3,goals:JSON.parse(JSON.stringify(GOALS0)),tasks:[],org:{name:'',groups:[]},avarias:[],months:{},meterEnd:null,meterTotal:0});
-let S;
-try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+const emptyMonth=ym=>({diasTrab:weekdaysIn(ym),diasFeitos:0,k2:{h:{p:0,n:0,d:0},o:{p:0,n:0,d:0}},k6:{h:{f:0,q:0},o:{f:0,q:0}},man:{k1:'',k2:'',k6:'',k4:'',k3:'',k5:''},mgr:{k1:'',k2:'',k6:'',k4:'',k3:'',k5:''},horas:0,trat:0,k3:Array(11).fill(0),k5:{r:'',n:'',i:'',p:'',eq:'',at:''}});
+const GOALS0={k1:{n:'',u:'%',dir:-1,t:[28.5,25,21,18]},k2:{n:'',u:'%',t:[65,72.5,80,87.5]},k6:{n:'',u:'%',t:[40,42.5,45,47.5]},k4:{n:'',u:'',t:[1.6,2,2.6,4]},k3:{n:'',u:'',t:[9,9.15,9.45,9.6]},k5:{n:'',u:'',t:[2.5,3,3.5,4]}};
+/* Nomes dos indicadores: definidos pelo utilizador, guardados s\u00f3 no navegador */
+const DEFN={k1:'Indicador 1',k2:'Indicador 2',k3:'Indicador 3',k4:'Indicador 4',k5:'Resultado',k6:'Taxa extra'};
+function NM(k){const v=S&&S.names&&S.names[k];return (v&&String(v).trim())||DEFN[k]||k}
+function applyNames(){const h=document.getElementById('kpiHint');if(h)h.innerHTML=Object.values(S.names||{}).some(v=>v&&v.trim())?'Clica num indicador para o atualizar':'Ainda sem nomes. <a href="#" id="goNames" style="color:var(--accent);font-weight:700">Definir nomes \u203a</a>';const g=document.getElementById('goNames');if(g)g.onclick=e=>{e.preventDefault();showTab('cfg');document.querySelector('[data-sp=names]').click()};document.querySelectorAll('[data-nm]').forEach(e=>e.textContent=NM(e.dataset.nm))}
+/* convers\u00e3o de dados antigos para as chaves novas */
+const OLDK=['cmU=','bnBz','aXZy','Zmg=','dnk=','aXFz'].map(x=>atob(x)),NEWK=['k1','k2','k3','k4','k5','k6'];
+function migKeys(o){if(!o||typeof o!=='object')return;OLDK.forEach((ok,i)=>{if(ok in o){if(!(NEWK[i] in o))o[NEWK[i]]=o[ok];delete o[ok]}})}
+function migrate(d){if(!d)return d;migKeys(d.goals);Object.values(d.goals||{}).forEach(g=>{if(g)g.n=''});
+  Object.values(d.goalsByMonth||{}).forEach(g=>{migKeys(g);Object.values(g).forEach(x=>{if(x)x.n=''})});
+  Object.entries(d.months||{}).forEach(([ym,m])=>{migKeys(m);migKeys(m.man);migKeys(m.mgr);const e=emptyMonth(ym);for(const k in e){if(m[k]==null)m[k]=e[k];else if(e[k]&&typeof e[k]==='object'&&!Array.isArray(e[k]))for(const j in e[k])if(m[k][j]==null)m[k][j]=e[k][j]}});d.names=d.names||{};return d}
+let S=null;
+const seed=()=>({names:{},goalsV:3,goals:JSON.parse(JSON.stringify(GOALS0)),tasks:[],org:{name:'',groups:[]},avarias:[],months:{},meterEnd:null,meterTotal:0});
+try{S=migrate(JSON.parse(localStorage.getItem(KEY)))}catch(e){}
 if(!S||!S.months)S=seed();
 S.org={name:'',groups:[]}; /* equipa removida: n\u00e3o guardar nomes nem emails */
 if(!S.goals)S.goals=JSON.parse(JSON.stringify(GOALS0));
 if((S.goalsV||1)<3){S.goals=JSON.parse(JSON.stringify(GOALS0));S.goalsV=3;}
 /* Valores de exemplo para teste e simula\u00e7\u00e3o pessoal. N\u00e3o s\u00e3o crit\u00e9rios oficiais nem confirmados. */
 const PRESET={
- '2026-05':{re:[28,24.75,22,18],nps:[60,72.5,80,87.5],ivr:[9.10,9.30,9.45,9.60],fh:[1.80,2.10,2.80,4]},
- '2026-06':{re:[29.5,25.5,22,18],nps:[65,72.5,80,87.5],ivr:[9.10,9.30,9.45,9.60],fh:[1.80,2.10,2.80,4]},
- '2026-07':{re:[28.5,25.5,22,18],nps:[65,72.5,80,87.5],ivr:[9.10,9.30,9.45,9.60],fh:[1.80,2.15,2.80,4]},
- '2026-08':{re:[28.5,26.5,22,18],nps:[65,72.5,80,87.5],ivr:[9.10,9.30,9.45,9.60],fh:[1.80,2.15,2.80,4]},
- '2026-09':{re:[28.5,26.5,21,18],nps:[65,72.5,80,87.5],ivr:[9,9.15,9.45,9.60],fh:[1.80,2.20,2.80,4]},
- '2026-10':{re:[28.5,25,21,18],nps:[65,72.5,80,87.5],ivr:[9,9.15,9.45,9.60],fh:[1.60,2,2.60,4]}};
+ '2026-05':{k1:[28,24.75,22,18],k2:[60,72.5,80,87.5],k3:[9.10,9.30,9.45,9.60],k4:[1.80,2.10,2.80,4]},
+ '2026-06':{k1:[29.5,25.5,22,18],k2:[65,72.5,80,87.5],k3:[9.10,9.30,9.45,9.60],k4:[1.80,2.10,2.80,4]},
+ '2026-07':{k1:[28.5,25.5,22,18],k2:[65,72.5,80,87.5],k3:[9.10,9.30,9.45,9.60],k4:[1.80,2.15,2.80,4]},
+ '2026-08':{k1:[28.5,26.5,22,18],k2:[65,72.5,80,87.5],k3:[9.10,9.30,9.45,9.60],k4:[1.80,2.15,2.80,4]},
+ '2026-09':{k1:[28.5,26.5,21,18],k2:[65,72.5,80,87.5],k3:[9,9.15,9.45,9.60],k4:[1.80,2.20,2.80,4]},
+ '2026-10':{k1:[28.5,25,21,18],k2:[65,72.5,80,87.5],k3:[9,9.15,9.45,9.60],k4:[1.60,2,2.60,4]}};
 PRESET['2026-11']=PRESET['2026-10'];PRESET['2026-12']=PRESET['2026-10'];
 if((S.presetV||0)<1){S.goalsByMonth=S.goalsByMonth||{};
   Object.entries(PRESET).forEach(([ym,p])=>{const g=JSON.parse(JSON.stringify(GOALS0));Object.entries(p).forEach(([k,t])=>g[k].t=t.slice());S.goalsByMonth[ym]=g});
-  S.goals.re=JSON.parse(JSON.stringify(GOALS0.re));S.presetV=1}
+  S.goals.k1=JSON.parse(JSON.stringify(GOALS0.k1));S.presetV=1}
 S.goalsByMonth=S.goalsByMonth||{};if(!Object.keys(S.goalsByMonth).length)S.goalsByMonth[ymKey(new Date())]=JSON.parse(JSON.stringify(S.goals));
-if(!S.goals.re){S.goals={re:JSON.parse(JSON.stringify(GOALS0.re)),...S.goals}}
-Object.values(S.months||{}).forEach(m=>{m.man=m.man||{};m.mgr=m.mgr||{};if(m.vy&&m.vy.r!==''&&m.vy.r!=null&&(m.man.re===''||m.man.re==null)&&!m.mgr.re)m.mgr.re=String(m.vy.r)});
+if(!S.goals.k1){S.goals={k1:JSON.parse(JSON.stringify(GOALS0.k1)),...S.goals}}
+Object.values(S.months||{}).forEach(m=>{m.man=m.man||{};m.mgr=m.mgr||{};if(m.k5&&m.k5.r!==''&&m.k5.r!=null&&(m.man.k1===''||m.man.k1==null)&&!m.mgr.k1)m.mgr.k1=String(m.k5.r)});
 S.avarias=(S.avarias||[]).filter(a=>'solic' in a||'ticket' in a);
 S.avarias=[]; /* as avarias nunca s\u00e3o guardadas: s\u00f3 existem enquanto a p\u00e1gina est\u00e1 aberta */
+try{localStorage.setItem(KEY,JSON.stringify({...S,avarias:[]}))}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify({...S,avarias:[]}))}catch(e){}}
 window.addEventListener('beforeunload',e=>{if(S.avarias&&S.avarias.length){e.preventDefault();e.returnValue=''}});
 function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2000)}
@@ -738,7 +756,7 @@ $('clearDone').onclick=()=>{S.tasks=S.tasks.filter(t=>!t.done);save();renderTask
 const MESES=['janeiro','fevereiro','mar\u00e7o','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 let gYM=null;
 const pnum=v=>parseFloat(String(v).replace(',','.'));
-const ORDK=['re','nps','ivr','fh','vy','iqs'];
+const ORDK=['k1','k2','k3','k4','k5','k6'];
 function gTarget(){return (S.goalsByMonth||{})[gYM]||null}
 function monthOpts(excl){const ks=Object.keys(S.goalsByMonth).filter(k=>k!==excl).sort().reverse();
   return ks.map(k=>`<option value="${k}">${mLabel(k)}</option>`).join('')+'<option value="__base">Valores base</option>'}
@@ -757,8 +775,8 @@ function renderGoals(){
   else{$('gFrom2').innerHTML=monthOpts(gYM);
     ORDK.forEach(k=>{if(!tgt[k])tgt[k]=JSON.parse(JSON.stringify(S.goals[k]||GOALS0[k]))});
     $('goalRows').innerHTML=ORDK.map(k=>{const g=tgt[k],lo=g.dir<0,f=v=>String(v).replace('.',',');
-      const inp=(i,pre)=>`<span class="gpre">${pre}</span><input type="text" inputmode="decimal" data-gk="${k}" data-gi="${i}" value="${f(g.t[i])}" aria-label="${g.n} limite ${i+1}">`;
-      return `<tr><td>${g.n}<select class="gdir" data-gk="${k}" data-gdir="1" aria-label="Sentido"><option value="1" ${lo?'':'selected'}>Maior \u00e9 melhor</option><option value="-1" ${lo?'selected':''}>Menor \u00e9 melhor</option></select></td>
+      const inp=(i,pre)=>`<span class="gpre">${pre}</span><input type="text" inputmode="decimal" data-gk="${k}" data-gi="${i}" value="${f(g.t[i])}" aria-label="${esc(NM(k))} limite ${i+1}">`;
+      return `<tr><td>${esc(NM(k))}<select class="gdir" data-gk="${k}" data-gdir="1" aria-label="Sentido"><option value="1" ${lo?'':'selected'}>Maior \u00e9 melhor</option><option value="-1" ${lo?'selected':''}>Menor \u00e9 melhor</option></select></td>
         <td>${inp(0,lo?'\u2265':'<')}</td>${g.t.map((v,i)=>`<td>${inp(i,lo?'<':'\u2265')}</td>`).join('')}</tr>`}).join('')}
   const keys=Object.keys(S.goalsByMonth).sort().reverse();
   $('gList').innerHTML=keys.length?'<span class="sub">Meses com objetivos:</span> '+keys.map(ym=>`<button class="mchip${ym===gYM?' on':''}" data-gym="${ym}">${mLabel(ym)}</button>`).join(''):'';
@@ -779,19 +797,22 @@ $('goalRows').onchange=e=>{const t=e.target,tgt=gTarget();if(!tgt||!t.dataset.gk
   g.t[+t.dataset.gi]=v;const ok=g.t.every((x,i)=>i===0||(g.dir<0?x<=g.t[i-1]:x>=g.t[i-1]));
   afterGoals(ok?'Objetivo guardado':'Guardado, mas aten\u00e7\u00e3o: os valores dos graus devem ir '+(g.dir<0?'diminuindo':'aumentando'))};
 $('setNav').onclick=e=>{const b=e.target.closest('[data-sp]');if(!b)return;document.querySelectorAll('#setNav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.set-pane').forEach(p=>p.hidden=p.dataset.pane!==b.dataset.sp)};
-function renderCfg(){
+const NROLE={k1:'Componente \u00b7 20% \u00b7 menor \u00e9 melhor',k2:'Componente \u00b7 30%',k3:'Componente \u00b7 20%',k4:'Componente \u00b7 30%',k5:'Resultado final (soma ponderada)',k6:'Taxa \u00e0 parte, fora do resultado'};
+function renderNames(){$('nameRows').innerHTML=['k1','k2','k3','k4','k5','k6'].map(k=>`<div class="set-row"><div><b>${DEFN[k]}</b><span class="sub">${NROLE[k]}</span></div><input class="nm-in" id="nm-${k}" data-nmk="${k}" maxlength="30" placeholder="${DEFN[k]}" value="${esc((S.names||{})[k]||'')}" autocomplete="off"></div>`).join('')}
+$('nameRows').addEventListener('input',e=>{const k=e.target.dataset.nmk;if(!k)return;S.names=S.names||{};S.names[k]=e.target.value;save();applyNames();renderCalcs();renderHist()});
+function renderCfg(){renderNames();
   renderGoals();renderNotifStatus();
 }
 $('notifOn').onclick=()=>{if(!('Notification' in window))return;Notification.requestPermission().then(()=>{renderNotifStatus();if(notifOK())toast('Alertas ativados')})};
 $('notifTest').onclick=()=>{if(!notifOK()){toast('Ativa primeiro os alertas');return}notify('Parqu\u00edmetro: teste','Assim aparece o alerta quando o tempo acabar.',false)};
 
 /* Calculadoras */
-$('ivrGrid').innerHTML=Array.from({length:11},(_,i)=>`<label for="ivr-${i}" class="${i>=9?'hi':i<=6?'lo':''}">${i}<input id="ivr-${i}" data-ivr="${i}" type="number" min="0"></label>`).join('');
+$('k3Grid').innerHTML=Array.from({length:11},(_,i)=>`<label for="k3-${i}" class="${i>=9?'hi':i<=6?'lo':''}">${i}<input id="k3-${i}" data-k3="${i}" type="number" min="0"></label>`).join('');
 const getK=(o,k)=>k.split('.').reduce((a,p)=>a[p],o);
 function setK(o,k,v){const ps=k.split('.');const last=ps.pop();ps.reduce((a,p)=>a[p],o)[last]=v}
 function fillCalcInputs(){
-  document.querySelectorAll('#tab-calc [data-k]').forEach(i=>{const v=getK(M(),i.dataset.k);i.value=i.dataset.k.startsWith('vy')?v:(v||'')});
-  document.querySelectorAll('[data-ivr]').forEach(i=>i.value=M().ivr[i.dataset.ivr]||'');
+  document.querySelectorAll('#tab-calc [data-k]').forEach(i=>{const v=getK(M(),i.dataset.k);i.value=i.dataset.k.startsWith('k5')?v:(v||'')});
+  document.querySelectorAll('[data-k3]').forEach(i=>i.value=M().k3[i.dataset.k3]||'');
   document.querySelectorAll('[data-mgr]').forEach(i=>{i.value=(M().mgr||{})[i.dataset.mgr]||''});
   document.querySelectorAll('[data-man]').forEach(i=>{const v=(M().man||{})[i.dataset.man];i.value=v===''||v==null?'':v});
 }
@@ -800,9 +821,9 @@ $('tab-calc').addEventListener('input',e=>{
   const t=e.target;
   if(t.dataset.mgr){M().mgr=M().mgr||{};M().mgr[t.dataset.mgr]=t.value;save();renderCalcs();return}
   if(t.dataset.man){const k=t.dataset.man;M().man=M().man||{};M().man[k]=t.value===''?'':parseFloat(t.value);save();renderCalcs();return}
-  {const card=t.closest('.calc');if(card&&(t.dataset.k||t.dataset.ivr)&&t.value!==''){const k=card.dataset.calc,mm=M();mm.man=mm.man||{};if(mm.man[k]!==''&&mm.man[k]!=null){mm.man[k]='';const mi=card.querySelector('[data-man]');if(mi)mi.value='';toast('Valor manual apagado: a usar o c\u00e1lculo autom\u00e1tico')}}}
-  if(t.dataset.k){setK(M(),t.dataset.k,t.dataset.k.startsWith('vy')?(t.value===''?'':parseFloat(t.value)):(parseFloat(t.value)||0))}
-  else if(t.dataset.ivr){M().ivr[+t.dataset.ivr]=parseInt(t.value)||0}
+  {const card=t.closest('.calc');if(card&&(t.dataset.k||t.dataset.k3)&&t.value!==''){const k=card.dataset.calc,mm=M();mm.man=mm.man||{};if(mm.man[k]!==''&&mm.man[k]!=null){mm.man[k]='';const mi=card.querySelector('[data-man]');if(mi)mi.value='';toast('Valor manual apagado: a usar o c\u00e1lculo autom\u00e1tico')}}}
+  if(t.dataset.k){setK(M(),t.dataset.k,t.dataset.k.startsWith('k5')?(t.value===''?'':parseFloat(t.value)):(parseFloat(t.value)||0))}
+  else if(t.dataset.k3){M().k3[+t.dataset.k3]=parseInt(t.value)||0}
   else return;
   save();renderCalcs();
 });
@@ -812,20 +833,20 @@ let resetArmed=false;
 $('resetMonth').onclick=e=>{if(!resetArmed){resetArmed=true;e.target.textContent='Confirmar';setTimeout(()=>{resetArmed=false;e.target.textContent='Limpar m\u00eas'},3000);return}
   S.months[curYM]=emptyMonth(curYM);resetArmed=false;e.target.textContent='Limpar m\u00eas';save();renderMonth();toast('M\u00eas limpo')};
 const manV=(m,k)=>{const v=(m.man||{})[k];return v!==''&&v!=null&&isFinite(v)?+v:null};
-function vyOf(m,c){const mv=manV(m,'vy');if(mv!=null)return mv;const rr=gradeOf('re',c.eff.re),n=gradeOf('nps',c.eff.nps),i=gradeOf('ivr',c.eff.ivr);const xs=[rr||'',n||'',i||'',m.vy.p,m.vy.eq];
-  if(!xs.every(x=>x!==''&&x!=null&&isFinite(x)))return NaN;const v=(rr*0.2+n*0.3+i*0.2+(+m.vy.p)*0.3)*0.85+(+m.vy.eq)*0.15;return Math.round(v*100+1e-6)/100}
-const npsOf=x=>{const t=x.p+x.n+x.d;return{t,r:t?(x.p-x.d)/t:NaN}};
+function v5Of(m,c){const mv=manV(m,'k5');if(mv!=null)return mv;const rr=gradeOf('k1',c.eff.k1),n=gradeOf('k2',c.eff.k2),i=gradeOf('k3',c.eff.k3);const xs=[rr||'',n||'',i||'',m.k5.p,m.k5.eq];
+  if(!xs.every(x=>x!==''&&x!=null&&isFinite(x)))return NaN;const v=(rr*0.2+n*0.3+i*0.2+(+m.k5.p)*0.3)*0.85+(+m.k5.eq)*0.15;return Math.round(v*100+1e-6)/100}
+const pctOf=x=>{const t=x.p+x.n+x.d;return{t,r:t?(x.p-x.d)/t:NaN}};
 function calcAll(){return calcFor(M())}
 function calcFor(m){
-  const nh=npsOf(m.nps.h),no=npsOf(m.nps.o),nt=npsOf({p:m.nps.h.p+m.nps.o.p,n:m.nps.h.n+m.nps.o.n,d:m.nps.h.d+m.nps.o.d});
-  const iF=m.iqs.o.f+m.iqs.h.f,iQ=m.iqs.o.q+m.iqs.h.q;
-  const iqs={o:m.iqs.o.f?m.iqs.o.q/m.iqs.o.f:NaN,h:m.iqs.h.f?m.iqs.h.q/m.iqs.h.f:NaN,t:iF?iQ/iF:NaN,f:iF,q:iQ};
-  const fh=m.horas?(m.trat||0)/m.horas:NaN;
-  const ivrN=m.ivr.reduce((a,b)=>a+b,0),ivr=ivrN?m.ivr.reduce((a,c,i)=>a+c*i,0)/ivrN:NaN;
-  const isMan={},eff={};[['nps',nt.r*100],['iqs',iqs.t*100],['fh',fh],['ivr',ivr]].forEach(([k,a])=>{const v=manV(m,k);isMan[k]=v!=null;eff[k]=v!=null?v:a});
-  isMan.vy=manV(m,'vy')!=null;
-  {const v=manV(m,'re');eff.re=v!=null?v:NaN;isMan.re=false}
-  return{m,nh,no,nt,iqs,fh,ivr,ivrN,eff,isMan};
+  const nh=pctOf(m.k2.h),no=pctOf(m.k2.o),nt=pctOf({p:m.k2.h.p+m.k2.o.p,n:m.k2.h.n+m.k2.o.n,d:m.k2.h.d+m.k2.o.d});
+  const iF=m.k6.o.f+m.k6.h.f,iQ=m.k6.o.q+m.k6.h.q;
+  const k6={o:m.k6.o.f?m.k6.o.q/m.k6.o.f:NaN,h:m.k6.h.f?m.k6.h.q/m.k6.h.f:NaN,t:iF?iQ/iF:NaN,f:iF,q:iQ};
+  const k4=m.horas?(m.trat||0)/m.horas:NaN;
+  const n3=m.k3.reduce((a,b)=>a+b,0),k3=n3?m.k3.reduce((a,c,i)=>a+c*i,0)/n3:NaN;
+  const isMan={},eff={};[['k2',nt.r*100],['k6',k6.t*100],['k4',k4],['k3',k3]].forEach(([k,a])=>{const v=manV(m,k);isMan[k]=v!=null;eff[k]=v!=null?v:a});
+  isMan.k5=manV(m,'k5')!=null;
+  {const v=manV(m,'k1');eff.k1=v!=null?v:NaN;isMan.k1=false}
+  return{m,nh,no,nt,k6,k4,k3,n3,eff,isMan};
 }
 /* Estados e carinhas */
 let GO=null,GM=null;const GG=()=>GM||S.goals;
@@ -842,11 +863,11 @@ function face(st){
   return `<svg class="face s-${st}" viewBox="0 0 32 32" aria-hidden="true"><circle class="f" cx="16" cy="16" r="14"/>${eyes}${m}</svg>`}
 const fmtG=(k,x)=>{const g=S.goals[k];return String(x).replace('.',',')+(g.u?' '+g.u:'')};
 function needFor(k){const c=calcAll(),m=c.m,g=GG()[k];if(c.isMan[k]||mgrOf(k))return null;
-  if(k==='nps'){const P=m.nps.h.p+m.nps.o.p,D=m.nps.h.d+m.nps.o.d,T=c.nt.t;if(!T)return null;const v=c.nt.r*100,n=gradeOf(k,v);const o={};
+  if(k==='k2'){const P=m.k2.h.p+m.k2.o.p,D=m.k2.h.d+m.k2.o.d,T=c.nt.t;if(!T)return null;const v=c.nt.r*100,n=gradeOf(k,v);const o={};
     if(n<5){const t=g.t[n-1]/100;o.up=t>=1?null:Math.max(1,Math.ceil((t*T-P+D)/(1-t)-1e-9));o.upTxt=o.up==null?'':`Faltam ${o.up} promotor${o.up>1?'es':''} seguido${o.up>1?'s':''} para o grau ${n+1}`}
     if(n>1){const L=g.t[n-2]/100;o.down=Math.max(0,Math.floor((P-D-L*T)/(1+L)+1e-9));o.downTxt=o.down?`Aguentas ${o.down} detrator${o.down>1?'es':''} sem descer de grau`:'Mais um detrator e desces de grau'}
     return o}
-  if(k==='ivr'){const N=c.ivrN;if(!N)return null;const Sm=m.ivr.reduce((a,x,i)=>a+x*i,0),n=gradeOf(k,c.ivr);const o={};
+  if(k==='k3'){const N=c.n3;if(!N)return null;const Sm=m.k3.reduce((a,x,i)=>a+x*i,0),n=gradeOf(k,c.k3);const o={};
     if(n<5){const t=g.t[n-1];o.up=t>=10?null:Math.max(1,Math.ceil((t*N-Sm)/(10-t)-1e-9));o.upTxt=o.up==null?'':`Faltam ${o.up} nota${o.up>1?'s':''} 10 seguida${o.up>1?'s':''} para o grau ${n+1}`}
     if(n>1){const L=g.t[n-2];o.down=Math.max(0,Math.floor(Sm/L-N+1e-9));o.downTxt=o.down?`Aguentas ${o.down} nota${o.down>1?'s':''} 0 sem descer de grau`:'Uma nota 0 agora e desces de grau'}
     return o}
@@ -854,14 +875,14 @@ function needFor(k){const c=calcAll(),m=c.m,g=GG()[k];if(c.isMan[k]||mgrOf(k))re
 function goalTxt(k,v){if(mgrOf(k))return'Grau definido \u00e0 m\u00e3o';const nd=needFor(k);if(nd&&nd.upTxt&&gradeOf(k,v)<5)return nd.upTxt;const g=GG()[k]||S.goals[k],n=gradeOf(k,v),lo=g.dir<0;if(!n)return'Grau 5 '+(lo?'abaixo de ':'a partir de ')+fmtG(k,g.t[3]);if(n===5)return'Grau m\u00e1ximo';
   const next=g.t[n-1],d=Math.abs(next-v);return `Grau ${n+1} ${lo?'abaixo de':'a partir de'} ${fmtG(k,next)} (${lo?(d>0?'desce '+String(+d.toFixed(2)).replace('.',',')+(g.u?' '+g.u:''):'tem de ficar abaixo'):'faltam '+String(+d.toFixed(2)).replace('.',',')+(g.u?' '+g.u:'')})`}
 /* Janela das calculadoras */
-const CNAME={re:'Reincid\u00eancia',nps:'NPS',iqs:'IQS',fh:'Produtividade hora',ivr:'IVR',vy:'Valyou'};
+const CNAME=new Proxy({},{get:(o,k)=>NM(k)});
 let openKey=null;
 function openCalc(k){openKey=k;document.querySelectorAll('#tab-calc .calc').forEach(c=>c.hidden=c.dataset.calc!==k);$('tab-calc').hidden=false;
   const f=document.querySelector(`#tab-calc .calc[data-calc="${k}"] input:not([disabled])`);f&&setTimeout(()=>f.focus(),30)}
 function closeCalc(){if($('tab-calc').hidden)return;$('tab-calc').hidden=true;const k=openKey;openKey=null;return k}
-const MANU={re:['%','ex.: 8,5'],nps:['%','ex.: 72,5'],iqs:['%','ex.: 45,2'],fh:['','ex.: 2,3'],ivr:['','ex.: 9,3'],vy:['','ex.: 3,1']};
+const MANU={k1:['%','ex.: 8,5'],k2:['%','ex.: 72,5'],k6:['%','ex.: 45,2'],k4:['','ex.: 2,3'],k3:['','ex.: 9,3'],k5:['','ex.: 3,1']};
 document.querySelectorAll('#tab-calc .calc').forEach(c=>{
-  {const k=c.dataset.calc,[u,ph]=MANU[k];c.querySelector('.big').insertAdjacentHTML('beforebegin',`<div class="man-row"><label class="f" for="man-${k}">${k==='re'?'Taxa de reincid\u00eancia':'Resultado manual'}${u?' ('+u+')':''}<input id="man-${k}" data-man="${k}" type="number" step="0.01" placeholder="${ph}"></label><span class="sub">${k==='re'?'Escreve a taxa de reincid\u00eancia do m\u00eas. Se quiseres, fixa tamb\u00e9m o grau.':'Escreve o resultado se n\u00e3o quiseres preencher os campos acima (preench\u00ea-los apaga o valor manual). O grau manual fica fixo mesmo que os crit\u00e9rios mudem.'}</span><span class="man-badge">\u270e A usar valor manual</span><label class="f" for="mgr-${k}">Grau manual<select id="mgr-${k}" data-mgr="${k}"><option value="">Autom\u00e1tico</option>${[1,2,3,4,5].map(n=>`<option value="${n}">Grau ${n}</option>`).join('')}</select></label></div>`)}
+  {const k=c.dataset.calc,[u,ph]=MANU[k];c.querySelector('.big').insertAdjacentHTML('beforebegin',`<div class="man-row"><label class="f" for="man-${k}">${k==='k1'?'Taxa do m\u00eas':'Resultado manual'}${u?' ('+u+')':''}<input id="man-${k}" data-man="${k}" type="number" step="0.01" placeholder="${ph}"></label><span class="sub">${k==='k1'?'Escreve a taxa do m\u00eas. Se quiseres, fixa tamb\u00e9m o grau.':'Escreve o resultado se n\u00e3o quiseres preencher os campos acima (preench\u00ea-los apaga o valor manual). O grau manual fica fixo mesmo que os crit\u00e9rios mudem.'}</span><span class="man-badge">\u270e A usar valor manual</span><label class="f" for="mgr-${k}">Grau manual<select id="mgr-${k}" data-mgr="${k}"><option value="">Autom\u00e1tico</option>${[1,2,3,4,5].map(n=>`<option value="${n}">Grau ${n}</option>`).join('')}</select></label></div>`)}
   c.querySelector('.ch').insertAdjacentHTML('beforeend','<button class="x-close" data-xclose aria-label="Fechar">\u00d7</button>');
   let a=c.querySelector('.calc-acts');if(!a){a=document.createElement('div');a.className='calc-acts';c.appendChild(a)}
   a.insertAdjacentHTML('beforeend','<button class="primary" data-upd>Atualizar</button>');
@@ -883,7 +904,7 @@ setFav('ok');
 
 /* Coment\u00e1rios por grau */
 const QUIPS={
- 1:['Este Valyou precisa de um reset de f\u00e1brica.','At\u00e9 o router do cliente tem melhor sinal que este n\u00famero.','LOS total. Nem luz ao fundo da fibra.'],
+ 1:['Este resultado precisa de um reset de f\u00e1brica.','At\u00e9 o router do cliente tem melhor sinal que este n\u00famero.','LOS total. Nem luz ao fundo da fibra.'],
  2:['A piscar a vermelho, como a ONT sem fibra.','A subir devagarinho, \u00e0 velocidade do ADSL.','Mais um empurr\u00e3o e sais do laranja.'],
  3:['Nem carne nem peixe.','Sinal est\u00e1vel, mas sem 5 GHz.','Na m\u00e9dia, como o Wi\u2011Fi do vizinho.'],
  4:['Bom trabalho! J\u00e1 cheira a pr\u00e9mio.','Est\u00e1s em forma, quase fibra pura.','O supervisor sorri quando v\u00ea isto.'],
@@ -903,46 +924,46 @@ function distBar(bar,leg,parts){const tot=parts.reduce((a,p)=>a+p.v,0);
 function renderCalcs(){
   GO=M().mgr||{};GM=goalsFor(curYM);
   const c=calcAll(),m=c.m,set=(id,v)=>$(id).textContent=v;
-  set('nps-h-t',c.nh.t);set('nps-h-r',pct(c.nh.r));set('nps-o-t',c.no.t);set('nps-o-r',pct(c.no.r));
-  set('nps-t-p',m.nps.h.p+m.nps.o.p);set('nps-t-n',m.nps.h.n+m.nps.o.n);set('nps-t-d',m.nps.h.d+m.nps.o.d);set('nps-t-t',c.nt.t);set('nps-t-r',pct(c.nt.r));
-  set('iqs-t-f',c.iqs.f);set('iqs-t-q',c.iqs.q);set('iqs-o-r',pct(c.iqs.o));set('iqs-h-r',pct(c.iqs.h));
-  const up=isFinite(c.iqs.t)&&isFinite(c.iqs.o)&&c.iqs.t!==c.iqs.o?(c.iqs.t>c.iqs.o):null;
-  $('iqs-t-r').innerHTML=pct(c.iqs.t)+(up===null?'':` <span class="${up?'up':'down'}">${up?'\u25b2':'\u25bc'}</span>`);
-  set('fh-r',num(c.eff.fh,2));
-  set('ivr-r',num(c.eff.ivr,2));set('ivr-n',c.ivrN+' respostas');
-  const eq=m.vy.eq,at=m.vy.at;
-  if(eq!==''&&at!==''){const d=at-eq;$('vy-cmp').innerHTML=`<span class="${d>=0?'up':'down'}">${d>=0?'+':''}${num(d,2)}</span>`}else set('vy-cmp','\u2014');
-  const npsV=c.eff.nps,iqsV=c.eff.iqs,P2=v=>isFinite(v)?num(v,2)+' %':'\u2014';
-  const gR=gradeOf('re',c.eff.re);m.vy.r=gR||'';$('vy-r').value=gR||'';
-  const gN=gradeOf('nps',npsV),gI=gradeOf('ivr',c.eff.ivr);m.vy.n=gN||'';m.vy.i=gI||'';$('vy-n').value=gN||'';$('vy-i').value=gI||'';
-  const gP=gradeOf('fh',c.eff.fh);$('vy-p').placeholder=gP?'Sugest\u00e3o: '+gP:'';
-  const nums=[m.vy.r,m.vy.n,m.vy.i,m.vy.p,m.vy.eq];
-  let vyV=nums.every(x=>x!==''&&x!=null&&isFinite(x))?((+m.vy.r)*0.2+(+m.vy.n)*0.3+(+m.vy.i)*0.2+(+m.vy.p)*0.3)*0.85+(+m.vy.eq)*0.15:NaN;
-  if(isFinite(vyV))vyV=Math.round(vyV*100+1e-6)/100;
-  if(c.isMan.vy)vyV=manV(m,'vy');
-  m.vy.at=isFinite(vyV)?vyV:'';$('vy-at').value=isFinite(vyV)?vyV.toFixed(2):'';
-  verdict('nps-v','nps',npsV);set('nps-big',P2(npsV));
-  verdict('iqs-v','iqs',iqsV);if(c.isMan.iqs)set('iqs-big',P2(iqsV));else $('iqs-big').innerHTML=$('iqs-t-r').innerHTML;
-  verdict('re-v','re',c.eff.re);set('re-big',P2(c.eff.re));verdict('fh-v','fh',c.eff.fh);verdict('ivr-v','ivr',c.eff.ivr);verdict('vy-v','vy',vyV);{const st=stateOf('vy',vyV);$('vyQuip').className='quip-head s-'+st;$('vyQuip').innerHTML=face(st)+`<em>\u201c${quip('vy',gradeOf('vy',vyV))}\u201d</em><small>Valyou ${isFinite(vyV)?num(vyV,2):'\u2014'}</small>`}set('vy-big',num(vyV,2));
-  [['nps-h-r',c.nh.r*100,'nps'],['nps-o-r',c.no.r*100,'nps'],['nps-t-r',npsV,'nps'],['iqs-o-r',c.iqs.o*100,'iqs'],['iqs-h-r',c.iqs.h*100,'iqs'],['iqs-t-r',iqsV,'iqs']].forEach(([id,v,k])=>{const e=$(id);e.classList.remove('s-g1','s-g2','s-g3','s-g4','s-g5','s-none');e.classList.add('s-'+stateOf(k,v))});
-  const P=m.nps.h.p+m.nps.o.p,N=m.nps.h.n+m.nps.o.n,D=m.nps.h.d+m.nps.o.d;
-  distBar('nps-bar','nps-leg',[{l:'Promotores',v:P,c:'p',col:'--ok'},{l:'Neutros',v:N,c:'n',col:'--warn'},{l:'Detratores',v:D,c:'d',col:'--bad'}]);
-  const iv=m.ivr,sum=(a,b)=>iv.slice(a,b+1).reduce((x,y)=>x+y,0);
-  distBar('ivr-bar','ivr-leg',[{l:'9\u201310',v:sum(9,10),c:'p',col:'--ok'},{l:'7\u20138',v:sum(7,8),c:'n',col:'--warn'},{l:'0\u20136',v:sum(0,6),c:'d',col:'--bad'}]);
-  document.querySelectorAll('[data-ivr]').forEach(i=>i.classList.toggle('has',+i.value>0));
-  const kv={nps:npsV,iqs:iqsV,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyV};
+  set('k2-h-t',c.nh.t);set('k2-h-r',pct(c.nh.r));set('k2-o-t',c.no.t);set('k2-o-r',pct(c.no.r));
+  set('k2-t-p',m.k2.h.p+m.k2.o.p);set('k2-t-n',m.k2.h.n+m.k2.o.n);set('k2-t-d',m.k2.h.d+m.k2.o.d);set('k2-t-t',c.nt.t);set('k2-t-r',pct(c.nt.r));
+  set('k6-t-f',c.k6.f);set('k6-t-q',c.k6.q);set('k6-o-r',pct(c.k6.o));set('k6-h-r',pct(c.k6.h));
+  const up=isFinite(c.k6.t)&&isFinite(c.k6.o)&&c.k6.t!==c.k6.o?(c.k6.t>c.k6.o):null;
+  $('k6-t-r').innerHTML=pct(c.k6.t)+(up===null?'':` <span class="${up?'up':'down'}">${up?'\u25b2':'\u25bc'}</span>`);
+  set('k4-r',num(c.eff.k4,2));
+  set('k3-r',num(c.eff.k3,2));set('k3-n',c.n3+' respostas');
+  const eq=m.k5.eq,at=m.k5.at;
+  if(eq!==''&&at!==''){const d=at-eq;$('k5-cmp').innerHTML=`<span class="${d>=0?'up':'down'}">${d>=0?'+':''}${num(d,2)}</span>`}else set('k5-cmp','\u2014');
+  const v2=c.eff.k2,v6=c.eff.k6,P2=v=>isFinite(v)?num(v,2)+' %':'\u2014';
+  const gR=gradeOf('k1',c.eff.k1);m.k5.r=gR||'';$('k5-r').value=gR||'';
+  const gN=gradeOf('k2',v2),gI=gradeOf('k3',c.eff.k3);m.k5.n=gN||'';m.k5.i=gI||'';$('k5-n').value=gN||'';$('k5-i').value=gI||'';
+  const gP=gradeOf('k4',c.eff.k4);$('k5-p').placeholder=gP?'Sugest\u00e3o: '+gP:'';
+  const nums=[m.k5.r,m.k5.n,m.k5.i,m.k5.p,m.k5.eq];
+  let v5=nums.every(x=>x!==''&&x!=null&&isFinite(x))?((+m.k5.r)*0.2+(+m.k5.n)*0.3+(+m.k5.i)*0.2+(+m.k5.p)*0.3)*0.85+(+m.k5.eq)*0.15:NaN;
+  if(isFinite(v5))v5=Math.round(v5*100+1e-6)/100;
+  if(c.isMan.k5)v5=manV(m,'k5');
+  m.k5.at=isFinite(v5)?v5:'';$('k5-at').value=isFinite(v5)?v5.toFixed(2):'';
+  verdict('k2-v','k2',v2);set('k2-big',P2(v2));
+  verdict('k6-v','k6',v6);if(c.isMan.k6)set('k6-big',P2(v6));else $('k6-big').innerHTML=$('k6-t-r').innerHTML;
+  verdict('k1-v','k1',c.eff.k1);set('k1-big',P2(c.eff.k1));verdict('k4-v','k4',c.eff.k4);verdict('k3-v','k3',c.eff.k3);verdict('k5-v','k5',v5);{const st=stateOf('k5',v5);$('totQuip').className='quip-head s-'+st;$('totQuip').innerHTML=face(st)+`<em>\u201c${quip('k5',gradeOf('k5',v5))}\u201d</em><small>${esc(NM('k5'))} ${isFinite(v5)?num(v5,2):'\u2014'}</small>`}set('k5-big',num(v5,2));
+  [['k2-h-r',c.nh.r*100,'k2'],['k2-o-r',c.no.r*100,'k2'],['k2-t-r',v2,'k2'],['k6-o-r',c.k6.o*100,'k6'],['k6-h-r',c.k6.h*100,'k6'],['k6-t-r',v6,'k6']].forEach(([id,v,k])=>{const e=$(id);e.classList.remove('s-g1','s-g2','s-g3','s-g4','s-g5','s-none');e.classList.add('s-'+stateOf(k,v))});
+  const P=m.k2.h.p+m.k2.o.p,N=m.k2.h.n+m.k2.o.n,D=m.k2.h.d+m.k2.o.d;
+  distBar('k2-bar','k2-leg',[{l:'Promotores',v:P,c:'p',col:'--ok'},{l:'Neutros',v:N,c:'n',col:'--warn'},{l:'Detratores',v:D,c:'d',col:'--bad'}]);
+  const iv=m.k3,sum=(a,b)=>iv.slice(a,b+1).reduce((x,y)=>x+y,0);
+  distBar('k3-bar','k3-leg',[{l:'9\u201310',v:sum(9,10),c:'p',col:'--ok'},{l:'7\u20138',v:sum(7,8),c:'n',col:'--warn'},{l:'0\u20136',v:sum(0,6),c:'d',col:'--bad'}]);
+  document.querySelectorAll('[data-k3]').forEach(i=>i.classList.toggle('has',+i.value>0));
+  const kv={k2:v2,k6:v6,k4:c.eff.k4,k3:c.eff.k3,k5:v5};
   document.querySelectorAll('#tab-calc .calc').forEach(el=>{el.classList.toggle('is-man',!!c.isMan[el.dataset.calc]);el.classList.toggle('is-fix',!!mgrOf(el.dataset.calc))});
-  const MAN='\u270e valor manual';kv.re=c.eff.re;
-  const KD={re:['Reincid\u00eancia',P2(c.eff.re),isFinite(c.eff.re)?'taxa do m\u00eas':'sem valor','20%'],
-    nps:['NPS',P2(npsV),c.isMan.nps?MAN:c.nt.t+' respostas','30%'],
-    ivr:['IVR',num(c.eff.ivr,2),c.isMan.ivr?MAN:c.ivrN+' respostas','20%'],
-    fh:['Produtividade',num(c.eff.fh,2),c.isMan.fh?MAN:m.horas?(m.trat||0)+' tratadas \u00b7 '+m.horas+' h':'sem horas','30%'],
-    vy:['Valyou',num(vyV,2),c.isMan.vy?MAN:m.vy.eq!==''?'Equipa '+num(+m.vy.eq,2):'sem valor da equipa',''],
-    iqs:['IQS',P2(iqsV),c.isMan.iqs?MAN:c.iqs.q+' IQS / '+c.iqs.f+' fechadas','']};
+  const MAN='\u270e valor manual';kv.k1=c.eff.k1;
+  const KD={k1:[NM('k1'),P2(c.eff.k1),isFinite(c.eff.k1)?'taxa do m\u00eas':'sem valor','20%'],
+    k2:[NM('k2'),P2(v2),c.isMan.k2?MAN:c.nt.t+' respostas','30%'],
+    k3:[NM('k3'),num(c.eff.k3,2),c.isMan.k3?MAN:c.n3+' respostas','20%'],
+    k4:[NM('k4'),num(c.eff.k4,2),c.isMan.k4?MAN:m.horas?(m.trat||0)+' tratadas \u00b7 '+m.horas+' h':'sem horas','30%'],
+    k5:[NM('k5'),num(v5,2),c.isMan.k5?MAN:m.k5.eq!==''?'Equipa '+num(+m.k5.eq,2):'sem valor da equipa',''],
+    k6:[NM('k6'),P2(v6),c.isMan.k6?MAN:c.k6.q+' / '+c.k6.f+' fechadas','']};
   const tile=key=>{const [l,v,sub0,w]=KD[key],val=kv[key],st=stateOf(key,val),n=gradeOf(key,val);let sub=sub0;if(mgrOf(key))sub+=' \u00b7 \u270e grau fixo';
-    return `<button class="kpi s-${st}${key==='vy'?' kpi-total':''}${key==='iqs'?' kpi-big':''}" data-key="${key}"><div class="kh"><span>${l}${w?` <i class="w">${w}</i>`:''}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`};
-  $('kpis').innerHTML=['re','nps','ivr','fh','vy'].map(tile).join('');
-  $('kpiIqs').innerHTML=tile('iqs');
+    return `<button class="kpi s-${st}${key==='k5'?' kpi-total':''}${key==='k6'?' kpi-big':''}" data-key="${key}"><div class="kh"><span>${esc(l)}${w?` <i class="w">${w}</i>`:''}</span>${face(st)}</div><b>${v}</b>${steps(st,n)}<small><span class="st">${LBL[st]}</span></small><small>${goalTxt(key,val)}</small><small>${sub}</small><span class="tap">Atualizar \u203a</span></button>`};
+  $('kpis').innerHTML=['k1','k2','k3','k4','k5'].map(tile).join('');
+  $('kpiK6').innerHTML=tile('k6');
   document.querySelectorAll('.kpi[data-key]').forEach(b=>b.onclick=()=>openCalc(b.dataset.key));
 }
 
@@ -1008,7 +1029,7 @@ $('avCopy').onclick=()=>copyRows(visibleAv());
 $('avCopySel').onclick=()=>copyRows(visibleAv().filter(a=>selected.has(a.id)));
 
 /* C\u00f3pia de seguran\u00e7a */
-function restore(d,src){if(!d||!d.tasks||!d.months)throw 0;d.org={name:'',groups:[]};const keep=S.avarias||[];S={...seed(),...d};S.avarias=keep;save();renderAll();renderCfg();$('importMsg').textContent='Dados restaurados'+(src?' de '+src:'')+'.'}
+function restore(d,src){if(!d||!d.tasks||!d.months)throw 0;migrate(d);d.org={name:'',groups:[]};const keep=S.avarias||[];S={...seed(),...d};S.avarias=keep;save();renderAll();renderCfg();$('importMsg').textContent='Dados restaurados'+(src?' de '+src:'')+'.'}
 const backupTxt=()=>JSON.stringify({app:'gestao',saved:new Date().toISOString(),...S,avarias:[],meterEnd:null});
 $('saveFile').onclick=()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([backupTxt()],{type:'text/plain;charset=utf-8'}));
@@ -1028,24 +1049,25 @@ $('wipeAll').onclick=()=>{
 $('wipeCancel').onclick=()=>{wipeArmed=false;$('wipeAll').textContent='Apagar tudo';$('wipeAll').classList.remove('armed');$('wipeCancel').hidden=true};
 
 /* Hist\u00f3rico */
-const HK=[['vy','Valyou'],['re','Reincid\u00eancia'],['nps','NPS'],['ivr','IVR'],['fh','Produtividade'],['iqs','IQS']];
-let histKey='vy';
-function monthVals(m,ym){const prev=GO,pg=GM;GO=m.mgr||{};GM=ym?goalsFor(ym):GM;const c=calcFor(m),o={re:c.eff.re,nps:c.eff.nps,iqs:c.eff.iqs,fh:c.eff.fh,ivr:c.eff.ivr,vy:vyOf(m,c)};o.g={};o.fx={};HK.forEach(([k])=>{o.g[k]=gradeOf(k,o[k]);o.fx[k]=!!mgrOf(k)});GO=prev;GM=pg;return o}
-const fmtK=(k,v)=>!isFinite(v)?'\u2014':(k==='nps'||k==='iqs'||k==='re')?num(v,2)+' %':num(v,2);
+const HKK=['k5','k1','k2','k3','k4','k6'];
+function HKf(){return HKK.map(k=>[k,NM(k)])}
+let histKey='k5';
+function monthVals(m,ym){const prev=GO,pg=GM;GO=m.mgr||{};GM=ym?goalsFor(ym):GM;const c=calcFor(m),o={k1:c.eff.k1,k2:c.eff.k2,k6:c.eff.k6,k4:c.eff.k4,k3:c.eff.k3,k5:v5Of(m,c)};o.g={};o.fx={};HKf().forEach(([k])=>{o.g[k]=gradeOf(k,o[k]);o.fx[k]=!!mgrOf(k)});GO=prev;GM=pg;return o}
+const fmtK=(k,v)=>!isFinite(v)?'\u2014':(k==='k2'||k==='k6'||k==='k1')?num(v,2)+' %':num(v,2);
 const mLabel=(ym,short)=>{const [y,mm]=ym.split('-').map(Number);return new Date(y,mm-1,1).toLocaleDateString('pt-PT',short?{month:'short',year:'2-digit'}:{month:'long',year:'numeric'})};
 function renderHist(){
-  $('histHead').innerHTML='<th>M\u00eas</th>'+HK.map(([k,l])=>`<th>${l}</th>`).join('');
-  $('histSeg').innerHTML=HK.map(([k,l])=>`<button data-hk="${k}" class="${k===histKey?'on':''}">${l}</button>`).join('');
-  const rows=Object.keys(S.months).sort().map(ym=>({ym,v:monthVals(S.months[ym],ym)})).filter(r=>HK.some(([k])=>isFinite(r.v[k])||r.v.g[k]));
-  $('histBody').innerHTML=rows.length?rows.slice().reverse().map(r=>`<tr data-ym="${r.ym}"><td style="text-transform:capitalize;font-weight:700">${mLabel(r.ym)}</td>${HK.map(([k])=>{const n=r.v.g[k],st=n?'g'+n:'none';return `<td><span class="gchip s-${st}">${fmtK(k,r.v[k])}${n?` <small>G${n}${r.v.fx[k]?' \u270e':''}</small>`:''}</span></td>`}).join('')}</tr>`).join('')
+  $('histHead').innerHTML='<th>M\u00eas</th>'+HKf().map(([k,l])=>`<th>${l}</th>`).join('');
+  $('histSeg').innerHTML=HKf().map(([k,l])=>`<button data-hk="${k}" class="${k===histKey?'on':''}">${l}</button>`).join('');
+  const rows=Object.keys(S.months).sort().map(ym=>({ym,v:monthVals(S.months[ym],ym)})).filter(r=>HKf().some(([k])=>isFinite(r.v[k])||r.v.g[k]));
+  $('histBody').innerHTML=rows.length?rows.slice().reverse().map(r=>`<tr data-ym="${r.ym}"><td style="text-transform:capitalize;font-weight:700">${mLabel(r.ym)}</td>${HKf().map(([k])=>{const n=r.v.g[k],st=n?'g'+n:'none';return `<td><span class="gchip s-${st}">${fmtK(k,r.v[k])}${n?` <small>G${n}${r.v.fx[k]?' \u270e':''}</small>`:''}</span></td>`}).join('')}</tr>`).join('')
     :'<tr><td colspan="7" class="empty">Ainda n\u00e3o h\u00e1 meses com dados. Preenche os indicadores no dashboard.</td></tr>';
   const pts=rows.map(r=>({ym:r.ym,v:r.v[histKey],g:r.v.g[histKey]})).filter(p=>isFinite(p.v));
   const el=$('histChart');
-  if(!pts.length){el.innerHTML='<div class="empty" style="padding:60px 0;text-align:center">Sem dados de '+HK.find(x=>x[0]===histKey)[1]+' em nenhum m\u00eas.</div>';return}
+  if(!pts.length){el.innerHTML='<div class="empty" style="padding:60px 0;text-align:center">Sem dados de '+HKf().find(x=>x[0]===histKey)[1]+' em nenhum m\u00eas.</div>';return}
   const G0=goalsFor(curYM)[histKey]||S.goals[histKey],g=G0.dir<0?G0.t.slice().reverse():G0.t,W=1000,H=340,L=64,R=24,T=20,B=40;
   let lo=Math.min(...pts.map(p=>p.v),g[0]),hi=Math.max(...pts.map(p=>p.v),g[3]);const pad=(hi-lo)*0.15||1;lo-=pad;hi+=pad;
-  if(histKey==='re')lo=Math.max(lo,0);
-  if(histKey==='nps'||histKey==='iqs'){lo=Math.max(lo,histKey==='nps'?-100:0);hi=Math.min(hi,100)}
+  if(histKey==='k1')lo=Math.max(lo,0);
+  if(histKey==='k2'||histKey==='k6'){lo=Math.max(lo,histKey==='k2'?-100:0);hi=Math.min(hi,100)}
   const y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo)),x0=L+60,x1=W-R-110,x=i=>pts.length===1?(x0+x1)/2:x0+(x1-x0)*i/(pts.length-1);
   const edges=[lo,...g,hi];let bands='';for(let i=0;i<5;i++){const a=Math.max(edges[i],lo),b=Math.min(edges[i+1],hi);if(b<=a)continue;
     const gi=G0.dir<0?5-i:i+1;bands+=`<rect class="band s-g${gi}" x="${L}" y="${y(b)}" width="${W-L-R}" height="${y(a)-y(b)}"/><text class="bl s-g${gi}" x="${W-R-6}" y="${y(b)+14}" text-anchor="end">Grau ${gi}</text>`}
@@ -1059,7 +1081,7 @@ $('histBody').onclick=e=>{const tr=e.target.closest('tr[data-ym]');if(!tr)return
 
 /* Lembrete de c\u00f3pia */
 const DAY=86400000;
-function hasData(){return S.tasks.length||Object.values(S.months).some(m=>HK.some(([k])=>isFinite(monthVals(m)[k])))}
+function hasData(){return S.tasks.length||Object.values(S.months).some(m=>HKf().some(([k])=>isFinite(monthVals(m)[k])))}
 function markBackup(){S.lastBackup=Date.now();save();checkBackup()}
 function checkBackup(){
   const days=S.lastBackup?Math.floor((Date.now()-S.lastBackup)/DAY):null;
@@ -1071,7 +1093,7 @@ function checkBackup(){
 $('bkNow').onclick=()=>$('saveFile').click();
 $('bkLater').onclick=()=>{S.bkSnooze=new Date().toDateString();save();checkBackup()};
 
-function renderAll(){renderTasks();renderAv();renderMonth();renderHist();checkBackup();tick()}
+function renderAll(){applyNames();renderTasks();renderAv();renderMonth();renderHist();checkBackup();tick()}
 renderAll();
 try{const t=localStorage.getItem(KEY+'-tab');showTab(TITLES[t]?t:'dash')}catch(e){showTab('dash')}
 </script>
